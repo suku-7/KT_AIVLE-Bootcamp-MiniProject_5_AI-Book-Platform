@@ -24,12 +24,12 @@ public class JwtUtil {
                 .compact();
     }
     
-    public String validateAndGetUserId(String token) {
-        return Jwts.parserBuilder()
+    public Long validateAndGetAuthorId(String token) {
+        return Long.valueOf(Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject();
+                .getSubject());
     }
 }

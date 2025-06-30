@@ -7,8 +7,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.*;
+
+import org.springframework.http.ResponseEntity;
+
 import lombok.Data;
 import thminiprojthebook.WritemanageApplication;
+import thminiprojthebook.auth.JwtUtil;
 
 @Entity
 @Table(name = "Writing_table")
@@ -51,7 +55,5 @@ public class Writing {
         this.context = command.getNewContext();
 
     }
-    //>>> Clean Arch / Port Method
-
 }
 //>>> DDD / Aggregate Root

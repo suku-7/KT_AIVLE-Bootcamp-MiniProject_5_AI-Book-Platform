@@ -13,4 +13,5 @@ import thminiprojthebook.domain.*;
 public interface WritingRepository
     extends PagingAndSortingRepository<Writing, Long> {
         List<Writing> findByAuthorName(String authorName);
+        List<Writing> findByAuthorId(Long authorId);
     }

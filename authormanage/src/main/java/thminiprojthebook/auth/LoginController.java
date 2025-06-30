@@ -32,7 +32,7 @@ public class LoginController {
         if(!author.getIsApproved()){
             return ResponseEntity.status(401).body("작가 승인이 되지 않았습니다.");
         }
-        String token = jwtUtil.generateToken(author.getName());
+        String token = jwtUtil.generateToken(String.valueOf(author.getAuthorId()));
         return ResponseEntity.ok(Map.of("token", token));
     }
 }
