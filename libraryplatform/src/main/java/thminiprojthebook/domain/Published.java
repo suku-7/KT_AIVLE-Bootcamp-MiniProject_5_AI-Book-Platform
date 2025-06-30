@@ -11,10 +11,32 @@ import thminiprojthebook.infra.AbstractEvent;
 @ToString
 public class Published extends AbstractEvent {
 
-    private Long bookId;
-    private String bookTitle;
-    private String author;
+   private Long bookId;
+
+    private String title;
+
+    private Boolean bestseller;
+
+    private String authorId;
+
+    private String authorName;
+
+    private Integer selectCount;
+
     private Date publishDate;
+
+    private String summary;
+
+    private String context;
+
+    private String classficationTpe;
+
+    private String imageUrl;
+
+    private String maxLength;
+
+    private String requestedBy;
+
 
     public Published(LibraryInfo aggregate) {
         super(aggregate);
