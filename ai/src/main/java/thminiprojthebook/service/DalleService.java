@@ -12,7 +12,7 @@ import java.util.Map;
 @Service
 public class DalleService {
     
-    @Value("${openai.api.key:}")
+    @Value("${spring.ai.openai.api-key:${openai.api.key:}}")
     private String openaiApiKey;
     
     private final RestTemplate restTemplate;
