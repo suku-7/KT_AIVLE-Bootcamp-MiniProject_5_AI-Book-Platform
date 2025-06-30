@@ -23,7 +23,7 @@ public class ContentAnalyzer {
 
     private String bookId;
 
-    private Text content;
+    private String context;
 
     private String language;
 
