@@ -14,7 +14,7 @@ import java.util.ArrayList;
 @Service
 public class GptService {
     
-    @Value("${openai.api.key:}")
+    @Value("${spring.ai.openai.api-key:${openai.api.key:}}")
     private String openaiApiKey;
     
     private final RestTemplate restTemplate;
@@ -25,6 +25,10 @@ public class GptService {
     public GptService() {
         this.restTemplate = new RestTemplate();
         this.objectMapper = new ObjectMapper();
+        // Spring 컨텍스트 외부에서 실행시 환경변수에서 직접 읽기
+        if (openaiApiKey == null || openaiApiKey.trim().isEmpty()) {
+            openaiApiKey = System.getenv("OPENAI_API_KEY");
+        }
     }
     
     /**
