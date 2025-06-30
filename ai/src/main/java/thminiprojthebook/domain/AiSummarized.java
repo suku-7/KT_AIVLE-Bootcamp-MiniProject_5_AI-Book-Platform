@@ -1,17 +1,15 @@
 package thminiprojthebook.domain;
 
-import java.time.LocalDate;
-import java.util.*;
 import lombok.*;
-import thminiprojthebook.domain.*;
 import thminiprojthebook.infra.AbstractEvent;
 
 //<<< DDD / Domain Event
 @Data
 @ToString
+@EqualsAndHashCode(callSuper=false)
 public class AiSummarized extends AbstractEvent {
 
-    private Long id;
+    private Long authorId;
     private String bookId;
     private String context;
     private String summary;

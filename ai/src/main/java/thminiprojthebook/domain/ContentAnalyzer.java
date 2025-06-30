@@ -46,6 +46,13 @@ public class ContentAnalyzer {
             System.out.println("- Context: " + bookRegisted.getContext());
             System.out.println("- AuthorId: " + bookRegisted.getAuthorId());
             
+            // Initialize or get AI process tracker
+            String bookIdStr = bookRegisted.getBookId().toString();
+            AiProcessTracker tracker = AiProcessTracker.findByBookId(bookIdStr);
+            if (tracker == null) {
+                tracker = AiProcessTracker.initializeForBook(bookIdStr, bookRegisted.getTitle());
+            }
+            
             // Get GptService from application context
             GptService gptService = AiApplication.applicationContext.getBean(GptService.class);
             
@@ -90,7 +97,7 @@ public class ContentAnalyzer {
                 
                 // Publish AiSummarized event with proper data mapping
                 AiSummarized aiSummarized = new AiSummarized(contentAnalyzer);
-                aiSummarized.setId(contentAnalyzer.getId());
+                aiSummarized.setAuthorId(bookRegisted.getAuthorId());
                 aiSummarized.setBookId(contentAnalyzer.getBookId());
                 aiSummarized.setContext(contentAnalyzer.getContext());
                 aiSummarized.setSummary(contentAnalyzer.getSummary());
@@ -100,8 +107,16 @@ public class ContentAnalyzer {
                 aiSummarized.setRequestedBy(contentAnalyzer.getRequestedBy());
                 aiSummarized.publishAfterCommit();
                 
+                // Mark content analysis as completed in tracker
+                tracker.markContentAnalysisCompleted(
+                    contentAnalyzer.getSummary(),
+                    contentAnalyzer.getClassificationType(),
+                    contentAnalyzer.getLanguage(),
+                    contentAnalyzer.getMaxLength()
+                );
+                
                 System.out.println("Summary generated successfully for book: " + bookRegisted.getTitle());
-                System.out.println("Generated summary: " + summary);
+                System.out.println("Generated summary: " + initialSummary);
                 System.out.println("AiSummarized event published with data: " + aiSummarized.toString());
             } else {
                 System.err.println("Failed to generate summary for book: " + bookRegisted.getTitle());

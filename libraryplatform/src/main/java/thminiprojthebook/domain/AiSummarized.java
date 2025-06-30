@@ -1,17 +1,17 @@
 package thminiprojthebook.domain;
 
-import java.util.*;
 import lombok.*;
-import thminiprojthebook.domain.*;
 import thminiprojthebook.infra.AbstractEvent;
 
 @Data
 @ToString
+@EqualsAndHashCode(callSuper=false)
 public class AiSummarized extends AbstractEvent {
 
-    private Long id;
+    private Long authorId;
     private String bookId;
-    private Object content;
+    private String context;
+    private String summary;
     private String language;
     private Integer maxLength;
     private String classificationType;

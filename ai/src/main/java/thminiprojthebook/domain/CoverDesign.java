@@ -45,6 +45,13 @@ public class CoverDesign {
             System.out.println("- Context: " + bookRegisted.getContext());
             System.out.println("- AuthorId: " + bookRegisted.getAuthorId());
             
+            // Initialize or get AI process tracker
+            String bookIdStr = bookRegisted.getBookId().toString();
+            AiProcessTracker tracker = AiProcessTracker.findByBookId(bookIdStr);
+            if (tracker == null) {
+                tracker = AiProcessTracker.initializeForBook(bookIdStr, bookRegisted.getTitle());
+            }
+            
             // Get DalleService from application context
             DalleService dalleService = AiApplication.applicationContext.getBean(DalleService.class);
             
@@ -84,6 +91,12 @@ public class CoverDesign {
                 coverCreated.setGeneratedBy(coverDesign.getGeneratedBy());
                 coverCreated.setCreatedAt(coverDesign.getCreatedAt().toString());
                 coverCreated.publishAfterCommit();
+                
+                // Mark cover generation as completed in tracker
+                tracker.markCoverGenerationCompleted(
+                    coverDesign.getImageUrl(),
+                    coverDesign.getGeneratedBy()
+                );
                 
                 System.out.println("Cover generated successfully for book: " + bookRegisted.getTitle());
                 System.out.println("Generated image URL: " + imageUrl);

@@ -70,5 +70,25 @@ public class PolicyHandler {
         // Sample Logic //
         LibraryInfo.publish(event);
     }
+
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='BookAiProcessCompleted'"
+    )
+    public void wheneverBookAiProcessCompleted_PublishCompleted(
+        @Payload BookAiProcessCompleted bookAiProcessCompleted
+    ) {
+        BookAiProcessCompleted event = bookAiProcessCompleted;
+        System.out.println(
+            "\n\n##### listener AI Process Fully Completed : " + bookAiProcessCompleted + "\n\n"
+        );
+        System.out.println("Book: " + event.getTitle() + " is ready for publication!");
+        System.out.println("- Summary: " + event.getSummary());
+        System.out.println("- Genre: " + event.getClassificationType());
+        System.out.println("- Cover URL: " + event.getImageUrl());
+
+        // Sample Logic - Publish the complete book with all AI enhancements
+        LibraryInfo.publishCompleted(event);
+    }
 }
 //>>> Clean Arch / Inbound Adaptor
