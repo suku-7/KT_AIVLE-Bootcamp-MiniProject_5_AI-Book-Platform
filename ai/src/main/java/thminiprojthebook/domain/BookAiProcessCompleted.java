@@ -10,6 +10,7 @@ import thminiprojthebook.infra.AbstractEvent;
 @EqualsAndHashCode(callSuper=false)
 public class BookAiProcessCompleted extends AbstractEvent {
 
+    private Long authorId;
     private String bookId;
     private String title;
     

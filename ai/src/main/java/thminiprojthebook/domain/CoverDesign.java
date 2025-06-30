@@ -16,6 +16,8 @@ public class CoverDesign {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private Long authorId;
+
     private Date updatedAt;
 
     private String title;
@@ -49,7 +51,7 @@ public class CoverDesign {
             String bookIdStr = bookRegisted.getBookId().toString();
             AiProcessTracker tracker = AiProcessTracker.findByBookId(bookIdStr);
             if (tracker == null) {
-                tracker = AiProcessTracker.initializeForBook(bookIdStr, bookRegisted.getTitle());
+                tracker = AiProcessTracker.initializeForBook(bookIdStr, bookRegisted.getTitle(), bookRegisted.getAuthorId());
             }
             
             // Get DalleService from application context
@@ -57,6 +59,7 @@ public class CoverDesign {
             
             // Create new CoverDesign entity
             CoverDesign coverDesign = new CoverDesign();
+            coverDesign.setAuthorId(bookRegisted.getAuthorId());
             coverDesign.setBookId(bookRegisted.getBookId().toString());
             coverDesign.setTitle(bookRegisted.getTitle());
             coverDesign.setCreatedAt(new Date());
@@ -64,6 +67,7 @@ public class CoverDesign {
             coverDesign.setGeneratedBy("DALL-E-3");
             
             System.out.println("CoverDesign entity created with initial data:");
+            System.out.println("- AuthorId: " + coverDesign.getAuthorId());
             System.out.println("- BookId: " + coverDesign.getBookId());
             System.out.println("- Title: " + coverDesign.getTitle());
             System.out.println("- GeneratedBy: " + coverDesign.getGeneratedBy());
@@ -85,6 +89,7 @@ public class CoverDesign {
                 // Publish CoverCreated event with proper data mapping
                 CoverCreated coverCreated = new CoverCreated(coverDesign);
                 coverCreated.setId(coverDesign.getId());
+                coverCreated.setAuthorId(coverDesign.getAuthorId());
                 coverCreated.setBookId(coverDesign.getBookId());
                 coverCreated.setTitle(coverDesign.getTitle());
                 coverCreated.setImageUrl(coverDesign.getImageUrl());

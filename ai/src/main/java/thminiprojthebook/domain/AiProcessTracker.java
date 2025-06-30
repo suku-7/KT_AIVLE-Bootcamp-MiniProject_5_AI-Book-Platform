@@ -17,6 +17,7 @@ public class AiProcessTracker {
 
     private String bookId;
     private String title;
+    private Long authorId;
     
     // Progress tracking
     private Boolean contentAnalysisCompleted = false;
@@ -48,10 +49,11 @@ public class AiProcessTracker {
     /**
      * Initialize AI process tracking for a book
      */
-    public static AiProcessTracker initializeForBook(String bookId, String title) {
+    public static AiProcessTracker initializeForBook(String bookId, String title, Long authorId) {
         AiProcessTracker tracker = new AiProcessTracker();
         tracker.setBookId(bookId);
         tracker.setTitle(title);
+        tracker.setAuthorId(authorId);
         repository().save(tracker);
         
         System.out.println("AI Process Tracker initialized for book: " + title + " (ID: " + bookId + ")");
@@ -94,6 +96,7 @@ public class AiProcessTracker {
             
             // Publish integrated completion event
             BookAiProcessCompleted completedEvent = new BookAiProcessCompleted();
+            completedEvent.setAuthorId(this.authorId);
             completedEvent.setBookId(this.bookId);
             completedEvent.setTitle(this.title);
             

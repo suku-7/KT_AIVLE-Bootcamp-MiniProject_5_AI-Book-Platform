@@ -50,7 +50,7 @@ public class ContentAnalyzer {
             String bookIdStr = bookRegisted.getBookId().toString();
             AiProcessTracker tracker = AiProcessTracker.findByBookId(bookIdStr);
             if (tracker == null) {
-                tracker = AiProcessTracker.initializeForBook(bookIdStr, bookRegisted.getTitle());
+                tracker = AiProcessTracker.initializeForBook(bookIdStr, bookRegisted.getTitle(), bookRegisted.getAuthorId());
             }
             
             // Get GptService from application context
