@@ -11,4 +11,6 @@ import thminiprojthebook.domain.*;
 //<<< PoEAA / Repository
 @RepositoryRestResource(collectionResourceRel = "writings", path = "writings")
 public interface WritingRepository
-    extends PagingAndSortingRepository<Writing, Long> {}
+    extends PagingAndSortingRepository<Writing, Long> {
+        List<Writing> findByAuthorName(String authorName);
+    }

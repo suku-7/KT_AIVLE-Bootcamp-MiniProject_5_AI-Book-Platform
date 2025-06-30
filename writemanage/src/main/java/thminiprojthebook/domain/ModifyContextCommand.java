@@ -5,4 +5,6 @@ import java.util.*;
 import lombok.Data;
 
 @Data
-public class ModifyContextCommand {}
+public class ModifyContextCommand {
+    private String newContext;
+}

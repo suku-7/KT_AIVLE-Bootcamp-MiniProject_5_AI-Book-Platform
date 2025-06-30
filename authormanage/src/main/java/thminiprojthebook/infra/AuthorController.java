@@ -23,7 +23,7 @@ public class AuthorController {
 
     @RequestMapping(
         value = "/authors/{id}/approve",
-        method = RequestMethod.PATCH,
+        method = RequestMethod.POST,
         produces = "application/json;charset=UTF-8"
     )
     public Author approve(

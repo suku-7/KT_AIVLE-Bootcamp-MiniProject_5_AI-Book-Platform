@@ -28,6 +28,8 @@ public class Writing {
 
     private Boolean registration;
 
+    private String authorName;
+
     public static WritingRepository repository() {
         WritingRepository writingRepository = WritemanageApplication.applicationContext.getBean(
             WritingRepository.class
@@ -45,8 +47,8 @@ public class Writing {
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
-    public void modifyContext() {
-        //implement business logic here:
+    public void modifyContext(ModifyContextCommand command) {
+        this.context = command.getNewContext();
 
     }
     //>>> Clean Arch / Port Method
