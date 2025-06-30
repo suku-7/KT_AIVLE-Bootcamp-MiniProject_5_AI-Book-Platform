@@ -13,6 +13,7 @@ public class AuthorApproved extends AbstractEvent {
 
     private Long authorId;
     private Boolean isApproved;
+    private String name;
 
     public AuthorApproved(Author aggregate) {
         super(aggregate);

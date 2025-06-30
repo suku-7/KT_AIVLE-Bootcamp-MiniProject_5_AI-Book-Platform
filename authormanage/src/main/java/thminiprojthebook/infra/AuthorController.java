@@ -20,30 +20,10 @@ public class AuthorController {
     @Autowired
     AuthorRepository authorRepository;
 
-    @RequestMapping(
-        value = "/authors/{id}/join",
-        method = RequestMethod.PUT,
-        produces = "application/json;charset=UTF-8"
-    )
-    public Author join(
-        @PathVariable(value = "id") Long id,
-        HttpServletRequest request,
-        HttpServletResponse response
-    ) throws Exception {
-        System.out.println("##### /author/join  called #####");
-        Optional<Author> optionalAuthor = authorRepository.findById(id);
-
-        optionalAuthor.orElseThrow(() -> new Exception("No Entity Found"));
-        Author author = optionalAuthor.get();
-        author.join();
-
-        authorRepository.save(author);
-        return author;
-    }
 
     @RequestMapping(
         value = "/authors/{id}/approve",
-        method = RequestMethod.PUT,
+        method = RequestMethod.PATCH,
         produces = "application/json;charset=UTF-8"
     )
     public Author approve(
@@ -64,7 +44,7 @@ public class AuthorController {
 
     @RequestMapping(
         value = "/authors/{id}/disapprove",
-        method = RequestMethod.PUT,
+        method = RequestMethod.PATCH,
         produces = "application/json;charset=UTF-8"
     )
     public Author disApprove(
