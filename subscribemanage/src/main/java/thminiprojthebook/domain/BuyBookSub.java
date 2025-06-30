@@ -11,10 +11,17 @@ import thminiprojthebook.infra.AbstractEvent;
 @ToString
 public class BuyBookSub extends AbstractEvent {
 
-    private Long id;
+    private Long subscribedBookId;
+    private Boolean status;
+    private Long bookId;
+    private SubscriberId subscriberId;
 
     public BuyBookSub(SubscribedBook aggregate) {
         super(aggregate);
+        this.subscribedBookId = aggregate.getSubscribedBookId();
+        this.bookId = aggregate.getBookId();
+        this.status = aggregate.getStatus();
+        this.subscriberId = aggregate.getSubscriberId();
     }
 
     public BuyBookSub() {
@@ -22,3 +29,4 @@ public class BuyBookSub extends AbstractEvent {
     }
 }
 //>>> DDD / Domain Event
+

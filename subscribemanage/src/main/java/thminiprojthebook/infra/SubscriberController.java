@@ -67,3 +67,4 @@ public class SubscriberController {
     }
 }
 //>>> Clean Arch / Inbound Adaptor
+

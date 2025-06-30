@@ -19,6 +19,11 @@ public class PointRecharged extends AbstractEvent {
 
     public PointRecharged(Point aggregate) {
         super(aggregate);
+        this.id = aggregate.getPointId();
+        this.userId = aggregate.getUserId();
+        this.pointBalance = aggregate.getPointBalance();
+        this.amount = aggregate.getAmount();    // 적립된 금액
+        this.usedAt = aggregate.getUsedAt();    // 적립 시점
     }
 
     public PointRecharged() {

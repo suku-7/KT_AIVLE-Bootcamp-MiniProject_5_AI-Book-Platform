@@ -21,6 +21,13 @@ public class PointInsufficient extends AbstractEvent {
 
     public PointInsufficient(Point aggregate) {
         super(aggregate);
+        this.id = aggregate.getPointId();
+        this.userId = aggregate.getUserId();
+        this.pointBalance = aggregate.getPointBalance();
+        this.standardSignupPoint = aggregate.getStandardSignupPoint();
+        this.ktSignupPoint = aggregate.getKtSignupPoint();
+        this.amount = aggregate.getAmount();
+        this.usedAt = aggregate.getUsedAt();
     }
 
     public PointInsufficient() {

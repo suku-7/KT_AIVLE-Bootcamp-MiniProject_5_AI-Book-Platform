@@ -20,38 +20,15 @@ public class PolicyHandler {
     @Autowired
     PointRepository pointRepository;
 
-    @StreamListener(KafkaProcessor.INPUT)
-    public void whatever(@Payload String eventString) {}
-
-    @StreamListener(
-        value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='BuyBookSub'"
-    )
-    public void wheneverBuyBookSub_PointDecrease(
-        @Payload BuyBookSub buyBookSub
-    ) {
-        BuyBookSub event = buyBookSub;
-        System.out.println(
-            "\n\n##### listener PointDecrease : " + buyBookSub + "\n\n"
-        );
-
-        // Sample Logic //
+    @StreamListener(value = KafkaProcessor.INPUT, condition = "headers['type']=='BuyBookSub'")
+    public void onBuyBookSub(@Payload BuyBookSub event) {
+        System.out.println("[Event] 소장 요청 감지됨 → 포인트 차감 시도");
         Point.pointDecrease(event);
     }
 
-    @StreamListener(
-        value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='SubscriberCreated'"
-    )
-    public void wheneverSubscriberCreated_Signup(
-        @Payload SubscriberCreated subscriberCreated
-    ) {
-        SubscriberCreated event = subscriberCreated;
-        System.out.println(
-            "\n\n##### listener Signup : " + subscriberCreated + "\n\n"
-        );
-
-        // Sample Logic //
+    @StreamListener(value = KafkaProcessor.INPUT, condition = "headers['type']=='SubscriberCreated'")
+    public void onSubscriberCreated(@Payload SubscriberCreated event) {
+        System.out.println("[Event] 신규 가입 감지됨 → 가입 포인트 지급");
         Point.signup(event);
     }
 }

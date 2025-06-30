@@ -19,6 +19,11 @@ public class KtSignedupPointCharged extends AbstractEvent {
 
     public KtSignedupPointCharged(Point aggregate) {
         super(aggregate);
+        this.id = aggregate.getPointId(); 
+        this.userId = aggregate.getUserId();
+        this.ktSignupPoint = aggregate.getKtSignupPoint();
+        this.signupDate = aggregate.getSignupDate();
+        this.isKt = aggregate.getIsKt();    
     }
 
     public KtSignedupPointCharged() {

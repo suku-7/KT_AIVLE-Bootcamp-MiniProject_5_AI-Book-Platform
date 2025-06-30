@@ -10,4 +10,6 @@ import thminiprojthebook.infra.AbstractEvent;
 public class BuyBookSub extends AbstractEvent {
 
     private Long id;
+    private String userId;
+    private Integer amount; // 구매 금액
 }

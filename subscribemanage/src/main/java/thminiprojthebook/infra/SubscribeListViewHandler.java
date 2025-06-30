@@ -35,3 +35,4 @@ public class SubscribeListViewHandler {
     }
     //>>> DDD / CQRS
 }
+

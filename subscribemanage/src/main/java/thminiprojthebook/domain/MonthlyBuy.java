@@ -13,6 +13,7 @@ public class MonthlyBuy extends AbstractEvent {
 
     private Long id;
 
+
     public MonthlyBuy(Subscriber aggregate) {
         super(aggregate);
     }

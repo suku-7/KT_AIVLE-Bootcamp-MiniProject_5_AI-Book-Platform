@@ -7,19 +7,27 @@ import org.springframework.stereotype.Component;
 import thminiprojthebook.domain.*;
 
 @Component
-public class SubscribedBookHateoasProcessor
-    implements RepresentationModelProcessor<EntityModel<SubscribedBook>> {
+public class SubscriberHateoasProcessor
+    implements RepresentationModelProcessor<EntityModel<Subscriber>> {
 
     @Override
-    public EntityModel<SubscribedBook> process(
-        EntityModel<SubscribedBook> model
-    ) {
+    public EntityModel<Subscriber> process(EntityModel<Subscriber> model) {
         model.add(
             Link
-                .of(model.getRequiredLink("self").getHref() + "/buybook")
-                .withRel("buybook")
+                .of(
+                    model.getRequiredLink("self").getHref() +
+                    "/createsubscriber"
+                )
+                .withRel("createsubscriber")
+        );
+        model.add(
+            Link
+                .of(model.getRequiredLink("self").getHref() + "/monthlypaid")
+                .withRel("monthlypaid")
         );
 
         return model;
     }
 }
+
+

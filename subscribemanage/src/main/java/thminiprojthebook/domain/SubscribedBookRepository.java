@@ -15,3 +15,4 @@ import thminiprojthebook.domain.*;
 )
 public interface SubscribedBookRepository
     extends PagingAndSortingRepository<SubscribedBook, Long> {}
+

@@ -18,28 +18,29 @@ import thminiprojthebook.domain.*;
 public class PolicyHandler {
 
     @Autowired
-    SubscriberRepository subscriberRepository;
-
-    @Autowired
-    SubscribedBookRepository subscribedBookRepository;
+    PointCommandService pointCommandService;
 
     @StreamListener(KafkaProcessor.INPUT)
-    public void whatever(@Payload String eventString) {}
+    public void wheneverBuyBookSub_포인트차감(@Payload BuyBookSub event) {
+        if (!event.validate()) return;
 
-    @StreamListener(
-        value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='PointInsufficient'"
-    )
-    public void wheneverPointInsufficient_PurchaseFail(
-        @Payload PointInsufficient pointInsufficient
-    ) {
-        PointInsufficient event = pointInsufficient;
-        System.out.println(
-            "\n\n##### listener PurchaseFail : " + pointInsufficient + "\n\n"
-        );
+        System.out.println("##### listener 포인트차감 : " + event.toJson());
 
-        // Sample Logic //
+        PointChargeCommand command = new PointChargeCommand();
+        command.setUserId(event.getSubscriberId().getValue());
+        command.setPrice(500); // 예시로 책 가격 500포인트
+        command.setSubscribedBookId(event.getSubscribedBookId());
+
+        pointCommandService.차감요청(command); // 외부 마이크로서비스 호출 또는 메시지 발행
+    }
+
+    @StreamListener(KafkaProcessor.INPUT)
+    public void wheneverPointInsufficient_구매실패(@Payload PointInsufficient event) {
+        if (!event.validate()) return;
+
+        System.out.println("##### listener 구매실패 : " + event.toJson());
         SubscribedBook.purchaseFail(event);
     }
 }
 //>>> Clean Arch / Inbound Adaptor
+

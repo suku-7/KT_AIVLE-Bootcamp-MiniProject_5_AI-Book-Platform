@@ -35,39 +35,23 @@ public class SubscribedBook {
     }
 
     //<<< Clean Arch / Port Method
-    public void buyBook() {
-        //implement business logic here:
+   public void buyBook(BuyBookCommand command) {
+    this.bookId = command.getBookId();
+    this.subscriberId = new SubscriberId(command.getSubscriberId()); // 생성자 맞게 조정
+    this.status = true;
 
-        BuyBookSub buyBookSub = new BuyBookSub(this);
-        buyBookSub.publishAfterCommit();
+    BuyBookSub event = new BuyBookSub(this);
+    event.publishAfterCommit();
     }
 
-    //>>> Clean Arch / Port Method
-
-    //<<< Clean Arch / Port Method
-    public static void purchaseFail(PointInsufficient pointInsufficient) {
-        //implement business logic here:
-
-        /** Example 1:  new item 
-        SubscribedBook subscribedBook = new SubscribedBook();
-        repository().save(subscribedBook);
-
-        */
-
-        /** Example 2:  finding and process
-        
-
-        repository().findById(pointInsufficient.get???()).ifPresent(subscribedBook->{
-            
-            subscribedBook // do something
+    public static void purchaseFail(PointInsufficient event) {
+        repository().findById(event.getSubscribedBookId()).ifPresent(subscribedBook -> {
+            subscribedBook.setStatus(false);
             repository().save(subscribedBook);
-
-
-         });
-        */
-
+        });
     }
     //>>> Clean Arch / Port Method
 
 }
 //>>> DDD / Aggregate Root
+

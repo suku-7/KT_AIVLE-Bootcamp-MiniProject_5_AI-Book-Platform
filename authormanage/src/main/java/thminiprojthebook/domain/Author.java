@@ -52,8 +52,6 @@ private String portfolioUrl;
     public void join(){
         
         //implement business logic here:
-        
-
 
     }
 //>>> Clean Arch / Port Method
@@ -61,9 +59,6 @@ private String portfolioUrl;
     public void approve(){
         
         //implement business logic here:
-        
-
-
         AuthorApproved authorApproved = new AuthorApproved(this);
         authorApproved.publishAfterCommit();
     }

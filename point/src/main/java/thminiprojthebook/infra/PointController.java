@@ -13,7 +13,7 @@ import thminiprojthebook.domain.*;
 //<<< Clean Arch / Inbound Adaptor
 
 @RestController
-// @RequestMapping(value="/points")
+@RequestMapping(value="/points")
 @Transactional
 public class PointController {
 

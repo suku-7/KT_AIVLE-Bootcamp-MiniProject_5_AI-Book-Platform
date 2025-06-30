@@ -9,11 +9,12 @@ import thminiprojthebook.infra.AbstractEvent;
 @ToString
 public class PointInsufficient extends AbstractEvent {
 
-    private Long id;
+    private Long pointId;
     private String userId;
     private Integer pointBalance;
-    private Integer standardSignupPoint;
-    private Integer ktSignupPoint;
-    private Integer amount;
-    private Date usedAt;
+    private Long subscribedBookId; // 추가됨
+
+    public PointInsufficient() {
+        super();
+    }
 }

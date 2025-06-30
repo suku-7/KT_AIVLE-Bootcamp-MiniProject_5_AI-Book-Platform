@@ -13,6 +13,8 @@ public class SubscriberCreated extends AbstractEvent {
 
     private Long id;
     private String name;
+    private String isKt;
+    private Boolean isMonthlySubscribed;
 
     public SubscriberCreated(Subscriber aggregate) {
         super(aggregate);
@@ -23,3 +25,4 @@ public class SubscriberCreated extends AbstractEvent {
     }
 }
 //>>> DDD / Domain Event
+

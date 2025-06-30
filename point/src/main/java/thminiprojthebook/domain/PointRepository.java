@@ -6,5 +6,6 @@ import thminiprojthebook.domain.*;
 
 //<<< PoEAA / Repository
 @RepositoryRestResource(collectionResourceRel = "points", path = "points")
-public interface PointRepository
-    extends PagingAndSortingRepository<Point, Long> {}
+public interface PointRepository extends PagingAndSortingRepository<Point, Long> {
+    Optional<Point> findByUserId(String userId);
+}
