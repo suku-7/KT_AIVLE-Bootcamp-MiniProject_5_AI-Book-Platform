@@ -17,4 +17,6 @@ public class AiSummarized extends AbstractEvent {
     private String language;
     private String classificationType;
     private String requestedBy;
+    private String title;   // LibraryInfo에서 필요로 하는 title 필드
+    private String summary; // LibraryInfo에서 필요로 하는 summary 필드
 }
