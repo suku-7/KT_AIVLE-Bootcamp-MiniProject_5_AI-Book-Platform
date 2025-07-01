@@ -1,19 +1,17 @@
 package thminiprojthebook.domain;
 
-import java.time.LocalDate;
-import java.util.*;
 import lombok.*;
-import thminiprojthebook.domain.*;
 import thminiprojthebook.infra.AbstractEvent;
 
 //<<< DDD / Domain Event
 @Data
 @ToString
+@EqualsAndHashCode(callSuper=false)
 public class CoverCreated extends AbstractEvent {
 
-    private Long bookId;
+    private Long id;
     private Long authorId;
-    private String authorName;
+    private String bookId;
     private String title;
     private String imageUrl;
     private String generatedBy;

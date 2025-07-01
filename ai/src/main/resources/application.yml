@@ -4,6 +4,25 @@ server:
 spring:
   application:
     name: ai
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:your-openai-api-key-here}
+      # Cover Design 전용 설정
+      cover:
+        model: dall-e-3
+        quality: standard
+        size: 1024x1024
+        style: vivid
+      # AI Summary 전용 설정  
+      summary:
+        model: gpt-4
+        temperature: 0.7
+        max-tokens: 1000
+      # Genre Classification 전용 설정
+      genre:
+        model: gpt-4
+        temperature: 0.3
+        max-tokens: 50
 ---
 
 spring:
@@ -53,6 +72,25 @@ server:
 
 spring:
   profiles: docker
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:your-openai-api-key-here}
+      # Cover Design 전용 설정
+      cover:
+        model: dall-e-3
+        quality: standard
+        size: 1024x1024
+        style: vivid
+      # AI Summary 전용 설정  
+      summary:
+        model: gpt-4
+        temperature: 0.7
+        max-tokens: 1000
+      # Genre Classification 전용 설정
+      genre:
+        model: gpt-4
+        temperature: 0.3
+        max-tokens: 50
   jpa:
     properties:
       hibernate:

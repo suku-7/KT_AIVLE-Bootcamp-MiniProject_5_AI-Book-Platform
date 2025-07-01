@@ -11,8 +11,7 @@ public class BookRegisted extends AbstractEvent {
 
     private Long bookId;
     private Long authorId;
-    private String authorName;
-    private String title;
     private String context;
-    private Boolean registration;
+    private String title;
+    private String authorName;
 }
