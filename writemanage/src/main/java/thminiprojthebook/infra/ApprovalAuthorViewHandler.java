@@ -27,7 +27,7 @@ public class ApprovalAuthorViewHandler {
             // view 객체 생성
             ApprovalAuthor approvalAuthor = new ApprovalAuthor();
             // view 객체에 이벤트의 Value 를 set 함
-            approvalAuthor.setId(Long.valueOf(authorApproved.getAuthorId()));
+            approvalAuthor.setAuthorId(Long.valueOf(authorApproved.getAuthorId()));
             approvalAuthor.setIsApproved(authorApproved.getIsApproved());
             // view 레파지 토리에 save
             approvalAuthorRepository.save(approvalAuthor);

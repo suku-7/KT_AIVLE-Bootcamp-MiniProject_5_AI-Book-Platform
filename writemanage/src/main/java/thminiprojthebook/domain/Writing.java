@@ -7,8 +7,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.*;
+
+import org.springframework.http.ResponseEntity;
+
 import lombok.Data;
 import thminiprojthebook.WritemanageApplication;
+import thminiprojthebook.auth.JwtUtil;
 
 @Entity
 @Table(name = "Writing_table")
@@ -28,6 +32,8 @@ public class Writing {
 
     private Boolean registration;
 
+    private String authorName;
+
     public static WritingRepository repository() {
         WritingRepository writingRepository = WritemanageApplication.applicationContext.getBean(
             WritingRepository.class
@@ -45,11 +51,9 @@ public class Writing {
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
-    public void modifyContext() {
-        //implement business logic here:
+    public void modifyContext(ModifyContextCommand command) {
+        this.context = command.getNewContext();
 
     }
-    //>>> Clean Arch / Port Method
-
 }
 //>>> DDD / Aggregate Root

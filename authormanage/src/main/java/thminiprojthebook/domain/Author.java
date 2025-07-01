@@ -20,25 +20,17 @@ public class Author  {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long authorId;    
     
+    private String name;    
     
+    private String loginId;    
     
-private Long authorId;    
+    private String password;    
     
+    private Boolean isApproved;    
     
-private String name;    
-    
-    
-private String loginId;    
-    
-    
-private String password;    
-    
-    
-private Boolean isApproved;    
-    
-    
-private String portfolioUrl;
+    private String portfolioUrl;
 
 
     public static AuthorRepository repository(){
@@ -47,38 +39,23 @@ private String portfolioUrl;
     }
 
 
-
-//<<< Clean Arch / Port Method
-    public void join(){
-        
-        //implement business logic here:
-
+    @PrePersist
+    public void prePersist() {
+        if (isApproved == null) {
+            this.isApproved = false;
+        }
     }
+
 //>>> Clean Arch / Port Method
 //<<< Clean Arch / Port Method
     public void approve(){
-        
-        //implement business logic here:
+        this.setIsApproved(true);
         AuthorApproved authorApproved = new AuthorApproved(this);
         authorApproved.publishAfterCommit();
     }
 //>>> Clean Arch / Port Method
 //<<< Clean Arch / Port Method
     public void disApprove(){
-        
-        //implement business logic here:
-        
-
-        thminiprojthebook.external.AuthorQuery authorQuery = new thminiprojthebook.external.AuthorQuery();
-        // authorQuery.set??()        
-          = AuthorApplication.applicationContext
-            .getBean(thminiprojthebook.external.Service.class)
-            .author(authorQuery);
-
+        this.setIsApproved(false);
     }
-//>>> Clean Arch / Port Method
-
-
-
 }
-//>>> DDD / Aggregate Root
