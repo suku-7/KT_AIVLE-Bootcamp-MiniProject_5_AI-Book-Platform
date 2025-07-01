@@ -16,7 +16,7 @@ import thminiprojthebook.service.GptService;
 //<<< Clean Arch / Inbound Adaptor
 
 @RestController
-@RequestMapping(value="/contentAnalyzers")
+// @RequestMapping(value="/contentAnalyzers")
 @Transactional
 public class ContentAnalyzerController {
 
