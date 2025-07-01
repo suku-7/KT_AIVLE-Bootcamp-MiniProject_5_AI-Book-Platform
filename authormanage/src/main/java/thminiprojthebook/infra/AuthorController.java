@@ -1,13 +1,14 @@
 package thminiprojthebook.infra;
 
+import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
 import thminiprojthebook.domain.*;
 
 //<<< Clean Arch / Inbound Adaptor
@@ -19,7 +20,6 @@ public class AuthorController {
 
     @Autowired
     AuthorRepository authorRepository;
-
 
     @RequestMapping(
         value = "/authors/{id}/approve",
@@ -44,7 +44,7 @@ public class AuthorController {
 
     @RequestMapping(
         value = "/authors/{id}/disapprove",
-        method = RequestMethod.PATCH,
+        method = RequestMethod.POST,
         produces = "application/json;charset=UTF-8"
     )
     public Author disApprove(
@@ -61,6 +61,12 @@ public class AuthorController {
 
         authorRepository.save(author);
         return author;
+    }
+
+     @GetMapping("/authors/admin")
+    public List<Author> getUnapprovedAuthors() {
+        List<Author> unapprovedAuthors = authorRepository.findByIsApprovedFalse();
+        return unapprovedAuthors;
     }
 }
 //>>> Clean Arch / Inbound Adaptor

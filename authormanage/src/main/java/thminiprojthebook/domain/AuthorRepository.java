@@ -1,5 +1,6 @@
 package thminiprojthebook.domain;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -11,4 +12,5 @@ import thminiprojthebook.domain.*;
 public interface AuthorRepository
     extends PagingAndSortingRepository<Author, Long> {
             Optional<Author> findByLoginId(String loginId);
+            List<Author> findByIsApprovedFalse();
     }
