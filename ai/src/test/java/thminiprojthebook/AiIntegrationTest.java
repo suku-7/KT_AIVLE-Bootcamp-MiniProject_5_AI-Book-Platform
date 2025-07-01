@@ -1,4 +1,4 @@
-package thminiprojthebook.test;
+package thminiprojthebook;
 
 import thminiprojthebook.service.DalleService;
 import thminiprojthebook.service.GptService;
@@ -41,6 +41,14 @@ public class AiIntegrationTest {
             if (imageUrl != null && !imageUrl.trim().isEmpty()) {
                 System.out.println("   ✅ 커버 이미지 생성 성공!");
                 System.out.println("   - 생성된 URL: " + imageUrl);
+                
+                // 실제 이미지 URL인지 확인
+                if (imageUrl.contains("oaidalleapiprodscus.blob.core.windows.net")) {
+                    System.out.println("   🎉 실제 DALL-E API로 생성된 이미지입니다!");
+                    System.out.println("   📌 브라우저에서 URL을 열어 이미지를 확인하세요.");
+                } else if (imageUrl.contains("mock-generated-image")) {
+                    System.out.println("   ⚠️  Mock 서비스로 생성된 가짜 URL입니다.");
+                }
             } else {
                 System.out.println("   ❌ 커버 이미지 생성 실패");
                 if (apiKey == null) {
