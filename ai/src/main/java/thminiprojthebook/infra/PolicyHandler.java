@@ -30,29 +30,26 @@ public class PolicyHandler {
         value = KafkaProcessor.INPUT,
         condition = "headers['type']=='BookRegisted'"
     )
-    public void wheneverBookRegisted_ProcessAiServices(
+    public void wheneverBookRegisted_ProcessSequentially(
         @Payload BookRegisted bookRegisted
     ) {
         BookRegisted event = bookRegisted;
         System.out.println(
-            "\n\n##### listener ProcessAiServices : " +
-            bookRegisted +
-            "\n\n"
+            "\n\n##### listener ProcessSequentially : " + bookRegisted + "\n\n"
         );
 
         try {
-            // 1. AI 콘텐츠 분석 및 요약 실행
-            System.out.println("=== Starting ContentAnalyzer.aiSummarize ===");
-            ContentAnalyzer.aiSummarize(event);
-            System.out.println("=== ContentAnalyzer.aiSummarize completed ===");
-            
-            // 2. AI 커버 이미지 생성 실행
-            System.out.println("=== Starting CoverDesign.autoCoverGeneratePolicy ===");
+            // Process AutoCoverGeneratePolicy
+            System.out.println("=== Starting AutoCoverGeneratePolicy ===");
             CoverDesign.autoCoverGeneratePolicy(event);
-            System.out.println("=== CoverDesign.autoCoverGeneratePolicy completed ===");
-            
+            System.out.println("=== AutoCoverGeneratePolicy completed ===");
+
+            // Process AiSummarize
+            System.out.println("=== Starting AiSummarize ===");
+            ContentAnalyzer.aiSummarize(event);
+            System.out.println("=== AiSummarize completed ===");
         } catch (Exception e) {
-            System.err.println("Error in AI services processing: " + e.getMessage());
+            System.err.println("Error in sequential processing: " + e.getMessage());
             e.printStackTrace();
         }
     }
