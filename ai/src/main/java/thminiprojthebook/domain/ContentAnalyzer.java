@@ -12,10 +12,10 @@ import thminiprojthebook.service.GptService;
 public class ContentAnalyzer {
 
     @Id
-    // @GeneratedValue(strategy = GenerationType.AUTO) // <-- 1. 이 줄을 제거 또는 주석 처리합니다.
-    private Long bookId;
-
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long authorId;
+
+    private String bookId;
 
     private String context;
 
@@ -24,8 +24,6 @@ public class ContentAnalyzer {
     private String language;
 
     private Integer maxLength;
-
-    private String language;
 
     private String classificationType;
 

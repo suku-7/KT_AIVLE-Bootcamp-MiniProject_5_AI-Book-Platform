@@ -1,4 +1,5 @@
 package thminiprojthebook.domain;
+import java.sql.Date;
 
 import lombok.*;
 import thminiprojthebook.infra.AbstractEvent;
@@ -9,7 +10,6 @@ import thminiprojthebook.infra.AbstractEvent;
 @EqualsAndHashCode(callSuper=false)
 public class CoverCreated extends AbstractEvent {
 
-    private Long id;
     private Long authorId;
     private String bookId;
     private String title;

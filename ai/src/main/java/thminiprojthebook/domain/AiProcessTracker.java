@@ -34,6 +34,7 @@ public class AiProcessTracker {
     // Cover Design Data
     private String imageUrl;
     private String generatedBy;
+    private Date coverCreatedAt; // 커버 생성 완료 시간 추가
 
     public static AiProcessTrackerRepository repository() {
         AiProcessTrackerRepository aiProcessTrackerRepository = AiApplication.applicationContext.getBean(
@@ -81,6 +82,7 @@ public class AiProcessTracker {
         this.coverGenerationCompleted = true;
         this.imageUrl = imageUrl;
         this.generatedBy = generatedBy;
+        this.coverCreatedAt = new Date(); // 커버 완료 시간 기록
         
         System.out.println("Cover generation completed for book: " + this.title);
         checkAndPublishCompletion();
@@ -109,7 +111,7 @@ public class AiProcessTracker {
             // Cover Design Data
             completedEvent.setImageUrl(this.imageUrl);
             completedEvent.setGeneratedBy(this.generatedBy);
-            completedEvent.setCoverCreatedAt(this.createdAt);
+            completedEvent.setCoverCreatedAt(this.coverCreatedAt); // 실제 커버 생성 시간 전달
             
             // Status flags
             completedEvent.setContentAnalysisCompleted(true);
