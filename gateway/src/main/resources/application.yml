@@ -12,7 +12,7 @@ spring:
         - id: authormanage
           uri: http://localhost:8082
           predicates:
-            - Path=/authors/**, 
+            - Path=/authors/**, /auth/login
         - id: writemanage
           uri: http://localhost:8083
           predicates:
@@ -64,7 +64,7 @@ spring:
         - id: authormanage
           uri: http://authormanage:8080
           predicates:
-            - Path=/authors/**, 
+            - Path=/authors/**, /auth/login
         - id: writemanage
           uri: http://writemanage:8080
           predicates:
