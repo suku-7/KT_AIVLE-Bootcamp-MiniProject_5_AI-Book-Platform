@@ -140,40 +140,5 @@ public class LibraryInfo {
     }
     //>>> Clean Arch / Port Method
 
-    //<<< Clean Arch / Port Method
-    public static void publishCompleted(BookAiProcessCompleted bookAiProcessCompleted) {
-        try {
-            System.out.println("=== Publishing AI Completed Book to Library ===");
-            System.out.println("Book: " + bookAiProcessCompleted.getTitle());
-            System.out.println("BookId: " + bookAiProcessCompleted.getBookId());
-            System.out.println("Summary: " + bookAiProcessCompleted.getSummary());
-            System.out.println("Genre: " + bookAiProcessCompleted.getClassificationType());
-            System.out.println("Cover Image: " + bookAiProcessCompleted.getImageUrl());
-            
-            // Create new LibraryInfo entry with complete AI data
-            LibraryInfo libraryInfo = new LibraryInfo();
-            libraryInfo.setBookTitle(bookAiProcessCompleted.getTitle());
-            libraryInfo.setAuthor("AI-Enhanced"); // You might want to get actual author data
-            libraryInfo.setPublishDate(bookAiProcessCompleted.getCompletedAt());
-            libraryInfo.setSelectCount(0);
-            libraryInfo.setRank(0);
-            libraryInfo.setBestseller(false);
-            
-            repository().save(libraryInfo);
-            
-            // Publish the book to library with all AI enhancements
-            Published published = new Published(libraryInfo);
-            published.publishAfterCommit();
-            
-            System.out.println("Book published to library successfully!");
-            System.out.println("LibraryInfo ID: " + libraryInfo.getId());
-            
-        } catch (Exception e) {
-            System.err.println("Error publishing AI completed book: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-    //>>> Clean Arch / Port Method
-
 }
 //>>> DDD / Aggregate Root
