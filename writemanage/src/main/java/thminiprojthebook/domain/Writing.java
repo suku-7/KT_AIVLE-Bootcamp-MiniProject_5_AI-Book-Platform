@@ -44,7 +44,8 @@ public class Writing {
     //<<< Clean Arch / Port Method
     public void registBook() {
         //implement business logic here:
-
+        this.registration = true;
+        
         BookRegisted bookRegisted = new BookRegisted(this);
         bookRegisted.publishAfterCommit();
     }
@@ -53,7 +54,6 @@ public class Writing {
     //<<< Clean Arch / Port Method
     public void modifyContext(ModifyContextCommand command) {
         this.context = command.getNewContext();
-
     }
 }
 //>>> DDD / Aggregate Root
