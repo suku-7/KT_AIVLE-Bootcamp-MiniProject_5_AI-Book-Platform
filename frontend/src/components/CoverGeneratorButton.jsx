@@ -1,118 +1,88 @@
-import { useState } from "react";
-import axios from "axios";
-import { Switch, FormControlLabel } from "@mui/material";
+// src/components/CoverGeneratorButton.jsx
 
-const GPT_PROMPT_REFINEMENT_INSTRUCTION = `
-당신은 책 표지 이미지 생성 프롬프트 전문가입니다.
-사용자가 제공하는 간단한 키워드를 바탕으로, DALL-E 3가 이미지화하기 좋은 형태로 시각적으로 구체적인 묘사를 포함한 프롬프트를 생성하세요.
-스타일, 배경, 중심 오브젝트, 분위기 등을 포함하세요. 너무 설명적이거나 모호한 단어는 피하세요.
-`;
+import React, { useState } from 'react';
+import { Button, CircularProgress, Box, Typography } from '@mui/material';
+import { requestCoverGeneration } from '../api/bookApi'; // AI 표지 생성 API 임포트
 
-function CoverGeneratorButton({ promptValue, setCoverUrl }) {
-  const [loading, setLoading] = useState(false);
-  const [useGpt, setUseGpt] = useState(true);
+/**
+ * AI 표지 생성을 요청하는 버튼 컴포넌트입니다.
+ * @param {object} props
+ * @param {string} props.promptValue - AI에게 전달할 표지 생성 프롬프트 (책 제목 등)
+ * @param {function(string): void} props.setCoverUrl - 생성된 이미지 URL을 부모 컴포넌트로 전달하는 콜백 함수
+ * @param {number} props.bookId - 표지 생성 대상이 되는 책의 ID
+ * @param {number} props.authorId - 표지 생성 요청을 하는 작가의 ID
+ * @param {string} props.authorName - 표지 생성 요청을 하는 작가의 이름
+ */
+const CoverGeneratorButton = ({ promptValue, setCoverUrl, bookId, authorId, authorName }) => {
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleGenerate = async () => {
-    if (!promptValue.trim()) {
-      alert("표지 컨셉 프롬프트를 입력하세요.");
+  const handleGenerateClick = async () => {
+    if (!promptValue) {
+      alert('표지 생성을 위한 프롬프트(예: 책 제목)를 입력해주세요.');
+      return;
+    }
+    if (!bookId || !authorId || !authorName) {
+      alert('책 정보(ID)와 작가 정보가 필요합니다.');
       return;
     }
 
-    setLoading(true);
-    let finalPrompt = promptValue;
-
+    setIsGenerating(true);
+    setError(null);
     try {
-      if (useGpt) {
-        const gptPayload = {
-          model: "gpt-4.1-mini",
-          messages: [
-            { role: "system", content: GPT_PROMPT_REFINEMENT_INSTRUCTION },
-            { role: "user", content: `사용자 입력:\n"${promptValue}"` }
-          ],
-          temperature: 0.7,
-          max_tokens: 400,
-        };
+      const response = await requestCoverGeneration({
+        bookId: parseInt(bookId), // bookId는 숫자 타입이어야 함
+        authorId: authorId,
+        authorName: authorName,
+        title: promptValue, // 프롬프트로 책 제목 사용
+        // coverPrompt 필드를 백엔드에서 어떻게 처리하는지에 따라 여기를 조정해야 할 수 있습니다.
+        // 현재 API 정의상 title이 프롬프트 역할을 할 수 있습니다.
+      });
 
-        const gptResponse = await axios.post(
-          "https://api.openai.com/v1/chat/completions",
-          gptPayload,
-          {
-            headers: {
-              Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (gptResponse.data.choices?.length > 0) {
-          finalPrompt = gptResponse.data.choices[0].message.content.trim();
-        }
+      if (response.data && response.data.imageUrl) {
+        setCoverUrl(response.data.imageUrl); // 생성된 이미지 URL 전달
+        alert('AI 표지 이미지가 성공적으로 생성되었습니다!');
+      } else {
+        setError('표지 생성에 실패했습니다: 유효한 URL을 받지 못했습니다.');
       }
-
-      const dalleResponse = await axios.post(
-        "https://api.openai.com/v1/images/generations",
-        {
-          model: "dall-e-3",
-          prompt: finalPrompt,
-          n: 1,
-          size: "1024x1792",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const url = dalleResponse.data.data[0].url;
-      setCoverUrl(url);
-      alert("표지 이미지가 생성되었습니다!");
-    } catch (error) {
-      console.error("OpenAI 요청 실패:", error.response?.data || error.message);
-      alert("이미지 생성 실패");
+    } catch (err) {
+      console.error('AI 표지 생성 오류:', err);
+      setError(err.response?.data?.message || 'AI 표지 생성 중 오류가 발생했습니다.');
     } finally {
-      setLoading(false);
+      setIsGenerating(false);
     }
   };
 
   return (
-    <div style={{ marginBottom: "1rem" }}>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={useGpt}
-            onChange={(e) => setUseGpt(e.target.checked)}
-            sx={{
-              '& .MuiSwitch-switchBase.Mui-checked': {
-                color: '#5a9',
-              },
-              '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                backgroundColor: '#5a9',
-              },
-            }}
-          />
-        }
-        label="GPT로 프롬프트 보정"
-        sx={{ mb: 1 }}
-      />
-      <button
-        type="button"
-        onClick={handleGenerate}
-        disabled={loading}
-        style={{
-          padding: "10px 16px",
-          backgroundColor: "#5a9",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer"
+    <Box>
+      <Button
+        variant="contained"
+        onClick={handleGenerateClick}
+        disabled={isGenerating || !promptValue || !bookId}
+        sx={{
+          backgroundColor: '#4CAF50', // 초록색 계열
+          '&:hover': { backgroundColor: '#45a049' },
+          py: 1,
+          px: 2,
+          fontSize: '0.9em',
         }}
       >
-        {loading ? "생성 중..." : "표지 이미지 생성"}
-      </button>
-    </div>
+        {isGenerating ? (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <CircularProgress size={20} color="inherit" sx={{ mr: 1 }} />
+            생성 중...
+          </Box>
+        ) : (
+          'AI 표지 생성 요청'
+        )}
+      </Button>
+      {error && (
+        <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+          {error}
+        </Typography>
+      )}
+    </Box>
   );
-}
+};
 
 export default CoverGeneratorButton;

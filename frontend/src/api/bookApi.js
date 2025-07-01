@@ -5,7 +5,7 @@ import axios from "axios";
 // Axios 인스턴스를 생성하고 기본 URL 및 헤더를 설정합니다.
 // baseURL은 API 게이트웨이 주소로 설정되어 개별 서비스로의 라우팅을 담당합니다.
 const api = axios.create({
-  baseURL: "https://8088-https://8088-cherish2pro-thminiprojt-2fbozbr7ku0.ws-us120.gitpod.io-msabookservice-hw3y5b3m0wj.ws-us120.gitpod.io", // 중요: 개별 서비스(8085)가 아닌 게이트웨이(8088) 주소입니다.
+  baseURL: "https://8088-cherish2pro-thminiprojt-2fbozbr7ku0.ws-us120.gitpod.io", // 중요: 개별 서비스(8085)가 아닌 게이트웨이(8088) 주소입니다.
   headers: {
     "Content-Type": "application/json",
   },
@@ -42,6 +42,12 @@ export const deleteAuthor = (authorId) => api.delete(`/authors/${authorId}`);
  * @returns {Promise<axios.Response>} API 응답 Promise
  */
 export const getAuthor = (authorId) => api.get(`/authors/${authorId}`);
+
+/**
+ * 모든 작가 목록을 조회합니다.
+ * @returns {Promise<axios.Response>} API 응답 Promise
+ */
+export const getAuthors = () => api.get(`/authors`); // <-- 이 함수가 명확히 export 되어 있습니다.
 
 /**
  * 특정 작가의 등록을 승인합니다.
@@ -222,27 +228,3 @@ export const getLibraryInfo = (bookId) => api.get(`/libraryinfos/${bookId}`);
  * @returns {Promise<axios.Response>} API 응답 Promise
  */
 export const getLibraryInfos = () => api.get(`/libraryinfos`);
-
-
-
-
-
-
-
-// // 도서 전체 목록 조회
-// export const getBooks = () => api.get();
-
-// // 도서 상세 조회
-// export const getBook = (id) => api.get(`/${id}`);
-
-// // 도서 등록
-// export const createBook = (data) => api.post("", data);
-
-// // 도서 수정
-// export const updateBook = (id, data) => api.put(`/${id}`, data);
-
-// // 도서 삭제
-// export const deleteBook = (id) => api.delete(`/${id}`);
-
-// // 도서 표지 생성 (기능 확장용 API)
-// export const generateCover = (id) => api.post(`/${id}/generate-cover`);
