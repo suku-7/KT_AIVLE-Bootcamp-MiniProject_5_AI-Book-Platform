@@ -30,34 +30,28 @@ public class PolicyHandler {
         value = KafkaProcessor.INPUT,
         condition = "headers['type']=='BookRegisted'"
     )
-    public void wheneverBookRegisted_AutoCoverGeneratePolicy(
+    public void wheneverBookRegisted_ProcessSequentially(
         @Payload BookRegisted bookRegisted
     ) {
         BookRegisted event = bookRegisted;
         System.out.println(
-            "\n\n##### listener AutoCoverGeneratePolicy : " +
-            bookRegisted +
-            "\n\n"
+            "\n\n##### listener ProcessSequentially : " + bookRegisted + "\n\n"
         );
 
-        // Sample Logic //
-        CoverDesign.autoCoverGeneratePolicy(event);
-    }
+        try {
+            // Process AutoCoverGeneratePolicy
+            System.out.println("=== Starting AutoCoverGeneratePolicy ===");
+            CoverDesign.autoCoverGeneratePolicy(event);
+            System.out.println("=== AutoCoverGeneratePolicy completed ===");
 
-    @StreamListener(
-        value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='BookRegisted'"
-    )
-    public void wheneverBookRegisted_AiSummarize(
-        @Payload BookRegisted bookRegisted
-    ) {
-        BookRegisted event = bookRegisted;
-        System.out.println(
-            "\n\n##### listener AiSummarize : " + bookRegisted + "\n\n"
-        );
-
-        // Sample Logic //
-        ContentAnalyzer.aiSummarize(event);
+            // Process AiSummarize
+            System.out.println("=== Starting AiSummarize ===");
+            ContentAnalyzer.aiSummarize(event);
+            System.out.println("=== AiSummarize completed ===");
+        } catch (Exception e) {
+            System.err.println("Error in sequential processing: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
 //>>> Clean Arch / Inbound Adaptor
