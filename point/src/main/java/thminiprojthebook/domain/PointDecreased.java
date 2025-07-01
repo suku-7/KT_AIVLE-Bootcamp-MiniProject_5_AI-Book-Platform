@@ -7,26 +7,19 @@ import thminiprojthebook.domain.*;
 import thminiprojthebook.infra.AbstractEvent;
 
 //<<< DDD / Domain Event
-public static void pointDecrease(BuyBookSub event) {
-    repository().findByUserId(event.getSubscriberId()).ifPresentOrElse(point -> {
-        int bookPrice = 1000; // 현재 정책
+@Data
+@ToString
+public class PointDecreased extends AbstractEvent {
 
-        if (point.getPointBalance() >= bookPrice) {
-            point.setPointBalance(point.getPointBalance() - bookPrice);
-            repository().save(point);
+    private Long userId;
+    private Integer pointBalance;
 
-            PointDecreased decreased = new PointDecreased(point);
-            decreased.setUserId(point.getUserId());
-            decreased.publishAfterCommit();
+    public PointDecreased(Point aggregate) {
+        super(aggregate);
+    }
 
-        } else {
-            PointInsufficient insufficient = new PointInsufficient(point);
-            insufficient.setUserId(point.getUserId());
-            insufficient.setPointBalance(point.getPointBalance());
-            insufficient.publishAfterCommit();
-        }
-    }, () -> {
-        System.err.println("포인트 정보 없음: userId = " + event.getSubscriberId());
-    });
+    public PointDecreased() {
+        super();
+    }
 }
 //>>> DDD / Domain Event

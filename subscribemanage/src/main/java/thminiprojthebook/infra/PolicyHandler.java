@@ -18,29 +18,94 @@ import thminiprojthebook.domain.*;
 public class PolicyHandler {
 
     @Autowired
-    PointCommandService pointCommandService;
+    UserRepository userRepository;
+
+    @Autowired
+    LibraryRepository libraryRepository;
 
     @StreamListener(KafkaProcessor.INPUT)
-    public void wheneverBuyBookSub_포인트차감(@Payload BuyBookSub event) {
-        if (!event.validate()) return;
+    public void whatever(@Payload String eventString) {}
 
-        System.out.println("##### listener 포인트차감 : " + event.toJson());
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='PointDecreased'"
+    )
+    public void wheneverPointDecreased_PointSyncPolicy(
+        @Payload PointDecreased pointDecreased
+    ) {
+        PointDecreased event = pointDecreased;
+        System.out.println(
+            "\n\n##### listener PointSyncPolicy : " + pointDecreased + "\n\n"
+        );
 
-        PointChargeCommand command = new PointChargeCommand();
-        command.setUserId(event.getSubscriberId().getValue());
-        command.setPrice(500); // 예시로 책 가격 500포인트
-        command.setSubscribedBookId(event.getSubscribedBookId());
-
-        pointCommandService.차감요청(command); // 외부 마이크로서비스 호출 또는 메시지 발행
+        // Sample Logic //
+        User.pointSyncPolicy(event);
     }
 
-    @StreamListener(KafkaProcessor.INPUT)
-    public void wheneverPointInsufficient_구매실패(@Payload PointInsufficient event) {
-        if (!event.validate()) return;
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='PointRecharged'"
+    )
+    public void wheneverPointRecharged_PointSyncPolicy(
+        @Payload PointRecharged pointRecharged
+    ) {
+        PointRecharged event = pointRecharged;
+        System.out.println(
+            "\n\n##### listener PointSyncPolicy : " + pointRecharged + "\n\n"
+        );
 
-        System.out.println("##### listener 구매실패 : " + event.toJson());
-        SubscribedBook.purchaseFail(event);
+        // Sample Logic //
+        User.pointSyncPolicy(event);
+    }
+
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='KtSignedupPointCharged'"
+    )
+    public void wheneverKtSignedupPointCharged_PointSyncPolicy(
+        @Payload KtSignedupPointCharged ktSignedupPointCharged
+    ) {
+        KtSignedupPointCharged event = ktSignedupPointCharged;
+        System.out.println(
+            "\n\n##### listener PointSyncPolicy : " +
+            ktSignedupPointCharged +
+            "\n\n"
+        );
+
+        // Sample Logic //
+        User.pointSyncPolicy(event);
+    }
+
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='StandardSignedupPointCharged'"
+    )
+    public void wheneverStandardSignedupPointCharged_PointSyncPolicy(
+        @Payload StandardSignedupPointCharged standardSignedupPointCharged
+    ) {
+        StandardSignedupPointCharged event = standardSignedupPointCharged;
+        System.out.println(
+            "\n\n##### listener PointSyncPolicy : " +
+            standardSignedupPointCharged +
+            "\n\n"
+        );
+
+        // Sample Logic //
+        User.pointSyncPolicy(event);
+    }
+
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='Published'"
+    )
+    public void wheneverPublished_BookInfoPolicy(@Payload Published published) {
+        Published event = published;
+        System.out.println(
+            "\n\n##### listener BookInfoPolicy : " + published + "\n\n"
+        );
+
+        // Sample Logic //
+        Library.bookInfoPolicy(event);
     }
 }
 //>>> Clean Arch / Inbound Adaptor
-

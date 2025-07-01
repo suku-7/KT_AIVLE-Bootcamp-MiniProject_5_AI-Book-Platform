@@ -11,13 +11,18 @@ import thminiprojthebook.infra.AbstractEvent;
 @ToString
 public class BestsellerGiven extends AbstractEvent {
 
-    private Long id;
-    private String bookTitle;
+    private Long bookId;
+    private Long authorId;
+    private String authorName;
+    private String title;
+    private String imageUrl;
+    private String summary;
+    private String context;
+    private String classificationType;
+    private Date publishDate;
     private Integer rank;
     private Boolean bestseller;
-    private String author;
-    private Integer selectCount;
-    private Date publishDate;
+    private Long selectCount;
 
     public BestsellerGiven(LibraryInfo aggregate) {
         super(aggregate);

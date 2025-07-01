@@ -9,10 +9,11 @@ import thminiprojthebook.infra.AbstractEvent;
 @ToString
 public class CoverCreated extends AbstractEvent {
 
-    private Long id;
-    private String bookId;
+    private Long bookId;
+    private Long authorId;
     private String title;
     private String imageUrl;
     private String generatedBy;
-    private String createdAt;
+    private Date updatedAt;
+    private Date createdAt;
 }

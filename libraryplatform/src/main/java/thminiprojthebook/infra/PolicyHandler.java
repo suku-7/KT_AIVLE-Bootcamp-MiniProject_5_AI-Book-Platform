@@ -25,18 +25,18 @@ public class PolicyHandler {
 
     @StreamListener(
         value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='PointDecreased'"
+        condition = "headers['type']=='BuyBookSub'"
     )
-    public void wheneverPointDecreased_SubscribeIncrease(
-        @Payload PointDecreased pointDecreased
+    public void wheneverBuyBookSub_BuyBookIncrease(
+        @Payload BuyBookSub buyBookSub
     ) {
-        PointDecreased event = pointDecreased;
+        BuyBookSub event = buyBookSub;
         System.out.println(
-            "\n\n##### listener SubscribeIncrease : " + pointDecreased + "\n\n"
+            "\n\n##### listener BuyBookIncrease : " + buyBookSub + "\n\n"
         );
 
         // Sample Logic //
-        LibraryInfo.subscribeIncrease(event);
+        LibraryInfo.buyBookIncrease(event);
     }
 
     @StreamListener(

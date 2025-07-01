@@ -12,6 +12,12 @@ public class PointHateoasProcessor
 
     @Override
     public EntityModel<Point> process(EntityModel<Point> model) {
+        model.add(
+            Link
+                .of(model.getRequiredLink("self").getHref() + "/pointrecharge")
+                .withRel("pointrecharge")
+        );
+
         return model;
     }
 }

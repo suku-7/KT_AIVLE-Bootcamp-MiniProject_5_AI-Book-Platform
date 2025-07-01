@@ -94,4 +94,3 @@ public class AbstractEvent {
     }
 }
 //>>> Clean Arch / Outbound Adaptor
-

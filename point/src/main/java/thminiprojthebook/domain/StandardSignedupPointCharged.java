@@ -1,20 +1,21 @@
+package thminiprojthebook.domain;
+
+import java.time.LocalDate;
+import java.util.*;
+import lombok.*;
+import thminiprojthebook.domain.*;
+import thminiprojthebook.infra.AbstractEvent;
+
+//<<< DDD / Domain Event
 @Data
 @ToString
 public class StandardSignedupPointCharged extends AbstractEvent {
 
-    private Long id;
-    private String userId;
-    private Integer standardSignupPoint;
-    private Date signupDate;
-    private String isKt;
+    private Long userId;
+    private Integer pointBalance;
 
     public StandardSignedupPointCharged(Point aggregate) {
         super(aggregate);
-        this.id = aggregate.getPointId(); 
-        this.userId = aggregate.getUserId();
-        this.standardSignupPoint = aggregate.getStandardSignupPoint();
-        this.signupDate = aggregate.getSignupDate();
-        this.isKt = aggregate.getIsKt();    
     }
 
     public StandardSignedupPointCharged() {

@@ -20,16 +20,73 @@ public class PolicyHandler {
     @Autowired
     PointRepository pointRepository;
 
-    @StreamListener(value = KafkaProcessor.INPUT, condition = "headers['type']=='BuyBookSub'")
-    public void onBuyBookSub(@Payload BuyBookSub event) {
-        System.out.println("[Event] 소장 요청 감지됨 → 포인트 차감 시도");
+    @StreamListener(KafkaProcessor.INPUT)
+    public void whatever(@Payload String eventString) {}
+
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='BuyBookSub'"
+    )
+    public void wheneverBuyBookSub_PointDecrease(
+        @Payload BuyBookSub buyBookSub
+    ) {
+        BuyBookSub event = buyBookSub;
+        System.out.println(
+            "\n\n##### listener PointDecrease : " + buyBookSub + "\n\n"
+        );
+
+        // Sample Logic //
         Point.pointDecrease(event);
     }
 
-    @StreamListener(value = KafkaProcessor.INPUT, condition = "headers['type']=='SubscriberCreated'")
-    public void onSubscriberCreated(@Payload SubscriberCreated event) {
-        System.out.println("[Event] 신규 가입 감지됨 → 가입 포인트 지급");
-        Point.signup(event);
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='BookServiceSubscribed'"
+    )
+    public void wheneverBookServiceSubscribed_PointDecrease(
+        @Payload BookServiceSubscribed bookServiceSubscribed
+    ) {
+        BookServiceSubscribed event = bookServiceSubscribed;
+        System.out.println(
+            "\n\n##### listener PointDecrease : " +
+            bookServiceSubscribed +
+            "\n\n"
+        );
+
+        // Sample Logic //
+        Point.pointDecrease(event);
+    }
+
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='UserRegistered'"
+    )
+    public void wheneverUserRegistered_InitialPointPolicy(
+        @Payload UserRegistered userRegistered
+    ) {
+        UserRegistered event = userRegistered;
+        System.out.println(
+            "\n\n##### listener InitialPointPolicy : " + userRegistered + "\n\n"
+        );
+
+        // Sample Logic //
+        Point.initialPointPolicy(event);
+    }
+
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='UserUpdated'"
+    )
+    public void wheneverUserUpdated_KtSignedupPointPolicy(
+        @Payload UserUpdated userUpdated
+    ) {
+        UserUpdated event = userUpdated;
+        System.out.println(
+            "\n\n##### listener KtSignedupPointPolicy : " + userUpdated + "\n\n"
+        );
+
+        // Sample Logic //
+        Point.ktSignedupPointPolicy(event);
     }
 }
 //>>> Clean Arch / Inbound Adaptor

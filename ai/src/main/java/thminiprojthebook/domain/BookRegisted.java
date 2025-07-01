@@ -10,8 +10,9 @@ import thminiprojthebook.infra.AbstractEvent;
 public class BookRegisted extends AbstractEvent {
 
     private Long bookId;
-    private String context;
     private Long authorId;
+    private String authorName;
     private String title;
+    private String context;
     private Boolean registration;
 }

@@ -11,17 +11,11 @@ import thminiprojthebook.infra.AbstractEvent;
 @ToString
 public class BuyBookSub extends AbstractEvent {
 
-    private Long subscribedBookId;
-    private Boolean status;
-    private Long bookId;
-    private SubscriberId subscriberId;
+    private Long userId;
+    private Long bookId; // <-- List<Long> 에서 Long 으로 수정
 
-    public BuyBookSub(SubscribedBook aggregate) {
+    public BuyBookSub(User aggregate) {
         super(aggregate);
-        this.subscribedBookId = aggregate.getSubscribedBookId();
-        this.bookId = aggregate.getBookId();
-        this.status = aggregate.getStatus();
-        this.subscriberId = aggregate.getSubscriberId();
     }
 
     public BuyBookSub() {
@@ -29,4 +23,3 @@ public class BuyBookSub extends AbstractEvent {
     }
 }
 //>>> DDD / Domain Event
-

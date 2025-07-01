@@ -11,19 +11,11 @@ import thminiprojthebook.infra.AbstractEvent;
 @ToString
 public class KtSignedupPointCharged extends AbstractEvent {
 
-    private Long id;
-    private String userId;
-    private Integer ktSignupPoint;
-    private Date signupDate;
-    private String isKt;
+    private Long userId;
+    private Integer pointBalance;
 
     public KtSignedupPointCharged(Point aggregate) {
         super(aggregate);
-        this.id = aggregate.getPointId(); 
-        this.userId = aggregate.getUserId();
-        this.ktSignupPoint = aggregate.getKtSignupPoint();
-        this.signupDate = aggregate.getSignupDate();
-        this.isKt = aggregate.getIsKt();    
     }
 
     public KtSignedupPointCharged() {
