@@ -64,10 +64,6 @@ logging:
     org.hibernate.type: trace
     org.springframework.cloud: debug
 
-
-server:
-  port: 8084
-
 ---
 
 spring:
