@@ -44,7 +44,7 @@ public class LibraryInfo {
 
     private Integer rank;
 
-    private Boolean bestseller;
+    
 
     public static LibraryInfoRepository repository() {
         LibraryInfoRepository libraryInfoRepository = LibraryplatformApplication.applicationContext.getBean(
@@ -56,6 +56,7 @@ public class LibraryInfo {
     //<<< Clean Arch / Port Method
     // 카운트를 1 증가시키는 내부 비즈니스 메서드
     public void increaseSelectCount() {
+        
         if (this.selectCount == null) {
             this.selectCount = 0L; // Long 타입이므로 0L로 초기화
         }
@@ -84,23 +85,13 @@ public class LibraryInfo {
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public static void publish(AiSummarized aiSummarized) {
-        /**
-         * 'AI 요약 완료' 이벤트를 받으면,
-         * 해당 bookId의 LibraryInfo가 있으면 정보를 업데이트하고, 없으면 새로 생성합니다.
-         * 그리고 최종적으로 '출간됨(Published)' 이벤트를 발행합니다.
-         */
+       repository().findById(aiSummarized.getBookId()).ifPresent(libraryInfo -> {
         
-        // 1. 이벤트의 bookId로 기존 LibraryInfo를 찾거나, 없으면 새로 만듭니다.
-        LibraryInfo libraryInfo = repository().findById(aiSummarized.getBookId())
-            .orElseGet(() -> {
-                LibraryInfo newLibraryInfo = new LibraryInfo();
-                newLibraryInfo.setBookId(aiSummarized.getBookId());
-                newLibraryInfo.setAuthorId(aiSummarized.getAuthorId());
-                newLibraryInfo.setSelectCount(0L); // 신규 생성이므로 0으로 초기화
-                return newLibraryInfo;
-            });
-            
-        // 2. AiSummarized 이벤트에 있는 정보로 필드를 업데이트합니다.
+        // AI 문서 요약 데이터를 도서정보에 저장
+        libraryInfo.setSummary(aiSummarized.getContext()); // context를 summary로 저장
+        libraryInfo.setClassficationTpe(aiSummarized.getClassificationType());
+        
+        // 원본 컨텍스트도 저장 (필요시)
         libraryInfo.setContext(aiSummarized.getContext());
         libraryInfo.setSummary(aiSummarized.getContext()); // summary 정보가 따로 없으므로 context로 대체합니다.
         libraryInfo.setClassificationType(aiSummarized.getClassificationType());

@@ -13,8 +13,9 @@ public class AiSummarized extends AbstractEvent {
     private Long authorId;
     private String authorName;
     private String context;
-    private Integer maxLength;
+    private Stirng summary;
     private String language;
+    private Integer maxLength;
     private String classificationType;
     private String requestedBy;
 }
