@@ -98,7 +98,15 @@ public class LibraryInfo {
 // 모든 베스트셀러의 rank(순위)를 업데이트하는 메소드
 private static void updateAllBestsellerRanks() {
     // 베스트셀러인 책들을 selectCount 기준 내림차순으로 조회
-    List<LibraryInfo> bestsellers = repository().PagingAndSortingRepository(); // 근우님 작성 필요
+    List<LibraryInfo> allBooks = (List<LibraryInfo>) repository().findAll();
+    List<LibraryInfo> bestsellers = allBooks.stream()
+        .filter(book -> book.getBestseller() != null && book.getBestseller())
+        .sorted((b1, b2) -> {
+            Long count1 = b1.getSelectCount() != null ? b1.getSelectCount() : 0L;
+            Long count2 = b2.getSelectCount() != null ? b2.getSelectCount() : 0L;
+            return count2.compareTo(count1); // 내림차순
+        })
+        .collect(java.util.stream.Collectors.toList());
     
     // rank 값 할당 (1위, 2위, 3위...)
     for (int i = 0; i < bestsellers.size(); i++) {
