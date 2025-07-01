@@ -8,10 +8,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import thminiprojthebook.domain.*;
 
+import thminiprojthebook.domain.*;
+import java.util.Map;
 //<<< Clean Arch / Inbound Adaptor
 
 @RestController
@@ -112,6 +111,72 @@ public class UserController {
 
         userRepository.save(user);
         return user;
+    }
+
+    @GetMapping("/users/{id}")
+    public User getUser(@PathVariable("id") Long id) throws Exception {
+        return userRepository.findById(id)
+        .orElseThrow(() -> new Exception("No Entity Found"));
+    }
+
+    @PutMapping(
+    value = "/users/{id}",
+    consumes = "application/json",
+    produces = "application/json;charset=UTF-8"
+    )
+    public User putUpdateUser(
+        @PathVariable(value = "id") Long id,
+        @RequestBody UpdateUserCommand updateUserCommand,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws Exception {
+        System.out.println("##### /user/putUpdateUser called #####");
+
+        Optional<User> optionalUser = userRepository.findById(id);
+        optionalUser.orElseThrow(() -> new Exception("No Entity Found"));
+
+        User user = optionalUser.get();
+
+        user.setLoginId(updateUserCommand.getLoginId());
+        user.setLoginPassword(updateUserCommand.getLoginPassword());
+        user.setName(updateUserCommand.getName());
+        user.setIsKt(updateUserCommand.getIsKt());
+
+        UserUpdated userUpdated = new UserUpdated(user);
+        userUpdated.publishAfterCommit();
+
+        return userRepository.save(user);
+    }
+
+
+    @PatchMapping(
+    value = "/users/{id}",
+    consumes = "application/json",
+    produces = "application/json;charset=UTF-8"
+    )
+    public User patchUserIsKt(
+        @PathVariable(value = "id") Long id,
+        @RequestBody Map<String, Object> updates, // JSON Map으로 받음
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws Exception {
+        System.out.println("##### /user/patchUserIsKt  called #####");
+
+        Optional<User> optionalUser = userRepository.findById(id);
+        optionalUser.orElseThrow(() -> new Exception("No Entity Found"));
+        User user = optionalUser.get();
+
+        // "isKt"만 수정 처리
+        if (updates.containsKey("isKt")) {
+            String newIsKt = updates.get("isKt").toString();
+            user.setIsKt(newIsKt);
+
+            // 이벤트 발행
+            UserUpdated userUpdated = new UserUpdated(user);
+            userUpdated.publishAfterCommit();
+        }
+
+        return userRepository.save(user);
     }
 }
 //>>> Clean Arch / Inbound Adaptor
