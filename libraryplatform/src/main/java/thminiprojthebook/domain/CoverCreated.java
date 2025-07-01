@@ -10,7 +10,7 @@ import thminiprojthebook.infra.AbstractEvent;
 public class CoverCreated extends AbstractEvent {
 
     private Long authorId;
-    private String bookId;
+    private Long bookId;
     private String title;
     private String imageUrl;
     private String generatedBy;

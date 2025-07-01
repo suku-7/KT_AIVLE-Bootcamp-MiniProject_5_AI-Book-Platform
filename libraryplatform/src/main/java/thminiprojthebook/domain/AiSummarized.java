@@ -10,12 +10,11 @@ import thminiprojthebook.infra.AbstractEvent;
 public class AiSummarized extends AbstractEvent {
 
     private Long authorId;
-    private String bookId;
+    private Long bookId;
     private String context;
     private String summary;
     private String language;
     private Integer maxLength;
-    private String language;
     private String classificationType;
     private String requestedBy;
 }

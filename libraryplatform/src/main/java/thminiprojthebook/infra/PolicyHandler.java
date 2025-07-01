@@ -36,7 +36,7 @@ public class PolicyHandler {
         );
 
         // Sample Logic //
-        LibraryInfo.buyBookIncrease(event);
+        LibraryInfo.buyBookIncrease(event); // 근우님 help
     }
 
     @StreamListener(

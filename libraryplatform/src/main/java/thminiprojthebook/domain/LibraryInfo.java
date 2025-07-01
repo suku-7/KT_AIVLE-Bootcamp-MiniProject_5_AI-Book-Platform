@@ -38,11 +38,7 @@ public class LibraryInfo {
 
     private String summary;
 
-    private String context;
-
     private Boolean bestseller;
-
-    private String imageUrl;
 
     private String maxLength;
 
@@ -50,7 +46,7 @@ public class LibraryInfo {
 
     private Integer rank;
 
-    
+    private Long selectCount;
 
     public static LibraryInfoRepository repository() {
         LibraryInfoRepository libraryInfoRepository = LibraryplatformApplication.applicationContext.getBean(
@@ -61,6 +57,7 @@ public class LibraryInfo {
 
     // 카운트를 1 증가시키는 내부 비즈니스 메서드
     public void increaseSelectCount() {
+        
         if (this.selectCount == null) {
             this.selectCount = 0L; // Long 타입이므로 0L로 초기화
         }
@@ -68,15 +65,15 @@ public class LibraryInfo {
     }
 
     //<<< Clean Arch / Port Method
-    public static void subscribeIncrease(PointDecreased pointDecreased) {
-          repository().findById(pointDecreased.getBookId()).ifPresent(libraryInfo -> {
+    public static void subscribeIncrease(BuyBookSub buyBookSub) {
+          repository().findById(buyBookSub.getBookId()).ifPresent(libraryInfo -> {
         
         // 구독 수 증가
-        Integer currentSelectCount = libraryInfo.getSelectCount();
+        Long currentSelectCount = libraryInfo.getSelectCount();
         if (currentSelectCount == null) {
-            currentSelectCount = 0;
+            currentSelectCount = 0L;
         }
-        libraryInfo.setSelectCount(currentSelectCount + 1);
+        libraryInfo.setSelectCount(currentSelectCount + 1L);
         
         // 구독 수가 5회 이상이면 베스트셀러 부여
         boolean wasBestseller = libraryInfo.getBestseller() != null && libraryInfo.getBestseller();
@@ -101,8 +98,7 @@ public class LibraryInfo {
 // 모든 베스트셀러의 rank(순위)를 업데이트하는 메소드
 private static void updateAllBestsellerRanks() {
     // 베스트셀러인 책들을 selectCount 기준 내림차순으로 조회
-    List<LibraryInfo> bestsellers = repository()
-        .findByBestsellerTrueOrderBySelectCountDesc();
+    List<LibraryInfo> bestsellers = repository().PagingAndSortingRepository(); // 근우님 작성 필요
     
     // rank 값 할당 (1위, 2위, 3위...)
     for (int i = 0; i < bestsellers.size(); i++) {
@@ -115,11 +111,10 @@ private static void updateAllBestsellerRanks() {
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public static void publish(AiSummarized aiSummarized) {
-       repository().findById(aiSummarized.getBookId()).ifPresent(libraryInfo -> {
-        
+       repository().findById(aiSummarized.getBookId()).ifPresent(libraryInfo -> {       
         // AI 문서 요약 데이터를 도서정보에 저장
         libraryInfo.setSummary(aiSummarized.getContext()); // context를 summary로 저장
-        libraryInfo.setClassficationTpe(aiSummarized.getClassificationType());
+        libraryInfo.setClassificationType(aiSummarized.getClassificationType());
         
         // 원본 컨텍스트도 저장 (필요시)
         libraryInfo.setContext(aiSummarized.getContext());
