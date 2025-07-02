@@ -16,6 +16,9 @@ import { WritePage } from '../pages/WritePage';
 import { BookDetailPage } from '../pages/BookDetailPage';
 import { MyLibraryPage } from '../pages/MyLibraryPage';
 import { PublishPage } from '../pages/PublishPage';
+import EditPage from "../pages/WritingEditPage.jsx";
+import MyWritingsPage from "../pages/MyWritingsPage.jsx";
+import MyWritingDetailPage from "../pages/MyWritingDetailPage.jsx";
 
 const ProtectedRoute = ({ allowedRoles }) => {
     const { auth } = useAuth();
@@ -47,7 +50,10 @@ export const Router = () => {
             {/* --- 작가 전용 경로 --- */}
             {/* <Route element={<ProtectedRoute allowedRoles={['author']} />}> */}
                 <Route path="/write" element={<WritePage />} />
-                <Route path="/publish/:bookId" element={<PublishPage />} />
+                <Route path="/write/my" element={<MyWritingsPage />} />
+                <Route path="/edit/:writingId" element={<EditPage />} />
+                <Route path="/publish/:writingId" element={<PublishPage />} />
+                <Route path="/write/:writingId" element={<MyWritingDetailPage />} />
             {/* </Route> */}
 
             {/* --- 관리자 전용 경로 --- */}

@@ -33,10 +33,10 @@ export const AuthForm = ({ userType }) => {
                 const response = userType === 'user' 
                     ? await api.loginUser(loginData) 
                     : await api.loginAuthor(loginData);
-                
                 alert('로그인 성공!');
                 login(response.data, userType);
-                navigate('/main');
+                userType ==='user' ? navigate('/main') : navigate('/write/my');
+                // navigate('/main')
             } else {
                 // 회원가입 시 isKt 값을 포함하도록 수정합니다.
                 const signupData = userType === 'user'

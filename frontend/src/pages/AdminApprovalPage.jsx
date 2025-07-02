@@ -2,7 +2,7 @@
 // FILENAME: src/pages/AdminApprovalPage.jsx (수정된 코드)
 // =================================================================
 import React, { useState, useEffect } from 'react';
-import { api } from '../api/apiClient';
+import {api, extractIdFromHref} from '../api/apiClient';
 
 export const AdminApprovalPage = () => {
     const [authors, setAuthors] = useState([]);
@@ -68,8 +68,8 @@ export const AdminApprovalPage = () => {
                 <tbody>
                     {authors.length > 0 ? (
                         authors.map(author => (
-                            <tr key={author.authorId}>
-                                <td style={{ padding: '8px', border: '1px solid #ddd' }}>{author.authorId}</td>
+                            <tr key={extractIdFromHref(author)}>
+                                <td style={{ padding: '8px', border: '1px solid #ddd' }}>{extractIdFromHref(author)}</td>
                                 <td style={{ padding: '8px', border: '1px solid #ddd' }}>{author.name}</td>
                                 <td style={{ padding: '8px', border: '1px solid #ddd' }}>{author.loginId}</td>
                                 <td style={{ padding: '8px', border: '1px solid #ddd' }}>{author.isApproved ? '승인됨' : '대기중'}</td>
@@ -77,11 +77,11 @@ export const AdminApprovalPage = () => {
                                     {/* ▼▼▼ 이 부분이 수정되었습니다 ▼▼▼ */}
                                     {!author.isApproved ? (
                                         <>
-                                            <button onClick={() => handleApproval(author.authorId, true)} style={{ marginRight: '5px' }}>승인</button>
+                                            <button onClick={() => handleApproval(extractIdFromHref(author), true)} style={{ marginRight: '5px' }}>승인</button>
                                             <button onClick={() => handleApproval(author.authorId, false)}>거절</button>
                                         </>
                                     ) : (
-                                        <button onClick={() => handleApproval(author.authorId, false)}>승인 취소</button>
+                                        <button onClick={() => handleApproval(extractIdFromHref(author), false)}>승인 취소</button>
                                     )}
                                     {/* ▲▲▲ 이 부분이 수정되었습니다 ▲▲▲ */}
                                 </td>

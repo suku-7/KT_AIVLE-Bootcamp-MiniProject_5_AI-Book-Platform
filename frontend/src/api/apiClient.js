@@ -5,7 +5,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-    baseURL: "https://8088-cherish2pro-thminiprojt-2fbozbr7ku0.ws-us120.gitpod.io",
+    baseURL: "http://localhost:8088",
     headers: {
         "Content-Type": "application/json",
     },
@@ -17,7 +17,7 @@ export const api = {
 
     // --- 로그인 API ---
     loginUser: (loginData) => apiClient.post('/users/login', loginData),
-    loginAuthor: (loginData) => apiClient.post('/authors/login', loginData),
+    loginAuthor: (loginData) => apiClient.post('/auth/login', loginData),
 
     // --- authormanage ---
     joinAuthor: (authorData) => apiClient.post('/authors', authorData),
@@ -25,8 +25,8 @@ export const api = {
     deleteAuthor: (authorId) => apiClient.delete(`/authors/${authorId}`),
     getAuthor: (authorId) => apiClient.get(`/authors/${authorId}`),
     getAuthors: () => apiClient.get('/authors'),
-    approveAuthor: (authorId) => apiClient.put(`/authors/${authorId}/approve`),
-    disapproveAuthor: (authorId) => apiClient.put(`/authors/${authorId}/disapprove`),
+    approveAuthor: (authorId) => apiClient.post(`/authors/${authorId}/approve`),
+    disapproveAuthor: (authorId) => apiClient.post(`/authors/${authorId}/disapprove`),
 
     // --- writemanage ---
     writeContext: (writingData) => apiClient.post('/writings', writingData),
@@ -34,6 +34,7 @@ export const api = {
     deleteContext: (bookId) => apiClient.delete(`/writings/${bookId}`),
     registBook: (bookId) => apiClient.put(`/writings/${bookId}/registbook`),
     getWriting: (bookId) => apiClient.get(`/writings/${bookId}`),
+    getMyWritings: () => apiClient.get(`/writings/my`),
     getApprovalAuthor: (authorId) => apiClient.get(`/approvalauthors/${authorId}`),
     getApprovalAuthors: () => apiClient.get('/approvalauthors'),
 
@@ -44,7 +45,6 @@ export const api = {
     getContentAnalyzer: (bookId) => apiClient.get(`/contentAnalyzers/${bookId}`),
 
     // --- subscribemanage ---
-    loginUser: (data) => apiClient.post('/users/login', data), // <-- 로그인 API 추가
     registerUser: (userData) => apiClient.post('/users', userData),
     updateUser: (userId, updateData) => apiClient.put(`/users/${userId}`, updateData),
     deleteUser: (userId) => apiClient.delete(`/users/${userId}`),
@@ -61,4 +61,9 @@ export const api = {
     // --- libraryplatform ---
     getLibraryInfo: (bookId) => apiClient.get(`/libraryInfos/${bookId}`),
     getLibraryInfos: () => apiClient.get('/libraryInfos'),
+};
+
+export const extractIdFromHref = (object) => {
+    const parts = object._links.self.href.split('/');
+    return parts[parts.length - 1]; // 마지막 경로 조각이 id
 };

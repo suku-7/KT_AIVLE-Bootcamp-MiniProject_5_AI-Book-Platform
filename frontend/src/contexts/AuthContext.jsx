@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
     // 1. 앱이 처음 시작될 때, localStorage에서 저장된 로그인 정보를 불러옵니다.
     useEffect(() => {
         try {
-            const storedAuth = localStorage.getItem('auth');
+            const storedAuth = localStorage.getItem('token');
             if (storedAuth) {
                 setAuth(JSON.parse(storedAuth));
             }

@@ -48,15 +48,11 @@ spring:
             
             # ❗ 가장 중요한 부분: '*' 대신 정확한 프론트엔드 주소를 사용합니다.
             allowedOrigins:
-              - "https://5173-cherish2pro-thminiprojt-2fbozbr7ku0.ws-us120.gitpod.io"
+              - "*"
               
             # 허용할 HTTP 메서드를 명시적으로 지정해주는 것이 좋습니다.
             allowedMethods:
-              - "GET"
-              - "POST"
-              - "PUT"
-              - "DELETE"
-              - "OPTIONS" # Preflight 요청을 위해 OPTIONS는 필수입니다.
+              - "*"
               
             # 모든 요청 헤더를 허용합니다.
             allowedHeaders:
@@ -111,15 +107,11 @@ spring:
             
             # ❗ 가장 중요한 부분: '*' 대신 정확한 프론트엔드 주소를 사용합니다.
             allowedOrigins:
-              - "https://5173-cherish2pro-thminiprojt-2fbozbr7ku0.ws-us120.gitpod.io"
+              - "*"
               
             # 허용할 HTTP 메서드를 명시적으로 지정해주는 것이 좋습니다.
             allowedMethods:
-              - "GET"
-              - "POST"
-              - "PUT"
-              - "DELETE"
-              - "OPTIONS" # Preflight 요청을 위해 OPTIONS는 필수입니다.
+              - "*"
               
             # 모든 요청 헤더를 허용합니다.
             allowedHeaders:
