@@ -1,47 +1,61 @@
-// src/router/Router.jsx
-
+// =================================================================
+// FILENAME: src/router/Router.jsx (수정)
+// 역할: 새로운 페이지 흐름에 맞게 라우팅 규칙을 전면 수정합니다.
+// =================================================================
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
-// 페이지 컴포넌트들을 임포트합니다.
-import HomePage from '../pages/HomePage';
-import BookDetailPage from '../pages/BookDetailPage';
-import UserAuthPage from '../pages/UserAuthPage';
-import AuthorAuthPage from '../pages/AuthorAuthPage';
-import WritePage from '../pages/WritePage';
-import PublishPage from '../pages/PublishPage';
-import AdminApprovalPage from '../pages/AdminApprovalPage';
+// 페이지 컴포넌트 임포트
+import { LandingPage } from '../pages/LandingPage';
+import { MainPage } from '../pages/MainPage';
+import { UserAuthPage } from '../pages/UserAuthPage';
+import { AuthorAuthPage } from '../pages/AuthorAuthPage';
+import { AdminApprovalPage } from '../pages/AdminApprovalPage';
+import { WritePage } from '../pages/WritePage';
+import { BookDetailPage } from '../pages/BookDetailPage';
+import { MyLibraryPage } from '../pages/MyLibraryPage';
+import { PublishPage } from '../pages/PublishPage';
 
-const Router = () => {
-  return (
-    <Routes>
-      {/* 메인 화면 */}
-      <Route path="/" element={<HomePage />} />
-      <Route path="/home" element={<HomePage />} /> {/* /home 경로도 HomePage로 연결 */}
-
-      {/* 도서 상세 보기 화면 */}
-      <Route path="/books/:bookId" element={<BookDetailPage />} />
-
-      {/* 사용자 회원가입/로그인 화면 */}
-      <Route path="/user-auth" element={<UserAuthPage />} />
-
-      {/* 작가 회원가입/로그인 화면 */}
-      <Route path="/author-auth" element={<AuthorAuthPage />} />
-
-      {/* 작가 글 쓰고 저장하는 화면 */}
-      <Route path="/write" element={<WritePage />} />
-      <Route path="/write/:bookId" element={<WritePage />} /> {/* 기존 글 수정 시 */}
-
-      {/* 작가 출간 신청시 AI 이미지와 요약 표시하는 화면 */}
-      <Route path="/publish/:bookId" element={<PublishPage />} />
-
-      {/* 관리자 작가 승인 거절 화면 */}
-      <Route path="/admin/approvals" element={<AdminApprovalPage />} />
-
-      {/* 404 Not Found 페이지 (일치하는 경로가 없을 경우) */}
-      <Route path="*" element={<div>404 Not Found</div>} />
-    </Routes>
-  );
+const ProtectedRoute = ({ allowedRoles }) => {
+    const { auth } = useAuth();
+    if (!auth.role || !allowedRoles.includes(auth.role)) {
+        return <Navigate to="/" replace />;
+    }
+    return <Outlet />;
 };
 
-export default Router;
+export const Router = () => {
+    return (
+        <Routes>
+            {/* --- 로그인 전 경로 --- */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/user-auth" element={<UserAuthPage />} />
+            <Route path="/author-auth" element={<AuthorAuthPage />} />
+            
+            {/* --- 로그인 후 공통 경로 (모든 로그인 사용자가 접근 가능) --- */}
+            <Route element={<ProtectedRoute allowedRoles={['user', 'author', 'admin']} />}>
+                <Route path="/main" element={<MainPage />} />
+                <Route path="/book/:bookId" element={<BookDetailPage />} />
+            </Route>
+
+            {/* --- 사용자 전용 경로 --- */}
+            <Route element={<ProtectedRoute allowedRoles={['user']} />}>
+                <Route path="/my-library" element={<MyLibraryPage />} />
+            </Route>
+
+            {/* --- 작가 전용 경로 --- */}
+            {/* <Route element={<ProtectedRoute allowedRoles={['author']} />}> */}
+                <Route path="/write" element={<WritePage />} />
+                <Route path="/publish/:bookId" element={<PublishPage />} />
+            {/* </Route> */}
+
+            {/* --- 관리자 전용 경로 --- */}
+            {/* <Route element={<ProtectedRoute allowedRoles={['admin']} />}> */}
+                <Route path="/admin/approvals" element={<AdminApprovalPage />} />
+            {/* </Route> */}
+            
+            <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+    );
+};

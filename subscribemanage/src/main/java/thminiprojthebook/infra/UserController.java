@@ -8,8 +8,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import thminiprojthebook.domain.*;
+import java.util.Map;
 import java.util.Map;
 //<<< Clean Arch / Inbound Adaptor
 
@@ -20,6 +25,22 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+
+    // --- [추가된 부분] 새로운 로그인 API ---
+    @PostMapping("/users/login")
+    public ResponseEntity<User> login(@RequestBody LoginCommand command) {
+        Optional<User> optionalUser = userRepository.findByLoginId(command.getLoginId());
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (user.getLoginPassword().equals(command.getPassword())) {
+                // 로그인 성공 시, 사용자 정보를 반환합니다.
+                return ResponseEntity.ok(user);
+            }
+        }
+        // 사용자가 없거나 비밀번호가 틀리면 401 Unauthorized 에러를 반환합니다.
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
 
     @RequestMapping(
         value = "/users/{id}/subscribetobookservice",

@@ -1,120 +1,155 @@
-// src/components/AuthForm.jsx
-
+// =================================================================
+// FILENAME: src/components/AuthForm.jsx (수정)
+// 역할: UI를 세련된 카드 디자인으로 전면 개편합니다.
+// =================================================================
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Paper } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { api } from '../api/apiClient';
 
-/**
- * 사용자/작가 인증을 위한 재사용 가능한 폼 컴포넌트입니다.
- * @param {object} props
- * @param {'login' | 'signup'} props.mode - 폼의 모드 (로그인 또는 회원가입)
- * @param {boolean} props.isAuthor - 작가 인증 폼인지 여부
- * @param {function(object): void} props.onSubmit - 폼 제출 시 호출될 콜백 함수
- * @param {boolean} [props.isLoading=false] - API 호출 중 로딩 상태인지 여부
- * @param {string} [props.errorMessage=''] - API 호출 실패 시 표시할 에러 메시지
- */
-const AuthForm = ({ mode, isAuthor, onSubmit, isLoading = false, errorMessage = '' }) => {
-  const [loginId, setLoginId] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [portfolioUrl, setPortfolioUrl] = useState(''); // 작가 전용
-  const [isKt, setIsKt] = useState('false'); // 사용자 전용 (기본값 false)
+// 1. Material-UI 컴포넌트를 추가로 불러옵니다.
+import { Box, Button, TextField, Typography, Paper } from '@mui/material';
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formData = { loginId, password };
+export const AuthForm = ({ userType }) => {
+    // KT 인증값을 받기 위해 isKt 필드를 state에 다시 추가합니다.
+    const [isLogin, setIsLogin] = useState(true);
+    const [formData, setFormData] = useState({ loginId: '', password: '', name: '', isKt: 'false', portfolioUrl: '' });
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+    const { login } = useAuth();
 
-    if (mode === 'signup') {
-      formData.name = name;
-      if (isAuthor) {
-        formData.portfolioUrl = portfolioUrl;
-      } else {
-        formData.isKt = isKt; // 사용자 회원가입 시 KT 여부
-      }
-    }
-    onSubmit(formData);
-  };
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
 
-  const title = mode === 'login' ? '로그인' : '회원가입';
-  const submitButtonText = mode === 'login' ? '로그인' : '가입하기';
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        
+        try {
+            if (isLogin) {
+                const loginData = { loginId: formData.loginId, password: formData.password };
+                const response = userType === 'user' 
+                    ? await api.loginUser(loginData) 
+                    : await api.loginAuthor(loginData);
+                
+                alert('로그인 성공!');
+                login(response.data, userType);
+                navigate('/main');
+            } else {
+                // 회원가입 시 isKt 값을 포함하도록 수정합니다.
+                const signupData = userType === 'user'
+                    ? { loginId: formData.loginId, loginPassword: formData.password, name: formData.name, isKt: formData.isKt }
+                    : { loginId: formData.loginId, password: formData.password, name: formData.name, portfolioUrl: formData.portfolioUrl };
 
-  return (
-    <Paper elevation={3} sx={{ p: 4, maxWidth: 400, mx: 'auto', mt: 5, borderRadius: 2 }}>
-      <Typography variant="h5" component="h1" gutterBottom align="center" fontWeight={600}>
-        {isAuthor ? '작가' : '사용자'} {title}
-      </Typography>
-      <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-        <TextField
-          label="아이디"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={loginId}
-          onChange={(e) => setLoginId(e.target.value)}
-          required
-        />
-        <TextField
-          label="비밀번호"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+                if (userType === 'user') {
+                    await api.registerUser(signupData);
+                } else {
+                    await api.joinAuthor(signupData);
+                }
+                alert('회원가입 성공! 로그인 해주세요.');
+                setIsLogin(true);
+            }
+        } catch (err) {
+            console.error(err);
+            const message = err.response?.data?.message || err.response?.data || '오류가 발생했습니다. 다시 시도해주세요.';
+            setError(message);
+        }
+    };
 
-        {mode === 'signup' && (
-          <>
-            <TextField
-              label="이름"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-            {isAuthor ? (
-              <TextField
-                label="포트폴리오 URL (선택 사항)"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={portfolioUrl}
-                onChange={(e) => setPortfolioUrl(e.target.value)}
-              />
-            ) : (
-              <TextField
-                label="KT 고객 여부 (true/false)"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={isKt}
-                onChange={(e) => setIsKt(e.target.value)}
-                helperText="true 또는 false로 입력해주세요."
-              />
-            )}
-          </>
-        )}
+    const formTitle = `${userType === 'user' ? '사용자' : '작가'} ${isLogin ? '로그인' : '회원가입'}`;
 
-        {errorMessage && (
-          <Typography color="error" sx={{ mt: 2, textAlign: 'center' }}>
-            {errorMessage}
-          </Typography>
-        )}
-
-        <Button
-          type="submit"
-          variant="contained"
-          fullWidth
-          sx={{ mt: 3, py: 1.5, backgroundColor: '#5a9', '&:hover': { backgroundColor: '#487' } }}
-          disabled={isLoading}
+    return (
+        <Paper 
+            elevation={4} 
+            sx={{ 
+                padding: { xs: '2rem', md: '3rem' },
+                width: '100%', 
+                maxWidth: '420px',
+                margin: '4rem auto',
+                borderRadius: '12px',
+            }}
         >
-          {isLoading ? '처리 중...' : submitButtonText}
-        </Button>
-      </Box>
-    </Paper>
-  );
-};
+            <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column' }}>
+                <Typography variant="h5" component="h1" fontWeight="bold" sx={{ mb: 1 }}>
+                    {isLogin ? '독서와 무제한 친해지리' : formTitle}
+                </Typography>
+                {isLogin && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
+                        20만 권 속에서 인생책을 찾아보세요
+                    </Typography>
+                )}
 
-export default AuthForm;
+                <TextField
+                    label="아이디"
+                    name="loginId"
+                    value={formData.loginId}
+                    onChange={handleChange}
+                    required
+                    fullWidth
+                    margin="normal"
+                />
+                <TextField
+                    label="비밀번호"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    fullWidth
+                    margin="normal"
+                />
+
+                {!isLogin && (
+                    <>
+                        <TextField label="이름" name="name" value={formData.name} onChange={handleChange} required fullWidth margin="normal" />
+                        {/* 사용자 회원가입 시에만 KT 고객 여부 필드를 표시합니다. */}
+                        {userType === 'user' && (
+                            <TextField 
+                                label="KT 고객 여부 (true/false)" 
+                                name="isKt" 
+                                value={formData.isKt} 
+                                onChange={handleChange} 
+                                required 
+                                fullWidth 
+                                margin="normal" 
+                            />
+                        )}
+                        {userType === 'author' && <TextField label="포트폴리오 URL" name="portfolioUrl" value={formData.portfolioUrl} onChange={handleChange} fullWidth margin="normal" />}
+                    </>
+                )}
+
+                {error && <Typography color="error" sx={{ mt: 2, textAlign: 'center' }}>{error}</Typography>}
+
+                <Button 
+                    type="submit" 
+                    variant="contained" 
+                    fullWidth
+                    sx={{
+                        mt: 2,
+                        mb: 2,
+                        padding: '12px',
+                        fontSize: '1rem',
+                        fontWeight: 'bold',
+                        backgroundColor: '#FFEB3B',
+                        color: '#333',
+                        '&:hover': {
+                            backgroundColor: '#FBC02D',
+                        }
+                    }}
+                >
+                    {isLogin ? '로그인' : '회원가입'}
+                </Button>
+
+                <Button 
+                    variant="text" 
+                    onClick={() => setIsLogin(!isLogin)}
+                    sx={{ alignSelf: 'center' }}
+                >
+                    {isLogin ? '계정이 없으신가요? 회원가입' : '이미 계정이 있으신가요? 로그인'}
+                </Button>
+            </Box>
+        </Paper>
+    );
+};

@@ -6,7 +6,7 @@ metadata:
     app: ai
 spec:
   ports:
-    - port: 8088
-      targetPort: 8088
+    - port: 8084
+      targetPort: 8084
   selector:
     app: ai

@@ -1,26 +1,11 @@
-// src/components/Footer.jsx
-
+// =================================================================
+// FILENAME: src/components/Footer.jsx
+// 역할: 모든 페이지 하단에 표시될 공통 푸터입니다.
+// =================================================================
 import React from 'react';
-import { Box, Typography } from '@mui/material';
 
-const Footer = () => {
-  return (
-    <Box
-      component="footer"
-      sx={{
-        mt: 'auto', // 메인 콘텐츠가 적을 때도 하단에 붙도록 함
-        py: 3,
-        px: { xs: 2, sm: 5, md: 10, lg: 35 },
-        backgroundColor: '#f0f0f0',
-        textAlign: 'center',
-        borderTop: '1px solid #ddd',
-      }}
-    >
-      <Typography variant="body2" color="text.secondary">
-        &copy; 2025 AI IN 서재. All rights reserved.
-      </Typography>
-    </Box>
-  );
-};
-
-export default Footer;
+export const Footer = () => (
+    <footer style={{ padding: "1rem", background: "#ecf0f1", textAlign: "center", marginTop: "auto" }}>
+        <p style={{ margin: 0, color: "#7f8c8d" }}>&copy; 2025 AI IN 서재. All rights reserved.</p>
+    </footer>
+);

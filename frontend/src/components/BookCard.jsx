@@ -1,59 +1,53 @@
-// src/components/BookCard.jsx
-
+// =================================================================
+// FILENAME: src/components/BookCard.jsx (신규 생성)
+// 역할: 책 한 권의 정보를 카드 형태로 예쁘게 표시하는 재사용 가능한 컴포넌트입니다.
+// 이전 프로젝트의 코드를 기반으로, 현재 프로젝트의 데이터 구조에 맞게 수정했습니다.
+// =================================================================
 import React from 'react';
 import { Card, CardMedia, CardContent, Typography, Box } from '@mui/material';
+import { Link } from 'react-router-dom';
 
-/**
- * 개별 책 정보를 표시하는 카드 컴포넌트입니다.
- * 메인 화면과 같은 목록에서 사용됩니다.
- * @param {object} props
- * @param {object} props.book - 책 정보 객체 (bookId, title, authorName, imageUrl, summary 등 포함)
- * @param {function(): void} [props.onClick] - 카드 클릭 시 호출될 콜백 함수
- */
-const BookCard = ({ book, onClick }) => {
-  // `book.imageUrl`이 없을 경우를 대비한 대체 이미지 URL
-  const defaultImageUrl = 'https://placehold.co/160x250/e0e0e0/000000?text=No+Image';
+// Material-UI 아이콘을 사용하려면 아래 패키지를 설치해야 합니다.
+// npm install @mui/icons-material @mui/material @emotion/react @emotion/styled
 
-  return (
-    <Box
-      sx={{
-        width: 160,
-        cursor: onClick ? 'pointer' : 'default', // onClick 프롭스가 있을 때만 커서 포인터
-        transition: 'transform 0.2s ease-in-out',
-        '&:hover': {
-          transform: onClick ? 'scale(1.03)' : 'none', // 클릭 가능할 때만 호버 효과
-        },
-      }}
-      onClick={onClick} // 카드 클릭 이벤트 핸들러
-    >
-      <Card
-        sx={{
-          width: 160,
-          boxShadow: 3,
-          borderRadius: 2,
-          overflow: 'hidden',
-        }}
-      >
-        <CardMedia
-          component="img"
-          height="250"
-          image={book.imageUrl || defaultImageUrl} // imageUrl 사용, 없으면 대체 이미지
-          alt={book.title}
-          sx={{ objectFit: 'cover' }}
-        />
-        <CardContent>
-          {/* 책 제목 */}
-          <Typography variant="subtitle1" noWrap>
-            {book.title}
-          </Typography>
-          {/* 작가 이름 */}
-          <Typography variant="body2" color="text.secondary" noWrap>
-            {book.authorName} {/* author 대신 authorName 사용 */}
-          </Typography>
-        </CardContent>
-      </Card>
-    </Box>
-  );
+export const BookCard = ({ book }) => {
+    if (!book) return null;
+
+    return (
+        <Link to={`/book/${book.bookId}`} style={{ textDecoration: 'none' }}>
+            <Card
+                sx={{
+                    width: 200,
+                    height: 350,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    boxShadow: 3,
+                    borderRadius: 2,
+                    transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+                    '&:hover': {
+                        transform: 'translateY(-5px)',
+                        boxShadow: 6,
+                    }
+                }}
+            >
+                <CardMedia
+                    component="img"
+                    sx={{
+                        height: 250,
+                        objectFit: 'cover',
+                    }}
+                    image={book.imageUrl || 'https://placehold.co/400x600?text=No+Image'} // 이미지가 없을 경우 대체 이미지
+                    alt={book.title}
+                />
+                <CardContent sx={{ flexGrow: 1, padding: '16px' }}>
+                    <Typography gutterBottom variant="h6" component="div" noWrap title={book.title}>
+                        {book.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" noWrap title={book.authorName}>
+                        {book.authorName}
+                    </Typography>
+                </CardContent>
+            </Card>
+        </Link>
+    );
 };
-
-export default BookCard;

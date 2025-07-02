@@ -20,7 +20,7 @@ import thminiprojthebook.domain.StandardSignedupPointCharged;
 public class Point {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GeneratedValue(strategy = GenerationType.AUTO) // <-- 이 어노테이션 한 줄을 삭제합니다.
     private Long userId;
 
     private Integer pointBalance;
