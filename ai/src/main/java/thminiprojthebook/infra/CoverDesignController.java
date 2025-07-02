@@ -28,7 +28,7 @@ public class CoverDesignController {
      * AI 커버 이미지 생성 요청
      */
     @RequestMapping(
-        value = "/coverDesigns/generate",
+        value = "/customs/coverDesigns/generate",
         method = RequestMethod.POST,
         produces = "application/json;charset=UTF-8"
     )
@@ -79,7 +79,7 @@ public class CoverDesignController {
      * ContentAnalyzer 기반 커버 생성
      */
     @RequestMapping(
-        value = "/coverDesigns/generateFromAnalyzer/{analyzerId}",
+        value = "/customs/coverDesigns/generateFromAnalyzer/{analyzerId}",
         method = RequestMethod.POST,
         produces = "application/json;charset=UTF-8"
     )
@@ -107,7 +107,7 @@ public class CoverDesignController {
      * 커버 디자인 승인
      */
     @RequestMapping(
-        value = "/coverDesigns/{id}/approve",
+        value = "/customs/coverDesigns/{id}/approve",
         method = RequestMethod.POST,
         produces = "application/json;charset=UTF-8"
     )
@@ -133,7 +133,7 @@ public class CoverDesignController {
     /**
      * 저자별 커버 디자인 조회
      */
-    @GetMapping("/coverDesigns/author/{authorId}")
+    @GetMapping("/customs/coverDesigns/author/{authorId}")
     public List<CoverDesign> getCoversByAuthor(@PathVariable(value = "authorId") Long authorId) {
         return coverDesignRepository.findByAuthorId(authorId);
     }
@@ -141,7 +141,7 @@ public class CoverDesignController {
     /**
      * 제목별 커버 디자인 조회
      */
-    @GetMapping("/coverDesigns/title/{title}")
+    @GetMapping("/customs/coverDesigns/title/{title}")
     public List<CoverDesign> getCoversByTitle(@PathVariable(value = "title") String title) {
         return coverDesignRepository.findByTitle(title);
     }
@@ -149,7 +149,7 @@ public class CoverDesignController {
     /**
      * AI 생성 방식별 커버 디자인 조회
      */
-    @GetMapping("/coverDesigns/generatedBy/{method}")
+    @GetMapping("/customs/coverDesigns/generatedBy/{method}")
     public List<CoverDesign> getCoversByMethod(@PathVariable(value = "method") String method) {
         return coverDesignRepository.findByGeneratedBy(method);
     }
@@ -157,7 +157,7 @@ public class CoverDesignController {
     /**
      * 커버 디자인 상태 조회
      */
-    @GetMapping("/coverDesigns/{id}/status")
+    @GetMapping("/customs/coverDesigns/{id}/status")
     public ResponseEntity<?> getCoverStatus(@PathVariable(value = "id") Long id) {
         Optional<CoverDesign> optionalCover = coverDesignRepository.findById(id);
         
@@ -180,6 +180,15 @@ public class CoverDesignController {
         status.put("updatedAt", coverDesign.getUpdatedAt());
         
         return ResponseEntity.ok(status);
+    }
+
+    /**
+     * 모든 커버 디자인 조회
+     */
+    @GetMapping("/coverDesigns")
+    public List<CoverDesign> getAllCoverDesigns() {
+        System.out.println("##### GET /coverDesigns called #####");
+        return (List<CoverDesign>) coverDesignRepository.findAll();
     }
 }
 //>>> Clean Arch / Inbound Adaptor

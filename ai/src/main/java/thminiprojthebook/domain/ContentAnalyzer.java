@@ -50,6 +50,7 @@ public class ContentAnalyzer {
             // Create new ContentAnalyzer entity with initial values
             ContentAnalyzer contentAnalyzer = new ContentAnalyzer();
             contentAnalyzer.setBookId(bookRegisted.getBookId());
+            contentAnalyzer.setAuthorId(bookRegisted.getAuthorId());
             contentAnalyzer.setContext(bookRegisted.getContext());
             contentAnalyzer.setLanguage("KO"); // Default to Korean
             contentAnalyzer.setMaxLength(500); // Default max length

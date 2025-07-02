@@ -27,7 +27,7 @@ public class ContentAnalyzerController {
      * AI 요약 생성 요청
      */
     @RequestMapping(
-        value = "/contentAnalyzers/{id}/generateSummary",
+        value = "/customs/contentAnalyzers/{id}/generateSummary",
         method = RequestMethod.POST,
         produces = "application/json;charset=UTF-8"
     )
@@ -79,7 +79,7 @@ public class ContentAnalyzerController {
      * AI 장르 분류 요청
      */
     @RequestMapping(
-        value = "/contentAnalyzers/{id}/classifyGenre",
+        value = "/customs/contentAnalyzers/{id}/classifyGenre",
         method = RequestMethod.POST,
         produces = "application/json;charset=UTF-8"
     )
@@ -128,7 +128,7 @@ public class ContentAnalyzerController {
      * AI 프로세스 실행 (요약 + 장르분류)
      */
     @RequestMapping(
-        value = "/contentAnalyzers/{id}/processAnalysis",
+        value = "/customs/contentAnalyzers/{id}/processAnalysis",
         method = RequestMethod.POST,
         produces = "application/json;charset=UTF-8"
     )
@@ -185,7 +185,7 @@ public class ContentAnalyzerController {
     /**
      * 미처리 AI 요청 목록 조회 (관리자용)
      */
-    @GetMapping("/contentAnalyzers/pending")
+    @GetMapping("/customs/contentAnalyzers/pending")
     public List<ContentAnalyzer> getPendingAnalyzers() {
         // AI 처리가 필요한 콘텐츠 조회 (요약이 없거나 분류가 없는 것들)
         return contentAnalyzerRepository.findPendingForAIProcessing();
@@ -194,7 +194,7 @@ public class ContentAnalyzerController {
     /**
      * 특정 저자의 AI 처리 상태 조회 (관리자용)
      */
-    @GetMapping("/contentAnalyzers/author/{authorId}")
+    @GetMapping("/customs/contentAnalyzers/author/{authorId}")
     public List<ContentAnalyzer> getAnalyzersByAuthor(@PathVariable(value = "authorId") Long authorId) {
         return contentAnalyzerRepository.findByAuthorId(authorId);
     }
@@ -202,7 +202,7 @@ public class ContentAnalyzerController {
     /**
      * AI 처리 완료된 콘텐츠 조회 (요약과 분류가 모두 완료된 것들)
      */
-    @GetMapping("/contentAnalyzers/completed")
+    @GetMapping("/customs/contentAnalyzers/completed")
     public List<ContentAnalyzer> getCompletedAnalyzers() {
         List<ContentAnalyzer> allAnalyzers = contentAnalyzerRepository.findAllAsList();
         return allAnalyzers.stream()
@@ -213,7 +213,7 @@ public class ContentAnalyzerController {
     /**
      * AI 요약만 완료된 콘텐츠 조회
      */
-    @GetMapping("/contentAnalyzers/summary-only")
+    @GetMapping("/customs/contentAnalyzers/summary-only")
     public List<ContentAnalyzer> getSummaryOnlyAnalyzers() {
         List<ContentAnalyzer> allAnalyzers = contentAnalyzerRepository.findAllAsList();
         return allAnalyzers.stream()
@@ -225,7 +225,7 @@ public class ContentAnalyzerController {
      * ContentAnalyzer 생성/등록 (AuthorController의 패턴을 따라)
      */
     @RequestMapping(
-        value = "/contentAnalyzers",
+        value = "/customs/contentAnalyzers",
         method = RequestMethod.POST,
         produces = "application/json;charset=UTF-8"
     )
@@ -262,7 +262,7 @@ public class ContentAnalyzerController {
     /**
      * AI 처리 상태 조회
      */
-    @GetMapping("/contentAnalyzers/{id}/status")
+    @GetMapping("/customs/contentAnalyzers/{id}/status")
     public ResponseEntity<?> getProcessingStatus(@PathVariable(value = "id") Long id) {
         Optional<ContentAnalyzer> optionalAnalyzer = contentAnalyzerRepository.findById(id);
         
@@ -291,6 +291,25 @@ public class ContentAnalyzerController {
         status.put("completionRate", (completionCount / 2.0) * 100);
         
         return ResponseEntity.ok(status);
+    }
+
+    /**
+     * 모든 ContentAnalyzer 조회 (장르 분류 결과 포함)
+     */
+    @GetMapping("/contentAnalyzers")
+    public List<ContentAnalyzer> getAllContentAnalyzers() {
+        System.out.println("##### GET /contentAnalyzers called #####");
+        List<ContentAnalyzer> analyzers = contentAnalyzerRepository.findAllAsList();
+        
+        // 각 analyzer의 상태를 로그로 출력
+        for (ContentAnalyzer analyzer : analyzers) {
+            System.out.println("ContentAnalyzer ID: " + analyzer.getAuthorId() + 
+                             ", BookID: " + analyzer.getBookId() +
+                             ", Genre: " + analyzer.getClassificationType() +
+                             ", HasSummary: " + (analyzer.getSummary() != null));
+        }
+        
+        return analyzers;
     }
 }
 //>>> Clean Arch / Inbound Adaptor

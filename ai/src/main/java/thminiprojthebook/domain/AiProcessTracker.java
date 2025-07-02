@@ -135,7 +135,7 @@ public class AiProcessTracker {
      * Find existing tracker for a book
      */
     public static AiProcessTracker findByBookId(Long bookId) {
-        return repository().findByBookId(bookId.toString());
+        return repository().findByBookId(bookId);
     }
 }
 //>>> DDD / Aggregate Root

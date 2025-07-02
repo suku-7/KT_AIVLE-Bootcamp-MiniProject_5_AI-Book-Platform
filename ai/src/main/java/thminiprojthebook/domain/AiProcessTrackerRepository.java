@@ -6,6 +6,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 //<<< PoEAA / Repository
 @RepositoryRestResource(collectionResourceRel = "aiProcessTrackers", path = "aiProcessTrackers")
 public interface AiProcessTrackerRepository extends JpaRepository<AiProcessTracker, Long> {
-    AiProcessTracker findByBookId(String bookId);
+    AiProcessTracker findByBookId(Long bookId);
 }
 //>>> PoEAA / Repository

@@ -21,7 +21,7 @@ public interface ContentAnalyzerRepository
     List<ContentAnalyzer> findByAuthorId(Long authorId);
     
     // 특정 북 ID의 콘텐츠 분석 조회
-    List<ContentAnalyzer> findByBookId(String bookId);
+    List<ContentAnalyzer> findByBookId(Long bookId);
     
     // 모든 ContentAnalyzer를 List로 반환
     @Query("SELECT ca FROM ContentAnalyzer ca")
