@@ -1,5 +1,5 @@
 server:
-  port: 8084
+  port: 8080
 
 spring:
   application:
@@ -64,6 +64,9 @@ logging:
     org.hibernate.type: trace
     org.springframework.cloud: debug
 
+
+server:
+    port: 8084
 ---
 
 spring:
