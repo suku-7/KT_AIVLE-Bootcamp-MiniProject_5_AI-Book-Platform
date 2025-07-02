@@ -12,22 +12,19 @@ const MyWritingDetailPage = () => {
     useEffect(() => {
         const fetchWriting = async () => {
             try {
-                const response = await api.getWriting(bookId, {
-                    headers: {
-                        Authorization: `Bearer ${auth.token}`,
-                    },
-                });
+                console.log("API 호출 전, bookId = ",bookId)
+                const response = await api.getWriting(bookId);
+                console.log("API 호출 후, response",response);
                 setWriting(response.data);
             } catch (error) {
                 console.error('글 불러오기 실패:', error);
                 alert('글을 불러올 수 없습니다.');
             }
         };
-
-        if (auth.token) {
+        if (auth && auth.user && auth.user.token) {
             fetchWriting();
         }
-    }, [bookId, auth.token]);
+    }, [bookId, auth]);
 
     if (!writing) return <div>로딩 중...</div>;
 

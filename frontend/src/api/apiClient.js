@@ -12,6 +12,22 @@ const apiClient = axios.create({
     withCredentials: true,
 });
 
+apiClient.interceptors.request.use(
+    (config) => {
+        const storedAuth = localStorage.getItem('auth');
+        if (storedAuth) {
+            const token = JSON.parse(storedAuth).user?.token;
+            if (token) {
+                config.headers['Authorization'] = `Bearer ${token}`;
+            }
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
 // API 함수들을 객체로 묶어서 export 합니다.
 export const api = {
 

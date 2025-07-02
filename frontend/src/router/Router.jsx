@@ -51,9 +51,9 @@ export const Router = () => {
             {/* <Route element={<ProtectedRoute allowedRoles={['author']} />}> */}
                 <Route path="/write" element={<WritePage />} />
                 <Route path="/write/my" element={<MyWritingsPage />} />
-                <Route path="/edit/:writingId" element={<EditPage />} />
-                <Route path="/publish/:writingId" element={<PublishPage />} />
-                <Route path="/write/:writingId" element={<MyWritingDetailPage />} />
+                <Route path="/edit/:bookId" element={<EditPage />} />
+                <Route path="/publish/:bookId" element={<PublishPage />} />
+                <Route path="/write/:bookId" element={<MyWritingDetailPage />} />
             {/* </Route> */}
 
             {/* --- 관리자 전용 경로 --- */}
