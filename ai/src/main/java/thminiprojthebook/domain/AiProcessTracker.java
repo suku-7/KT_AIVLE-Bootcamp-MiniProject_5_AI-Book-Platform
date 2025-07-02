@@ -12,10 +12,7 @@ import java.util.Date;
 public class AiProcessTracker {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    private String bookId;
+    private Long bookId;
     private String title;
     private Long authorId;
     
@@ -50,7 +47,7 @@ public class AiProcessTracker {
     /**
      * Initialize AI process tracking for a book
      */
-    public static AiProcessTracker initializeForBook(String bookId, String title, Long authorId) {
+    public static AiProcessTracker initializeForBook(Long bookId, String title, Long authorId) {
         AiProcessTracker tracker = new AiProcessTracker();
         tracker.setBookId(bookId);
         tracker.setTitle(title);
@@ -137,8 +134,8 @@ public class AiProcessTracker {
     /**
      * Find existing tracker for a book
      */
-    public static AiProcessTracker findByBookId(String bookId) {
-        return repository().findByBookId(bookId);
+    public static AiProcessTracker findByBookId(Long bookId) {
+        return repository().findByBookId(bookId.toString());
     }
 }
 //>>> DDD / Aggregate Root

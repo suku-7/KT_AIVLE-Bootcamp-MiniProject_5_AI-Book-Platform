@@ -171,10 +171,9 @@ public class CoverDesignController {
         CoverDesign coverDesign = optionalCover.get();
         
         java.util.Map<String, Object> status = new java.util.HashMap<>();
-        status.put("id", coverDesign.getId());
+        status.put("bookId", coverDesign.getBookId());
         status.put("title", coverDesign.getTitle());
         status.put("authorId", coverDesign.getAuthorId());
-        status.put("bookId", coverDesign.getBookId());
         status.put("imageUrl", coverDesign.getImageUrl());
         status.put("generatedBy", coverDesign.getGeneratedBy());
         status.put("createdAt", coverDesign.getCreatedAt());

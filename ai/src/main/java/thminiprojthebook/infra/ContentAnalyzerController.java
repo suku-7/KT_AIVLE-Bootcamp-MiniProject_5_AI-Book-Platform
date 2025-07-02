@@ -103,7 +103,7 @@ public class ContentAnalyzerController {
                 analyzer.getSummary() : analyzer.getContext();
                 
             String genre = gptService.classifyGenre(
-                analyzer.getBookId(), // 제목 역할
+                analyzer.getBookId().toString(), // 제목 역할
                 contentForClassification
             );
             

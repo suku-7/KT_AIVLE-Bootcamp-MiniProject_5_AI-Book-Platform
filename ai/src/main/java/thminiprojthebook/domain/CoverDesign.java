@@ -13,23 +13,14 @@ import thminiprojthebook.service.DalleService;
 public class CoverDesign {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
+    private Long bookId;
     private Long authorId;
-
     private Date updatedAt;
-
     private String title;
-
-    @Column(length = 1000)
+    @Column(length = 2000)
     private String imageUrl;
-
     private String generatedBy;
-
     private Date createdAt;
-
-    private String bookId;
 
     public static CoverDesignRepository repository() {
         CoverDesignRepository coverDesignRepository = AiApplication.applicationContext.getBean(
@@ -49,10 +40,9 @@ public class CoverDesign {
             System.out.println("- AuthorId: " + bookRegisted.getAuthorId());
             
             // Initialize or get AI process tracker
-            String bookIdStr = bookRegisted.getBookId().toString();
-            AiProcessTracker tracker = AiProcessTracker.findByBookId(bookIdStr);
+            AiProcessTracker tracker = AiProcessTracker.findByBookId(bookRegisted.getBookId());
             if (tracker == null) {
-                tracker = AiProcessTracker.initializeForBook(bookIdStr, bookRegisted.getTitle(), bookRegisted.getAuthorId());
+                tracker = AiProcessTracker.initializeForBook(bookRegisted.getBookId(), bookRegisted.getTitle(), bookRegisted.getAuthorId());
             }
             
             // Get DalleService from application context
@@ -61,7 +51,7 @@ public class CoverDesign {
             // Create new CoverDesign entity
             CoverDesign coverDesign = new CoverDesign();
             coverDesign.setAuthorId(bookRegisted.getAuthorId());
-            coverDesign.setBookId(bookRegisted.getBookId().toString());
+            coverDesign.setBookId(bookRegisted.getBookId());
             coverDesign.setTitle(bookRegisted.getTitle());
             coverDesign.setCreatedAt(new Date());
             coverDesign.setUpdatedAt(new Date());

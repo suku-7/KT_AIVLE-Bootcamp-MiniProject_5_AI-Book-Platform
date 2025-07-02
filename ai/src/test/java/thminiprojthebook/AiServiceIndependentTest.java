@@ -181,7 +181,7 @@ public class AiServiceIndependentTest {
             
             // ContentAnalyzer 엔티티 생성 시뮬레이션
             ContentAnalyzer analyzer = new ContentAnalyzer();
-            analyzer.setBookId(book.getBookId().toString());
+            analyzer.setBookId(book.getBookId());
             analyzer.setContext(book.getContext());
             analyzer.setLanguage("KO");
             analyzer.setMaxLength(500);

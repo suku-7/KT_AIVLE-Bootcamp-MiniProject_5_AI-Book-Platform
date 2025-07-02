@@ -12,21 +12,13 @@ import thminiprojthebook.service.GptService;
 public class ContentAnalyzer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long bookId;
     private Long authorId;
-
-    private String bookId;
-
     private String context;
-
     private String summary;
-
     private String language;
-
     private Integer maxLength;
-
     private String classificationType;
-
     private String requestedBy;
 
     public static ContentAnalyzerRepository repository() {
@@ -47,10 +39,9 @@ public class ContentAnalyzer {
             System.out.println("- AuthorId: " + bookRegisted.getAuthorId());
             
             // Initialize or get AI process tracker
-            String bookIdStr = bookRegisted.getBookId().toString();
-            AiProcessTracker tracker = AiProcessTracker.findByBookId(bookIdStr);
+            AiProcessTracker tracker = AiProcessTracker.findByBookId(bookRegisted.getBookId());
             if (tracker == null) {
-                tracker = AiProcessTracker.initializeForBook(bookIdStr, bookRegisted.getTitle(), bookRegisted.getAuthorId());
+                tracker = AiProcessTracker.initializeForBook(bookRegisted.getBookId(), bookRegisted.getTitle(), bookRegisted.getAuthorId());
             }
             
             // Get GptService from application context
@@ -58,7 +49,7 @@ public class ContentAnalyzer {
             
             // Create new ContentAnalyzer entity with initial values
             ContentAnalyzer contentAnalyzer = new ContentAnalyzer();
-            contentAnalyzer.setBookId(bookRegisted.getBookId().toString());
+            contentAnalyzer.setBookId(bookRegisted.getBookId());
             contentAnalyzer.setContext(bookRegisted.getContext());
             contentAnalyzer.setLanguage("KO"); // Default to Korean
             contentAnalyzer.setMaxLength(500); // Default max length

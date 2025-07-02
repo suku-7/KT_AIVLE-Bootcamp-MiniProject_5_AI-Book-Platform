@@ -9,7 +9,7 @@ import java.util.List;
 @RepositoryRestResource(
     collectionResourceRel = "contentAnalyzers",
     path = "contentAnalyzers"
-)
+) //CRUD
 public interface ContentAnalyzerRepository
     extends PagingAndSortingRepository<ContentAnalyzer, Long> {
     
