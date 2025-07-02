@@ -169,5 +169,33 @@ public class WritingController {
             return ResponseEntity.status(401).body("유효하지 않은 토큰입니다.");
         }
     }
+
+    @GetMapping("/writings/{id}")
+    public ResponseEntity<?> getMyWritingById(
+        @PathVariable Long id,
+        @RequestHeader("Authorization") String authHeader
+    ) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body("토큰이 필요합니다.");
+        }
+
+        String token = authHeader.substring(7);
+        Long authorId = jwtUtil.validateAndGetAuthorId(token);
+
+        Optional<ApprovalAuthor> optional = approvalAuthorRepository.findById(authorId);
+        if (optional.isEmpty() || !optional.get().getIsApproved()) {
+            return ResponseEntity.status(403).body("작가 승인되지 않았습니다.");
+        }
+
+        Writing writing = writingRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("책이 존재하지 않습니다."));
+
+        if (!writing.getAuthorId().equals(authorId)) {
+            return ResponseEntity.status(403).body("본인의 책만 조회할 수 있습니다.");
+        }
+
+        return ResponseEntity.ok(writing);
+    }
+
 }
 //>>> Clean Arch / Inbound Adaptor

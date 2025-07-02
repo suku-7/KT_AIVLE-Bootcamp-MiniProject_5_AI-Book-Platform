@@ -5,7 +5,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-    baseURL: "http://localhost:8088",
+    baseURL: "https://8088-cherish2pro-thminiprojt-o9vqt141yks.ws-us120.gitpod.io",
     headers: {
         "Content-Type": "application/json",
     },
