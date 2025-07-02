@@ -91,6 +91,7 @@ public class ContentAnalyzer {
                 AiSummarized aiSummarized = new AiSummarized(contentAnalyzer);
                 aiSummarized.setAuthorId(bookRegisted.getAuthorId());
                 aiSummarized.setBookId(contentAnalyzer.getBookId());
+                aiSummarized.setTitle(bookRegisted.getTitle()); // Add title from BookRegisted event
                 aiSummarized.setContext(contentAnalyzer.getContext());
                 aiSummarized.setSummary(contentAnalyzer.getSummary());
                 aiSummarized.setLanguage(contentAnalyzer.getLanguage());
