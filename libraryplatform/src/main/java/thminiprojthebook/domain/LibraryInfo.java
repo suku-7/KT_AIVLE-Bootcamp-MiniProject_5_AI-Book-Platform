@@ -28,6 +28,7 @@ public class LibraryInfo {
 
     private String title;
 
+    @Column(length = 1000) // 긴 URL을 저장하기 위해 길이를 늘림
     private String imageUrl;
 
     private String summary;
