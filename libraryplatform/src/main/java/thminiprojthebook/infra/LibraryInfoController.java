@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional; //Transactional
 
 
 @RestController
-@RequestMapping("/libraryInfos")
+@RequestMapping("/customs/libraryInfos")
 @Transactional
 public class LibraryInfoController {
 
@@ -25,7 +25,7 @@ public class LibraryInfoController {
     }
 
     // 2. 특정 도서 상세 조회
-    @GetMapping("/{bookId}")
+    @GetMapping("/customs/{bookId}")
     public ResponseEntity<LibraryInfo> getLibraryInfoById(
             @PathVariable("bookId") Long bookId) {
         Optional<LibraryInfo> optionalLibraryInfo = 
@@ -37,7 +37,7 @@ public class LibraryInfoController {
     }
 
     // 3. AI 요약/표지 생성을 통한 출간 프로세스
-    @PostMapping("/publish")
+    @PostMapping("/customs/publish")
     public ResponseEntity<LibraryInfo> publishBook(
         @RequestBody AiSummarized aiSummarized) {
     
@@ -50,10 +50,9 @@ public class LibraryInfoController {
 
 
     // 4. 책 소장 증가 처리 (베스트셀러 부여 트리거)
-    @PostMapping("/select")
+    @PostMapping("/customs/select")
     public ResponseEntity<String> processBookSelection(
             @RequestBody BuyBookSub buyBookSub) {
-        
         // 도메인 이벤트 처리 (소장 횟수 증가)
         LibraryInfo.buyBookIncrease(buyBookSub);
         
