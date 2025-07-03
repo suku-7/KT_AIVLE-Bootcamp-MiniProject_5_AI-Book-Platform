@@ -143,7 +143,7 @@ export const MyLibraryPage = () => {
                     </Button>
                 ) : (
                     <Button variant="contained" onClick={handleSubscribe} sx={subscribeButtonStyle}>
-                        월간 구독하기 (11,900P)
+                        월간 구독하기 (9,900P)
                     </Button>
                 )}
             </Paper>

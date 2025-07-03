@@ -6,6 +6,7 @@
 import React from 'react';
 import { Card, CardMedia, CardContent, Typography, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { extractIdFromHref } from '../api/apiClient';
 
 // Material-UI 아이콘을 사용하려면 아래 패키지를 설치해야 합니다.
 // npm install @mui/icons-material @mui/material @emotion/react @emotion/styled
@@ -14,7 +15,7 @@ export const BookCard = ({ book }) => {
     if (!book) return null;
 
     return (
-        <Link to={`/book/${book.bookId}`} style={{ textDecoration: 'none' }}>
+        <Link to={`/book/${extractIdFromHref(book)}`} style={{ textDecoration: 'none' }}>
             <Card
                 sx={{
                     width: 200,

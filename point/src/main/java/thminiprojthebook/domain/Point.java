@@ -47,7 +47,7 @@ public class Point {
     }
 
     public void decreaseForSubscription() {
-        this.setPointBalance(this.getPointBalance() - 11900);
+        this.setPointBalance(this.getPointBalance() - 9900);
         PointDecreased pointDecreased = new PointDecreased(this);
         pointDecreased.publishAfterCommit();
     }

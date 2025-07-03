@@ -5,10 +5,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { api } from '../api/apiClient';
+import { api, extractIdFromHref } from '../api/apiClient';
 
 export const BookDetailPage = () => {
     const { bookId } = useParams();
+    console.log("bookId in URL:", bookId);  // 👈 로그 확인
     const { auth } = useAuth();
     const navigate = useNavigate();
     const [book, setBook] = useState(null);
@@ -35,7 +36,7 @@ export const BookDetailPage = () => {
             return;
         }
         try {
-            await api.buyBook(auth.user.userId, { bookId: book.bookId });
+            await api.buyBook(auth.user.userId, { bookId: extractIdFromHref(book)});
             alert(`${book.title}을(를) 구매했습니다. 내 서재에서 확인하세요.`);
             // TODO: 구매 후 auth 상태의 사용자 정보를 갱신하여 소장 목록을 반영하면 더 좋습니다.
         } catch (error) {
@@ -65,7 +66,7 @@ export const BookDetailPage = () => {
                         <div style={{ background: '#f9f9f9', padding: '1rem', border: '1px solid #eee', whiteSpace: 'pre-wrap' }}>{book.context}</div>
                     </div>
                 ) : (
-                    <button onClick={handleBuyBook} style={{ padding: '0.75rem 1.5rem', cursor: 'pointer' }}>이 책 소장하기 (5000P)</button>
+                    <button onClick={handleBuyBook} style={{ padding: '0.75rem 1.5rem', cursor: 'pointer' }}>이 책 소장하기 (1000P)</button>
                 )}
             </div>
         </div>
