@@ -11,7 +11,7 @@ import thminiprojthebook.infra.AbstractEvent;
 public class BookAiProcessCompleted extends AbstractEvent {
 
     private Long authorId;
-    private String bookId;
+    private Long bookId;
     private String title;
     
     // Content Analysis Data

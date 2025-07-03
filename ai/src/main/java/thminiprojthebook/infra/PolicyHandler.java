@@ -39,17 +39,40 @@ public class PolicyHandler {
         );
 
         try {
-            // Process AutoCoverGeneratePolicy
-            System.out.println("=== Starting AutoCoverGeneratePolicy ===");
-            CoverDesign.autoCoverGeneratePolicy(event);
-            System.out.println("=== AutoCoverGeneratePolicy completed ===");
-
-            // Process AiSummarize
+            // Process AiSummarize first to generate summary
             System.out.println("=== Starting AiSummarize ===");
             ContentAnalyzer.aiSummarize(event);
             System.out.println("=== AiSummarize completed ===");
+
+            // Process AutoCoverGeneratePolicy after summary is available
+            System.out.println("=== Starting AutoCoverGeneratePolicy ===");
+            CoverDesign.autoCoverGeneratePolicy(event);
+            System.out.println("=== AutoCoverGeneratePolicy completed ===");
         } catch (Exception e) {
             System.err.println("Error in sequential processing: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['type']=='AiSummarized'"
+    )
+    public void wheneverAiSummarized_GenerateCoverWithSummary(
+        @Payload AiSummarized aiSummarized
+    ) {
+        AiSummarized event = aiSummarized;
+        System.out.println(
+            "\n\n##### listener GenerateCoverWithSummary : " + aiSummarized + "\n\n"
+        );
+
+        try {
+            // Generate or update cover using AI summary for better results
+            System.out.println("=== Starting Cover Generation with AI Summary ===");
+            CoverDesign.generateCoverWithSummary(event);
+            System.out.println("=== Cover Generation with AI Summary completed ===");
+        } catch (Exception e) {
+            System.err.println("Error in cover generation with summary: " + e.getMessage());
             e.printStackTrace();
         }
     }

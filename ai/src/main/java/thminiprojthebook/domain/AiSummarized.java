@@ -11,7 +11,8 @@ import java.util.Date;
 public class AiSummarized extends AbstractEvent {
 
     private Long authorId;
-    private String bookId;
+    private Long bookId;
+    private String title;
     private String context;
     private String summary;
     private String language;

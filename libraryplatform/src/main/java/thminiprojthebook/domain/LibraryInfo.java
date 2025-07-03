@@ -28,6 +28,7 @@ public class LibraryInfo {
 
     private String title;
 
+    @Column(length = 1000)
     private String imageUrl;
 
     private String summary;

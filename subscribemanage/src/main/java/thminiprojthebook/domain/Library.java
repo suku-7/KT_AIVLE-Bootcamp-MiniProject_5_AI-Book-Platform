@@ -26,6 +26,7 @@ public class Library {
 
     private String authorName;
 
+    @Column(length = 1000)
     private String imageUrl;
 
     private String summary;
