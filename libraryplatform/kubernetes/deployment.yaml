@@ -5,7 +5,7 @@ metadata:
   labels:
     app: libraryplatform
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: libraryplatform
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: libraryplatform
-          image: "username/libraryplatform:latest"
+          image: "heonjun/libraryplatform:20250703"
           ports:
             - containerPort: 8080
           readinessProbe:

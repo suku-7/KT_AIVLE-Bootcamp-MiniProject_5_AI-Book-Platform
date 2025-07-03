@@ -5,7 +5,7 @@ metadata:
   labels:
     app: gateway
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: gateway
@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: username/gateway:latest
+          image: heonjun/gateway:20250703
           ports:
             - containerPort: 8080

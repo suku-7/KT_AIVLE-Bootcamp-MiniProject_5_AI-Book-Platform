@@ -5,7 +5,7 @@ metadata:
   labels:
     app: authormanage
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: authormanage
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: authormanage
-          image: "username/authormanage:latest"
+          image: "heonjun/authormanage:20250703"
           ports:
             - containerPort: 8080
           readinessProbe:

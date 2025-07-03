@@ -5,7 +5,7 @@ metadata:
   labels:
     app: subscribemanage
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: subscribemanage
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: subscribemanage
-          image: "username/subscribemanage:latest"
+          image: "heonjun/subscribemanage:20250703"
           ports:
             - containerPort: 8080
           readinessProbe:

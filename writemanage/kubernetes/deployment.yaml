@@ -5,7 +5,7 @@ metadata:
   labels:
     app: writemanage
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: writemanage
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: writemanage
-          image: "username/writemanage:latest"
+          image: "heonjun/writemanage:20250703"
           ports:
             - containerPort: 8080
           readinessProbe:
