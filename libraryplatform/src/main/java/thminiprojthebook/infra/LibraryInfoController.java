@@ -37,16 +37,16 @@ public class LibraryInfoController {
     }
 
     // 3. AI 요약/표지 생성을 통한 출간 프로세스
-    @PostMapping("/customs/publish")
-    public ResponseEntity<LibraryInfo> publishBook(
-        @RequestBody AiSummarized aiSummarized) {
+//     @PostMapping("/customs/publish")
+//     public ResponseEntity<LibraryInfo> publishBook(
+//         @RequestBody AiSummarized aiSummarized) {
     
-    LibraryInfo savedBook = LibraryInfo.publish(aiSummarized);
+//     // LibraryInfo savedBook = LibraryInfo.publish(aiSummarized);
     
-    return ResponseEntity
-            .created(URI.create("/libraryInfos/" + savedBook.getBookId()))
-            .body(savedBook);
-}
+//     return ResponseEntity
+//             .created(URI.create("/libraryInfos/" + savedBook.getBookId()))
+//             .body(savedBook);
+// }
 
 
     // 4. 책 소장 증가 처리 (베스트셀러 부여 트리거)

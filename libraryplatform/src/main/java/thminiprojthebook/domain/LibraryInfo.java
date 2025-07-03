@@ -105,6 +105,7 @@ public class LibraryInfo {
         libraryInfo.setClassificationType(aiSummarized.getClassificationType());
         libraryInfo.setPublishDate(new Date()); // 현재 시간으로 발행일 설정
         libraryInfo.setSelectCount(0L); // 최초 생성 시 선택 횟수는 0
+        libraryInfo.setImageUrl(coverCreated.getImageUrl());
         
         // 3. 생성된 객체를 DB에 저장합니다.
         repository().save(libraryInfo);
@@ -115,37 +116,9 @@ public class LibraryInfo {
 
     
         System.out.println(
-            "publish(AiSummarized) Policy: A new book has been published." +
+            "publish(AiSummarized) Policy: A new book has been published." + "publish(CoverCreated) Policy: Cover image updated for bookId: " +
             " bookId: " + libraryInfo.getBookId()
         );
-
-        // library cover 다지인 
-        repository().findById(coverCreated.getBookId()).ifPresent(libraryInfo->{
-            
-            // 2. 이미지 URL을 업데이트합니다.
-            libraryInfo.setImageUrl(coverCreated.getImageUrl());
-            
-            // 3. 변경된 정보를 저장합니다.
-            repository().save(libraryInfo);
-
-            System.out.println(
-                "publish(CoverCreated) Policy: Cover image updated for bookId: " + libraryInfo.getBookId()
-            );
-        });
     }
-
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
-    public static void publish(CoverCreated coverCreated) {
-        /**
-         * AI 서비스가 표지 생성을 완료하면, 기존 도서 정보에
-         * 이미지 URL을 업데이트합니다.
-         */
-        
-        // 1. CoverCreated 이벤트의 bookId로 기존 LibraryInfo 객체를 찾습니다.
-        
-    }
-    //>>> Clean Arch / Port Method
-
 }
-//>>> DDD / Aggregate Root
+

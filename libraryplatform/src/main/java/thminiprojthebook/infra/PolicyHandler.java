@@ -21,8 +21,8 @@ public class PolicyHandler {
     LibraryInfoRepository libraryInfoRepository;
 
     // 임시 저장소: bookId 기준으로 이벤트 매칭
-    private Map<String, AiSummarized> aiSummarizedMap = new ConcurrentHashMap<>();
-    private Map<String, CoverCreated> coverCreatedMap = new ConcurrentHashMap<>();
+    private Map<Long, AiSummarized> aiSummarizedMap = new ConcurrentHashMap<>();
+    private Map<Long, CoverCreated> coverCreatedMap = new ConcurrentHashMap<>();
 
     @StreamListener(KafkaProcessor.INPUT)
     public void whatever(@Payload String eventString) {}
@@ -41,7 +41,7 @@ public class PolicyHandler {
         condition = "headers['type']=='AiSummarized'"
     )
     public void wheneverAiSummarized(@Payload AiSummarized aiSummarized) {
-        String bookId = aiSummarized.getBookId();
+        Long bookId = aiSummarized.getBookId();
         aiSummarizedMap.put(bookId, aiSummarized);
         System.out.println("\n\n##### listener Received AiSummarized : " + aiSummarized + "\n\n");
 
@@ -55,7 +55,7 @@ public class PolicyHandler {
         condition = "headers['type']=='CoverCreated'"
     )
     public void wheneverCoverCreated(@Payload CoverCreated coverCreated) {
-        String bookId = coverCreated.getBookId();
+        Long bookId = coverCreated.getBookId();
         coverCreatedMap.put(bookId, coverCreated);
         System.out.println("\n\n##### listener Received CoverCreated : " + coverCreated + "\n\n");
 
@@ -64,7 +64,7 @@ public class PolicyHandler {
         
     }
 
-    private void publishIfReady(String bookId) {
+    private void publishIfReady(Long bookId) {
         AiSummarized aiEvent = aiSummarizedMap.get(bookId);
         CoverCreated coverEvent = coverCreatedMap.get(bookId);
 
@@ -77,4 +77,3 @@ public class PolicyHandler {
         }
     }
 }
-//>>> Clean Arch / Inbound Adaptor
