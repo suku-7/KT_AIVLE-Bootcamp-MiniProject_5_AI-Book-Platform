@@ -29,6 +29,7 @@ public class AiProcessTracker {
     private Integer maxLength;
     
     // Cover Design Data
+    @Column(length = 1000)
     private String imageUrl;
     private String generatedBy;
     private Date coverCreatedAt; // 커버 생성 완료 시간 추가
