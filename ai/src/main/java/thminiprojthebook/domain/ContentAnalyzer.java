@@ -1,6 +1,7 @@
 package thminiprojthebook.domain;
 
 import javax.persistence.*;
+import java.util.List;
 import lombok.Data;
 import thminiprojthebook.AiApplication;
 import thminiprojthebook.service.GptService;
@@ -37,6 +38,17 @@ public class ContentAnalyzer {
             System.out.println("- Title: " + bookRegisted.getTitle());
             System.out.println("- Context: " + bookRegisted.getContext());
             System.out.println("- AuthorId: " + bookRegisted.getAuthorId());
+            
+            // Check if ContentAnalyzer already exists for this book
+            List<ContentAnalyzer> existingAnalyzers = repository().findByBookId(bookRegisted.getBookId());
+            if (!existingAnalyzers.isEmpty()) {
+                ContentAnalyzer existing = existingAnalyzers.get(0);
+                if (existing.getSummary() != null && !existing.getSummary().trim().isEmpty()) {
+                    System.out.println("ContentAnalyzer already exists and processed for BookId: " + bookRegisted.getBookId());
+                    System.out.println("Skipping duplicate processing to prevent repeated AI calls");
+                    return;
+                }
+            }
             
             // Initialize or get AI process tracker
             AiProcessTracker tracker = AiProcessTracker.findByBookId(bookRegisted.getBookId());

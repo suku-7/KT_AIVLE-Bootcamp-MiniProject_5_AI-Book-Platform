@@ -48,6 +48,13 @@ public class AiProcessTracker {
      * Initialize AI process tracking for a book
      */
     public static AiProcessTracker initializeForBook(Long bookId, String title, Long authorId) {
+        // Check if tracker already exists
+        AiProcessTracker existingTracker = findByBookId(bookId);
+        if (existingTracker != null) {
+            System.out.println("AI Process Tracker already exists for book: " + title + " (ID: " + bookId + ")");
+            return existingTracker;
+        }
+        
         AiProcessTracker tracker = new AiProcessTracker();
         tracker.setBookId(bookId);
         tracker.setTitle(title);

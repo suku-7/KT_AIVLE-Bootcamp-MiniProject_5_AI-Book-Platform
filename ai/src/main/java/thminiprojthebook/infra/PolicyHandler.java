@@ -1,9 +1,7 @@
 package thminiprojthebook.infra;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.naming.NameParser;
-import javax.naming.NameParser;
+import java.util.List;
+import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.StreamListener;
@@ -39,12 +37,29 @@ public class PolicyHandler {
         );
 
         try {
-            // Process AiSummarize first to generate summary
+            // Check if processing is already completed for this book
+            List<ContentAnalyzer> existingAnalyzers = contentAnalyzerRepository.findByBookId(event.getBookId());
+            boolean contentAnalysisExists = !existingAnalyzers.isEmpty() && 
+                existingAnalyzers.get(0).getSummary() != null && 
+                !existingAnalyzers.get(0).getSummary().trim().isEmpty();
+                
+            Optional<CoverDesign> existingCover = coverDesignRepository.findById(event.getBookId());
+            boolean coverExists = existingCover.isPresent() && 
+                existingCover.get().getImageUrl() != null && 
+                !existingCover.get().getImageUrl().trim().isEmpty();
+            
+            if (contentAnalysisExists && coverExists) {
+                System.out.println("Both content analysis and cover generation already completed for BookId: " + event.getBookId());
+                System.out.println("Skipping duplicate processing");
+                return;
+            }
+            
+            // Process AiSummarize first to generate summary (with internal duplicate check)
             System.out.println("=== Starting AiSummarize ===");
             ContentAnalyzer.aiSummarize(event);
             System.out.println("=== AiSummarize completed ===");
 
-            // Process AutoCoverGeneratePolicy after summary is available
+            // Process AutoCoverGeneratePolicy after summary is available (with internal duplicate check)
             System.out.println("=== Starting AutoCoverGeneratePolicy ===");
             CoverDesign.autoCoverGeneratePolicy(event);
             System.out.println("=== AutoCoverGeneratePolicy completed ===");

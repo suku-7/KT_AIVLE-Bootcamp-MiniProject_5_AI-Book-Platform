@@ -28,7 +28,7 @@ spring:
         - id: libraryplatform
           uri: http://localhost:8086
           predicates:
-            - Path=/libraryInfos/**, 
+            - Path=/libraryInfos/**, /bestsellers, 
         - id: subscribemanage
           uri: http://localhost:8087
           predicates:
