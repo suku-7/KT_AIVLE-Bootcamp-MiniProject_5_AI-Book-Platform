@@ -1,6 +1,6 @@
 // =================================================================
 // FILENAME: src/pages/PublishPage.jsx (최종 수정)
-// 역할: 페이지 전체에 최대 너비를 설정하여, 넓은 화면에서도 레이아웃이 안정적으로 보이도록 수정합니다.
+// 역할: 페이지 전체에 최대 너비를 설정하고, 로딩 아이콘만 중앙에 배치합니다.
 // =================================================================
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
@@ -43,7 +43,9 @@ export const PublishPage = () => {
     }, [location, navigate, bookId]);
 
     const fetchAiResults = async (isInitialFetch = false) => {
-        if (!isInitialFetch) setIsPublishing(true);
+        if (!isInitialFetch && !isPublishing) {
+            setIsPublishing(true);
+        }
 
         try {
             const [coverRes, summaryRes] = await Promise.all([
@@ -104,7 +106,6 @@ export const PublishPage = () => {
     }
 
     return (
-        // 1. 전체 페이지를 감싸는 컨테이너에 maxWidth와 중앙 정렬을 적용합니다.
         <Box sx={{ maxWidth: '1400px', margin: 'auto', p: { xs: 2, md: 4 } }}>
             <Box sx={{
                 display: 'flex',
@@ -153,7 +154,20 @@ export const PublishPage = () => {
                     <Stack spacing={4}>
                         <Paper variant="outlined" sx={{ p: 3 }}>
                             <Typography variant="h6" fontWeight="bold" gutterBottom>AI 생성 표지</Typography>
-                            <Box sx={{ mt: 2, height: '30vh', backgroundColor: 'grey.100', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2 }}>
+                            {/* [수정] 표지 로딩 아이콘도 중앙에 배치합니다. */}
+                            <Box sx={{ 
+                                mt: 2, 
+                                height: '30vh', 
+                                backgroundColor: 'grey.100', 
+                                borderRadius: 2, 
+                                p: 2,
+                                // 로딩 중일 때만 중앙 정렬 스타일 적용
+                                ...(isPublishing && !coverImageUrl && {
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }),
+                            }}>
                                 {isPublishing && !coverImageUrl && <CircularProgress />}
                                 {coverImageUrl && (
                                     <Box component="img" src={coverImageUrl} alt="AI-generated cover" sx={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: 2 }} />
@@ -163,7 +177,21 @@ export const PublishPage = () => {
 
                         <Paper variant="outlined" sx={{ p: 3 }}>
                             <Typography variant="h6" fontWeight="bold" gutterBottom>AI 생성 요약</Typography>
-                            <Box sx={{ mt: 2, height: '35vh', p: 3, backgroundColor: 'grey.100', borderRadius: 2, overflowY: 'auto' }}>
+                             {/* [수정] 로딩 중일 때만 중앙 정렬 스타일을 적용하고, 텍스트는 기본 정렬(좌측 상단)을 따르도록 합니다. */}
+                            <Box sx={{ 
+                                mt: 2, 
+                                height: '35vh', 
+                                p: 3, 
+                                backgroundColor: 'grey.100', 
+                                borderRadius: 2, 
+                                overflowY: 'auto',
+                                // 로딩 중일 때만 중앙 정렬 스타일 적용
+                                ...(isPublishing && !summary && {
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }),
+                            }}>
                                 {isPublishing && !summary && <CircularProgress />}
                                 {summary && <Typography>{summary}</Typography>}
                             </Box>
@@ -174,4 +202,5 @@ export const PublishPage = () => {
         </Box>
     );
 };
+
 export default PublishPage;
