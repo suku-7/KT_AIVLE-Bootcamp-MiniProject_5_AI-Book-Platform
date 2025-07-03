@@ -86,7 +86,7 @@ public class LibraryInfo {
 
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
-   public static LibraryInfo publish(AiSummarized aiSummarized) {
+   public static void publish(AiSummarized aiSummarized ,CoverCreated coverCreated) {
         /**
          * AI 서비스가 문서 요약을 완료하면, 그 내용을 바탕으로
          * 새로운 LibraryInfo(도서 정보)를 생성하고 Published 이벤트를 발행합니다.
@@ -118,22 +118,8 @@ public class LibraryInfo {
             "publish(AiSummarized) Policy: A new book has been published." +
             " bookId: " + libraryInfo.getBookId()
         );
-        
-        return libraryInfo;
 
-
-        
-    }
-
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
-    public static void publish(CoverCreated coverCreated) {
-        /**
-         * AI 서비스가 표지 생성을 완료하면, 기존 도서 정보에
-         * 이미지 URL을 업데이트합니다.
-         */
-        
-        // 1. CoverCreated 이벤트의 bookId로 기존 LibraryInfo 객체를 찾습니다.
+        // library cover 다지인 
         repository().findById(coverCreated.getBookId()).ifPresent(libraryInfo->{
             
             // 2. 이미지 URL을 업데이트합니다.
@@ -146,6 +132,18 @@ public class LibraryInfo {
                 "publish(CoverCreated) Policy: Cover image updated for bookId: " + libraryInfo.getBookId()
             );
         });
+    }
+
+    //>>> Clean Arch / Port Method
+    //<<< Clean Arch / Port Method
+    public static void publish(CoverCreated coverCreated) {
+        /**
+         * AI 서비스가 표지 생성을 완료하면, 기존 도서 정보에
+         * 이미지 URL을 업데이트합니다.
+         */
+        
+        // 1. CoverCreated 이벤트의 bookId로 기존 LibraryInfo 객체를 찾습니다.
+        
     }
     //>>> Clean Arch / Port Method
 
