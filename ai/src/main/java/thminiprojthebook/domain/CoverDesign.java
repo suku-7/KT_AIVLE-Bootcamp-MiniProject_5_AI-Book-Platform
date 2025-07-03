@@ -40,6 +40,14 @@ public class CoverDesign {
             System.out.println("- Context: " + bookRegisted.getContext());
             System.out.println("- AuthorId: " + bookRegisted.getAuthorId());
             
+            // Check if cover already exists for this book
+            Optional<CoverDesign> existingCover = repository().findById(bookRegisted.getBookId());
+            if (existingCover.isPresent() && existingCover.get().getImageUrl() != null && !existingCover.get().getImageUrl().trim().isEmpty()) {
+                System.out.println("Cover already exists for BookId: " + bookRegisted.getBookId());
+                System.out.println("Skipping duplicate cover generation to prevent repeated API calls");
+                return;
+            }
+            
             // Initialize or get AI process tracker
             AiProcessTracker tracker = AiProcessTracker.findByBookId(bookRegisted.getBookId());
             if (tracker == null) {

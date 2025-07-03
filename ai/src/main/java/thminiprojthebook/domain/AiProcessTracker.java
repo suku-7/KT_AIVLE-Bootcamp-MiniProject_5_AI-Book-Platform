@@ -29,6 +29,7 @@ public class AiProcessTracker {
     private Integer maxLength;
     
     // Cover Design Data
+    @Column(length = 1000)
     private String imageUrl;
     private String generatedBy;
     private Date coverCreatedAt; // 커버 생성 완료 시간 추가
@@ -48,6 +49,13 @@ public class AiProcessTracker {
      * Initialize AI process tracking for a book
      */
     public static AiProcessTracker initializeForBook(Long bookId, String title, Long authorId) {
+        // Check if tracker already exists
+        AiProcessTracker existingTracker = findByBookId(bookId);
+        if (existingTracker != null) {
+            System.out.println("AI Process Tracker already exists for book: " + title + " (ID: " + bookId + ")");
+            return existingTracker;
+        }
+        
         AiProcessTracker tracker = new AiProcessTracker();
         tracker.setBookId(bookId);
         tracker.setTitle(title);
