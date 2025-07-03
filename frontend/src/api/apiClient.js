@@ -5,7 +5,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-    baseURL: "https://8088-cherish2pro-thminiprojt-o9vqt141yks.ws-us120.gitpod.io",
+    baseURL: "https://8088-cherish2pro-thminiprojt-2fbozbr7ku0.ws-us120.gitpod.io",
     headers: {
         "Content-Type": "application/json",
     },
@@ -46,7 +46,7 @@ export const api = {
 
     // --- writemanage ---
     writeContext: (writingData) => apiClient.post('/writings', writingData),
-    modifyContext: (bookId, updateData) => apiClient.put(`/writings/${bookId}`, updateData),
+    modifyContext: (bookId, updateData) => apiClient.put(`/writings/${bookId}/modifycontext`, updateData),
     deleteContext: (bookId) => apiClient.delete(`/writings/${bookId}`),
     registBook: (bookId) => apiClient.put(`/writings/${bookId}/registbook`),
     getWriting: (bookId) => apiClient.get(`/writings/${bookId}`),

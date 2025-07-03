@@ -1,26 +1,31 @@
 // =================================================================
 // FILENAME: src/components/AuthForm.jsx (수정)
-// 역할: UI를 세련된 카드 디자인으로 전면 개편합니다.
+// 역할: 사용자 회원가입 시, KT 인증 부분을 스위치 컴포넌트로 변경합니다.
 // =================================================================
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../api/apiClient';
 
-// 1. Material-UI 컴포넌트를 추가로 불러옵니다.
-import { Box, Button, TextField, Typography, Paper } from '@mui/material';
+// 1. Switch 컴포넌트를 추가로 import 합니다.
+import { Box, Button, TextField, Typography, Paper, Switch } from '@mui/material';
 
 export const AuthForm = ({ userType }) => {
-    // KT 인증값을 받기 위해 isKt 필드를 state에 다시 추가합니다.
     const [isLogin, setIsLogin] = useState(true);
-    const [formData, setFormData] = useState({ loginId: '', password: '', name: '', isKt: 'false', portfolioUrl: '' });
+    // 2. isKt의 초기값을 boolean 타입인 false로 변경합니다.
+    const [formData, setFormData] = useState({ loginId: '', password: '', name: '', isKt: false, portfolioUrl: '' });
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const { login } = useAuth();
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        const { name, value, type, checked } = e.target;
+        // 3. 이벤트 타겟의 타입이 'checkbox'(스위치)인지 확인하여 값을 처리합니다.
+        if (type === 'checkbox') {
+            setFormData(prev => ({ ...prev, [name]: checked }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -35,12 +40,11 @@ export const AuthForm = ({ userType }) => {
                     : await api.loginAuthor(loginData);
                 alert('로그인 성공!');
                 login(response.data, userType);
-                userType ==='user' ? navigate('/main') : navigate('/write/my');
-                // navigate('/main')
+                navigate('/main');
             } else {
-                // 회원가입 시 isKt 값을 포함하도록 수정합니다.
+                // 4. API로 보내기 전, isKt 값을 다시 문자열("true" 또는 "false")로 변환합니다.
                 const signupData = userType === 'user'
-                    ? { loginId: formData.loginId, loginPassword: formData.password, name: formData.name, isKt: formData.isKt }
+                    ? { loginId: formData.loginId, loginPassword: formData.password, name: formData.name, isKt: String(formData.isKt) }
                     : { loginId: formData.loginId, password: formData.password, name: formData.name, portfolioUrl: formData.portfolioUrl };
 
                 if (userType === 'user') {
@@ -58,7 +62,9 @@ export const AuthForm = ({ userType }) => {
         }
     };
 
-    const formTitle = `${userType === 'user' ? '사용자' : '작가'} ${isLogin ? '로그인' : '회원가입'}`;
+    const userTypeName = userType === 'user' ? '사용자' : '작가';
+    const formTitle = `${userTypeName} ${isLogin ? '로그인' : '회원가입'}`;
+    const buttonText = isLogin ? `${userTypeName} 로그인` : `${userTypeName} 회원가입`;
 
     return (
         <Paper 
@@ -77,44 +83,35 @@ export const AuthForm = ({ userType }) => {
                 </Typography>
                 {isLogin && (
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
-                        20만 권 속에서 인생책을 찾아보세요
+                        AI IN 서재안에서 인생책을 찾아보세요
                     </Typography>
                 )}
 
-                <TextField
-                    label="아이디"
-                    name="loginId"
-                    value={formData.loginId}
-                    onChange={handleChange}
-                    required
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    label="비밀번호"
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                    fullWidth
-                    margin="normal"
-                />
+                <TextField label="아이디" name="loginId" value={formData.loginId} onChange={handleChange} required fullWidth margin="normal" />
+                <TextField label="비밀번호" name="password" type="password" value={formData.password} onChange={handleChange} required fullWidth margin="normal" />
 
                 {!isLogin && (
                     <>
                         <TextField label="이름" name="name" value={formData.name} onChange={handleChange} required fullWidth margin="normal" />
-                        {/* 사용자 회원가입 시에만 KT 고객 여부 필드를 표시합니다. */}
+                        
+                        {/* 5. 기존 TextField를 Switch 컴포넌트로 교체하고, 레이아웃을 수정합니다. */}
                         {userType === 'user' && (
-                            <TextField 
-                                label="KT 고객 여부 (true/false)" 
-                                name="isKt" 
-                                value={formData.isKt} 
-                                onChange={handleChange} 
-                                required 
-                                fullWidth 
-                                margin="normal" 
-                            />
+                            <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, mb: 1 }}>
+                                <Typography sx={{ mr: 2 }}>KT 고객 인증</Typography>
+                                <Switch
+                                    checked={formData.isKt}
+                                    onChange={handleChange}
+                                    name="isKt"
+                                    sx={{
+                                        '& .MuiSwitch-switchBase.Mui-checked': {
+                                            color: '#FFD600',
+                                        },
+                                        '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                            backgroundColor: '#FFEB60',
+                                        },
+                                    }}
+                                />
+                            </Box>
                         )}
                         {userType === 'author' && <TextField label="포트폴리오 URL" name="portfolioUrl" value={formData.portfolioUrl} onChange={handleChange} fullWidth margin="normal" />}
                     </>
@@ -132,14 +129,15 @@ export const AuthForm = ({ userType }) => {
                         padding: '12px',
                         fontSize: '1rem',
                         fontWeight: 'bold',
-                        backgroundColor: '#FFEB3B',
-                        color: '#333',
+                        backgroundColor: '#FFF7BF',
+                        color: 'grey.700',
+                        boxShadow: 'none',
                         '&:hover': {
-                            backgroundColor: '#FBC02D',
+                            backgroundColor: '#FFEB60',
                         }
                     }}
                 >
-                    {isLogin ? '로그인' : '회원가입'}
+                    {buttonText}
                 </Button>
 
                 <Button 

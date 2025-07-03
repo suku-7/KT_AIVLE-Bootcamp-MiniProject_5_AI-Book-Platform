@@ -62,7 +62,7 @@ public class Point {
         if (this.getIsKt() == null || !this.getIsKt().equals("true")) {
             this.setIsKt("true");
             if(this.pointBalance == null) this.pointBalance = 0;
-            this.setPointBalance(this.getPointBalance() + 4000);
+            this.setPointBalance(this.getPointBalance() + 5000);
             KtSignedupPointCharged ktCharged = new KtSignedupPointCharged(this);
             ktCharged.publishAfterCommit();
         }
@@ -96,7 +96,7 @@ public class Point {
 
         boolean isKtUser = "true".equals(userRegistered.getIsKt());
         if (isKtUser) {
-            point.setPointBalance(point.getPointBalance() + 4000);
+            point.setPointBalance(point.getPointBalance() + 5000);
         }
         repository().save(point);
 

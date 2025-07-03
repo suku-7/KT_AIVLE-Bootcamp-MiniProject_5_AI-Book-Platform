@@ -19,6 +19,7 @@ import { PublishPage } from '../pages/PublishPage';
 import EditPage from "../pages/WritingEditPage.jsx";
 import MyWritingsPage from "../pages/MyWritingsPage.jsx";
 import MyWritingDetailPage from "../pages/MyWritingDetailPage.jsx";
+import ProfileEditPage from '../pages/ProfileEditPage';
 
 const ProtectedRoute = ({ allowedRoles }) => {
     const { auth } = useAuth();
@@ -40,6 +41,8 @@ export const Router = () => {
             <Route element={<ProtectedRoute allowedRoles={['user', 'author', 'admin']} />}>
                 <Route path="/main" element={<MainPage />} />
                 <Route path="/book/:bookId" element={<BookDetailPage />} />
+                {/* ▼▼▼ 이 줄을 추가합니다. ▼▼▼ */}
+                <Route path="/profile/edit" element={<ProfileEditPage />} />
             </Route>
 
             {/* --- 사용자 전용 경로 --- */}

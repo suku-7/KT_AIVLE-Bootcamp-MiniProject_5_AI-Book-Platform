@@ -53,7 +53,12 @@ public class Writing {
     //>>> Clean Arch / Port Method
     //<<< Clean Arch / Port Method
     public void modifyContext(ModifyContextCommand command) {
-        this.context = command.getNewContext();
+        if(command.getNewTitle() != null) {
+            this.title = command.getNewTitle();
+        }
+        if(command.getNewContext() != null) {
+            this.context = command.getNewContext();
+        }
     }
 }
 //>>> DDD / Aggregate Root

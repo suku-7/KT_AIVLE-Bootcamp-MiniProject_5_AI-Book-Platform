@@ -1,16 +1,17 @@
 // =================================================================
 // FILENAME: src/pages/LandingPage.jsx (수정)
-// 역할: 화면 너비에 따른 이미지와 콘텐츠 영역의 비율을 조정합니다.
+// 역할: 초기화면의 버튼 색상을 요청에 맞게 수정합니다.
 // =================================================================
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, Button, Paper } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 
 // src/assets 폴더에 넣은 배경 이미지를 불러옵니다.
 import backgroundImage from '../assets/library-background.png'; 
 
 export const LandingPage = () => {
     const navigate = useNavigate();
+    const buttonTextColor = 'grey.700'; // 버튼에 사용할 공통 회색 텍스트
 
     return (
         <Box 
@@ -26,8 +27,7 @@ export const LandingPage = () => {
             {/* 왼쪽 영역: 배경 이미지 */}
             <Box
                 sx={{
-                    // ▼▼▼ 이 부분의 비율을 3에서 4로 늘렸습니다. ▼▼▼
-                    flex: { xs: 0, md: 4 }, // 중간 크기 이상 화면에서 4의 비율을 차지
+                    flex: { xs: 0, md: 4 },
                     backgroundImage: `url(${backgroundImage})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
@@ -38,8 +38,7 @@ export const LandingPage = () => {
             {/* 오른쪽 영역: 로그인 및 회원가입 */}
             <Box
                 sx={{
-                    // ▼▼▼ 이 부분의 비율은 그대로 1를 유지합니다. ▼▼▼
-                    flex: { xs: 1, md: 1 }, // 중간 크기 이상 화면에서 2의 비율을 차지
+                    flex: { xs: 1, md: 1 },
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -59,28 +58,50 @@ export const LandingPage = () => {
                     </Typography>
                     
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        {/* ▼▼▼ 1. '사용자 로그인' 버튼 스타일 수정 ▼▼▼ */}
                         <Button 
                             fullWidth 
                             variant="contained" 
-                            color="primary" 
                             onClick={() => navigate('/user-auth')}
-                            sx={{ padding: '12px', fontSize: '1rem' }}
+                            sx={{ 
+                                padding: '12px', 
+                                fontSize: '1rem',
+                                backgroundColor: '#FFF7BF', // 요청하신 배경색
+                                color: buttonTextColor,    // 회색 텍스트
+                                boxShadow: 'none',
+                                '&:hover': {
+                                    backgroundColor: '#FFEB60', // 호버 시 약간 더 진한 색
+                                }
+                            }}
                         >
                             사용자 로그인 / 가입
                         </Button>
+                        
+                        {/* ▼▼▼ 2. '작가 로그인' 버튼 스타일 수정 ▼▼▼ */}
                         <Button 
                             fullWidth 
                             variant="outlined" 
-                            color="secondary" 
                             onClick={() => navigate('/author-auth')}
-                            sx={{ padding: '12px', fontSize: '1rem' }}
+                            sx={{ 
+                                padding: '12px', 
+                                fontSize: '1rem',
+                                borderColor: '#FFF7BF', // 요청하신 테두리 색
+                                color: buttonTextColor,  // 회색 텍스트
+                                '&:hover': {
+                                    borderColor: '#FFF1A8',
+                                    backgroundColor: 'rgba(255, 241, 168, 0.1)' // 호버 시 약간의 배경색
+                                }
+                            }}
                         >
                             작가 로그인 / 가입
                         </Button>
+
+                        {/* ▼▼▼ 3. '관리자 페이지' 버튼 스타일 수정 ▼▼▼ */}
                         <Button 
                             fullWidth 
                             variant="text" 
                             onClick={() => navigate('/admin/approvals')}
+                            sx={{ color: buttonTextColor }} // 회색 텍스트
                         >
                             관리자 페이지로 이동
                         </Button>

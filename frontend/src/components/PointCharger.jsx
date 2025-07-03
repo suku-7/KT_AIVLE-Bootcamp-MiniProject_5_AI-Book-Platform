@@ -1,6 +1,6 @@
 // =================================================================
 // FILENAME: src/components/PointCharger.jsx (수정)
-// 역할: 충전 금액 입력 필드에 1,000단위 콤마를 추가하여 가독성을 높입니다.
+// 역할: '초기화' 버튼을 제거하고, 모든 버튼의 스타일을 노란색 계열로 통일합니다.
 // =================================================================
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
@@ -11,6 +11,16 @@ export const PointCharger = ({ onChargeSuccess }) => {
     const { auth } = useAuth();
     const [amount, setAmount] = useState(0);
     const [loading, setLoading] = useState(false);
+
+    // 버튼에 적용할 공통 스타일을 정의합니다.
+    const chargeButtonStyle = {
+        backgroundColor: '#FFF7BF',
+        color: 'grey.800',
+        boxShadow: 'none',
+        '&:hover': {
+            backgroundColor: '#FFEB60',
+        }
+    };
 
     const handleCharge = async () => {
         if (!auth.user) {
@@ -23,7 +33,6 @@ export const PointCharger = ({ onChargeSuccess }) => {
         }
         setLoading(true);
         try {
-            // API로 보낼 때는 순수 숫자 값(amount)을 보냅니다.
             const response = await api.rechargePoint(auth.user.userId, { amount });
             alert(`${amount.toLocaleString()} 포인트가 충전되었습니다.`);
             
@@ -44,37 +53,31 @@ export const PointCharger = ({ onChargeSuccess }) => {
     };
 
     return (
-        <Box sx={{ mt: 2, p: 2.5, border: '1px solid', borderColor: 'primary.main', borderRadius: 2 }}>
-            <Typography variant="h6" gutterBottom>포인트 충전</Typography>
-            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-                <Button variant="outlined" onClick={() => addAmount(5000)}>+ 5,000 P</Button>
-                <Button variant="outlined" onClick={() => addAmount(10000)}>+ 10,000 P</Button>
-                <Button variant="outlined" onClick={() => addAmount(30000)}>+ 30,000 P</Button>
-                <Button variant="text" onClick={() => setAmount(0)}>초기화</Button>
+        <Box>
+            <Typography variant="h6" fontWeight="bold" gutterBottom>포인트 충전</Typography>
+            <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
+                <Button variant="contained" onClick={() => addAmount(5000)} sx={chargeButtonStyle}>+ 5,000 P</Button>
+                <Button variant="contained" onClick={() => addAmount(10000)} sx={chargeButtonStyle}>+ 10,000 P</Button>
+                <Button variant="contained" onClick={() => addAmount(30000)} sx={chargeButtonStyle}>+ 30,000 P</Button>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                {/* ▼▼▼ 이 TextField 부분이 수정되었습니다. ▼▼▼ */}
                 <TextField 
-                    type="text" // type을 "text"로 변경하여 콤마가 포함된 문자열을 받을 수 있게 합니다.
+                    type="text"
                     label="충전할 금액"
-                    value={amount.toLocaleString('ko-KR')} // 화면에 표시될 때는 콤마를 추가합니다.
+                    value={amount.toLocaleString('ko-KR')}
                     onChange={(e) => {
-                        // 사용자가 입력한 값에서 콤마 등 숫자 외의 문자를 모두 제거합니다.
                         const numericValue = e.target.value.replace(/[^0-9]/g, '');
-                        // 숫자만 남은 값을 상태(state)에 저장합니다.
                         setAmount(Number(numericValue));
                     }}
                     fullWidth
                     variant="outlined"
-                    // 모바일 기기에서 숫자 키패드가 나타나도록 돕는 속성입니다.
                     inputProps={{ inputMode: 'numeric' }} 
                 />
-                {/* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */}
                 <Button 
                     variant="contained" 
                     onClick={handleCharge} 
                     disabled={loading} 
-                    sx={{ py: 1.5, px: 3, whiteSpace: 'nowrap' }}
+                    sx={{ ...chargeButtonStyle, py: 1.5, px: 3, whiteSpace: 'nowrap' }}
                 >
                     {loading ? '충전 중...' : '충전하기'}
                 </Button>

@@ -1,127 +1,177 @@
 // =================================================================
-// FILENAME: src/pages/PublishPage.jsx
-// 역할: 작가가 작성한 글을 AI로 분석하고 최종 출간하는 페이지입니다.
+// FILENAME: src/pages/PublishPage.jsx (최종 수정)
+// 역할: 페이지 전체에 최대 너비를 설정하여, 넓은 화면에서도 레이아웃이 안정적으로 보이도록 수정합니다.
 // =================================================================
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../api/apiClient';
-import { useAuth } from '../contexts/AuthContext';
+import { 
+    Box, Button, Typography, Paper, CircularProgress, Stack
+} from '@mui/material';
 
 export const PublishPage = () => {
     const { bookId } = useParams();
-    const { auth } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [writing, setWriting] = useState(null);
     const [coverImageUrl, setCoverImageUrl] = useState('');
     const [summary, setSummary] = useState('');
-    const [isCoverLoading, setIsCoverLoading] = useState(false);
-    const [isSummaryLoading, setIsSummaryLoading] = useState(false);
+    const [isPublishing, setIsPublishing] = useState(false);
+    const [isPublished, setIsPublished] = useState(false);
 
-    // 1. 페이지 로드 시 원고 내용 불러오기
+    const pollingRef = useRef(null);
+
     useEffect(() => {
-        const fetchWriting = async () => {
-            try {
-                const response = await api.getWriting(bookId);
-                setWriting(response.data);
-            } catch (error) {
-                console.error("원고 정보를 불러오는 데 실패했습니다.", error);
-                alert("원고 정보를 불러올 수 없습니다.");
+        if (location.state?.writingData) {
+            const initialWriting = location.state.writingData;
+            setWriting(initialWriting);
+            if (initialWriting.registration) {
+                setIsPublished(true);
+                fetchAiResults(true);
+            }
+        } else {
+            alert("출간할 글의 정보를 가져오지 못했습니다.");
+            navigate(-1);
+        }
+
+        return () => {
+            if (pollingRef.current) {
+                clearInterval(pollingRef.current);
             }
         };
-        fetchWriting();
-    }, [bookId]);
+    }, [location, navigate, bookId]);
 
-    // 2. AI 표지 생성 요청
-    const handleGenerateCover = async () => {
-        if (!writing) return;
-        setIsCoverLoading(true);
+    const fetchAiResults = async (isInitialFetch = false) => {
+        if (!isInitialFetch) setIsPublishing(true);
+
         try {
-            // AI 표지 생성을 요청합니다. (백엔드에서 비동기 처리됨)
-            await api.requestCoverGeneration({
-                bookId: writing.bookId,
-                authorId: writing.authorId,
-                title: writing.title,
-                authorName: writing.authorName
-            });
-            // 실제로는 Web-Socket이나 반복 폴링으로 완료 여부를 확인해야 하지만,
-            // 여기서는 5초 후 생성된 정보를 조회하는 것으로 대체합니다.
-            setTimeout(async () => {
-                const response = await api.getCoverDesign(writing.bookId);
-                setCoverImageUrl(response.data.imageUrl);
-                setIsCoverLoading(false);
-            }, 5000); // 5초 대기
+            const [coverRes, summaryRes] = await Promise.all([
+                api.getCoverDesign(bookId),
+                api.getContentAnalyzer(bookId)
+            ]);
+            
+            const newCoverUrl = coverRes.data?.imageUrl;
+            const newSummary = summaryRes.data?.summary;
+
+            let coverDone = false;
+            let summaryDone = false;
+
+            if (newCoverUrl) {
+                setCoverImageUrl(newCoverUrl);
+                coverDone = true;
+            }
+            if (newSummary) {
+                setSummary(newSummary);
+                summaryDone = true;
+            }
+
+            if (coverDone && summaryDone) {
+                if (pollingRef.current) {
+                    clearInterval(pollingRef.current);
+                    pollingRef.current = null;
+                }
+                setIsPublishing(false);
+            }
         } catch (error) {
-            alert("AI 표지 생성에 실패했습니다.");
-            setIsCoverLoading(false);
-        }
-    };
-    
-    // 3. AI 요약 생성 요청
-    const handleGenerateSummary = async () => {
-        if (!writing) return;
-        setIsSummaryLoading(true);
-        try {
-            await api.requestContentAnalysis({
-                bookId: writing.bookId,
-                authorId: writing.authorId,
-                context: writing.context,
-                maxLength: 150, // 150자 요약 요청
-            });
-            // 표지와 마찬가지로 5초 후 결과를 조회합니다.
-            setTimeout(async () => {
-                const response = await api.getContentAnalyzer(writing.bookId);
-                setSummary(response.data.summary); // ContentAnalyzer에 summary 필드가 있다고 가정
-                setIsSummaryLoading(false);
-            }, 5000); // 5초 대기
-        } catch (error) {
-            alert("AI 요약 생성에 실패했습니다.");
-            setIsSummaryLoading(false);
+            console.error("AI 결과물 로딩 실패:", error);
         }
     };
 
-    // 4. 최종 출간 등록
     const handlePublish = async () => {
-        if (!coverImageUrl || !summary) {
-            alert("AI 표지와 요약을 먼저 생성해주세요.");
-            return;
-        }
+        if (!writing || isPublished || isPublishing) return;
+
+        setIsPublishing(true);
+        setIsPublished(true);
+
         try {
             await api.registBook(bookId);
-            alert("책이 성공적으로 출간되었습니다! 메인 화면에서 확인하세요.");
-            navigate('/');
+            alert("AI가 표지와 요약 생성을 시작했습니다. 결과가 표시될 때까지 잠시만 기다려주세요.");
+            
+            pollingRef.current = setInterval(() => {
+                fetchAiResults();
+            }, 5000);
+
         } catch (error) {
-            alert("출간에 실패했습니다.");
+            alert("출간 요청에 실패했습니다.");
+            setIsPublishing(false);
+            setIsPublished(false);
         }
     };
 
-    if (!writing) return <p>원고 로딩 중...</p>;
+    if (!writing) {
+        return <Box sx={{ display: 'flex', justifyContent: 'center', p: 5 }}><CircularProgress /></Box>;
+    }
 
     return (
-        <div>
-            <h2>출간 신청하기</h2>
-            <h3>{writing.title}</h3>
-            <p style={{ whiteSpace: 'pre-wrap', background: '#f9f9f9', padding: '1rem' }}>{writing.context}</p>
-            <hr />
-            
-            <h4>AI 기능</h4>
-            <div style={{ display: 'flex', gap: '2rem' }}>
-                <div>
-                    <button onClick={handleGenerateCover} disabled={isCoverLoading}>
-                        {isCoverLoading ? '표지 생성 중...' : 'AI 표지 생성'}
-                    </button>
-                    {coverImageUrl && <img src={coverImageUrl} alt="AI-generated cover" style={{ width: '200px', marginTop: '1rem' }} />}
-                </div>
-                <div>
-                    <button onClick={handleGenerateSummary} disabled={isSummaryLoading}>
-                        {isSummaryLoading ? '요약 생성 중...' : 'AI 요약 생성'}
-                    </button>
-                    {summary && <p style={{ marginTop: '1rem', background: '#f0f0f0', padding: '1rem' }}>{summary}</p>}
-                </div>
-            </div>
+        // 1. 전체 페이지를 감싸는 컨테이너에 maxWidth와 중앙 정렬을 적용합니다.
+        <Box sx={{ maxWidth: '1400px', margin: 'auto', p: { xs: 2, md: 4 } }}>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', md: 'row' },
+                gap: 4,
+            }}>
+                {/* 왼쪽 영역 */}
+                <Box sx={{ flex: 1 }}>
+                    <Stack spacing={4}>
+                        <Paper variant="outlined" sx={{ p: 3, backgroundColor: 'white' }}>
+                            <Typography variant="h5" component="h2" fontWeight="bold">
+                                AI 최종 출간
+                            </Typography>
+                            <Button 
+                                variant="contained"
+                                size="large"
+                                onClick={handlePublish}
+                                disabled={isPublishing || isPublished}
+                                sx={{ mt: 2, mb: 1, backgroundColor: '#FFF7BF', color: 'grey.800', '&:hover': { backgroundColor: '#FFEB60' } }}
+                            >
+                                {isPublishing ? "AI 작업 중..." : (isPublished ? "✅ 출간 완료" : "AI 출간 시작하기")}
+                            </Button>
+                            <Typography variant="body2" color="text.secondary">
+                                버튼을 누르면 AI가 글을 분석하여 표지와 요약을 생성하고 책을 출간합니다.
+                            </Typography>
+                        </Paper>
 
-            <hr />
-            <button onClick={handlePublish} style={{ marginTop: '2rem', padding: '1rem 2rem', fontSize: '1.2rem' }}>최종 출간하기</button>
-        </div>
+                        <Paper variant="outlined" sx={{ p: 3 }}>
+                            <Typography variant="subtitle1" color="text.secondary">제목</Typography>
+                            <Box sx={{ p: 2, mb: 2, backgroundColor: 'grey.100', borderRadius: 1 }}>
+                                <Typography variant="h6" fontWeight="bold">
+                                    {writing.title}
+                                </Typography>
+                            </Box>
+                            
+                            <Typography variant="subtitle1" color="text.secondary">내용</Typography>
+                            <Box sx={{ p: 2, backgroundColor: 'grey.100', borderRadius: 1, whiteSpace: 'pre-wrap', height: '55vh', overflowY: 'auto' }}>
+                                <Typography>{writing.context}</Typography>
+                            </Box>
+                        </Paper>
+                    </Stack>
+                </Box>
+
+                {/* 오른쪽 영역 */}
+                <Box sx={{ flex: 1.3 }}>
+                    <Stack spacing={4}>
+                        <Paper variant="outlined" sx={{ p: 3 }}>
+                            <Typography variant="h6" fontWeight="bold" gutterBottom>AI 생성 표지</Typography>
+                            <Box sx={{ mt: 2, height: '30vh', backgroundColor: 'grey.100', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2 }}>
+                                {isPublishing && !coverImageUrl && <CircularProgress />}
+                                {coverImageUrl && (
+                                    <Box component="img" src={coverImageUrl} alt="AI-generated cover" sx={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: 2 }} />
+                                )}
+                            </Box>
+                        </Paper>
+
+                        <Paper variant="outlined" sx={{ p: 3 }}>
+                            <Typography variant="h6" fontWeight="bold" gutterBottom>AI 생성 요약</Typography>
+                            <Box sx={{ mt: 2, height: '35vh', p: 3, backgroundColor: 'grey.100', borderRadius: 2, overflowY: 'auto' }}>
+                                {isPublishing && !summary && <CircularProgress />}
+                                {summary && <Typography>{summary}</Typography>}
+                            </Box>
+                        </Paper>
+                    </Stack>
+                </Box>
+            </Box>
+        </Box>
     );
 };
+export default PublishPage;

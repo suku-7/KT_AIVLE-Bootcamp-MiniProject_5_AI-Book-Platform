@@ -1,21 +1,31 @@
 // =================================================================
 // FILENAME: src/pages/MyLibraryPage.jsx (수정)
-// 역할: 구독 및 구독 취소 성공 시, 전체 데이터를 새로고침하도록 수정합니다.
+// 역할: '내 정보 새로고침' 버튼을 '내 정보' 카드 안으로 이동시킵니다.
 // =================================================================
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { api } from '../api/apiClient';
-import { Link, useNavigate } from 'react-router-dom';
 import { PointCharger } from '../components/PointCharger';
 import { BookCard } from '../components/BookCard';
-import { Typography, Box, Button, CircularProgress, IconButton } from '@mui/material';
+import { Typography, Box, Button, CircularProgress, Paper, Stack, Chip } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 
 export const MyLibraryPage = () => {
     const { auth, updateAuthUser } = useAuth();
     const [myBooks, setMyBooks] = useState([]);
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
+
+    const buttonTextColor = 'grey.800';
+    const subscribeButtonStyle = {
+        backgroundColor: '#FFF7BF',
+        color: buttonTextColor,
+        fontWeight: 'bold',
+        boxShadow: 'none',
+        '&:hover': {
+            backgroundColor: '#FFEB60',
+        }
+    };
 
     const fetchMyLibraryData = async () => {
         if (!auth.user?.userId) {
@@ -61,10 +71,9 @@ export const MyLibraryPage = () => {
             return;
         }
         try {
-            // ▼▼▼ [수정] 구독 취소 시에는 전체 새로고침 대신, API 응답으로 받은 데이터로만 화면을 업데이트합니다. ▼▼▼
             const response = await api.cancelSubscribeToBookService(auth.user.userId);
             alert("구독이 취소되었습니다.");
-            updateAuthUser(response.data); // 상태만 바로 업데이트
+            updateAuthUser(response.data);
         } catch (error) {
             alert("구독 취소에 실패했습니다.");
             console.error(error);
@@ -76,50 +85,99 @@ export const MyLibraryPage = () => {
         await fetchMyLibraryData();
     };
 
-    if (loading) return <p>내 서재 정보를 불러오는 중...</p>;
+    if (loading) return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+            <CircularProgress />
+        </Box>
+    );
     if (!auth.user) return <p>로그인이 필요합니다.</p>;
 
     const isSubscribed = auth.user.isSubscribe?.startsWith("월간 구독 중");
 
     return (
-        <Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="h4" component="h2" gutterBottom fontWeight="bold">내 서재</Typography>
-                <Button variant="outlined" startIcon={<RefreshIcon />} onClick={fetchMyLibraryData}>
-                    내 정보 새로고침
-                </Button>
-            </Box>
+        <Box sx={{ p: { xs: 2, md: 4 } }}>
+            {/* 1. 페이지 전체 제목은 그대로 유지합니다. */}
+            <Typography variant="h4" component="h2" gutterBottom fontWeight="bold" sx={{ mb: 3 }}>
+                내 서재
+            </Typography>
             
-            <Box sx={{ mb: 4, p: 2, backgroundColor: 'grey.100', borderRadius: 2 }}>
-                <Typography variant="h6">내 정보</Typography>
-                <Typography><strong>보유 포인트:</strong> {auth.user.pointBalance?.toLocaleString() || 0} P</Typography>
-                <Typography><strong>구독 상태:</strong> {isSubscribed ? auth.user.isSubscribe : "현재 구독 중이 아닙니다."}</Typography>
-                
+            <Paper 
+                variant="outlined"
+                sx={{ 
+                    p: 3, 
+                    mb: 4, 
+                    borderRadius: '16px', 
+                    backgroundColor: 'white',
+                    maxWidth: '500px'
+                }}
+            >
+                {/* 2. '내 정보' 제목과 '새로고침' 버튼을 함께 배치합니다. */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                    <Typography variant="h6" fontWeight="bold">내 정보</Typography>
+                    <Button variant="outlined" size="small" startIcon={<RefreshIcon />} onClick={fetchMyLibraryData}>
+                        새로고침
+                    </Button>
+                </Box>
+
+                <Stack spacing={1} sx={{ mb: 3 }}>
+                    <Typography><strong>보유 포인트:</strong> {auth.user.pointBalance?.toLocaleString() || 0} P</Typography>
+                    
+                    {isSubscribed ? (
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Typography><strong>구독 상태:</strong></Typography>
+                            <Chip 
+                                icon={<WorkspacePremiumIcon />} 
+                                label={auth.user.isSubscribe}
+                                color="success"
+                                variant="filled"
+                            />
+                        </Box>
+                    ) : (
+                        <Typography><strong>구독 상태:</strong> 현재 구독 중이 아닙니다.</Typography>
+                    )}
+                </Stack>
+
                 {isSubscribed ? (
-                    <Button variant="contained" color="error" onClick={handleCancelSubscription} sx={{ mt: 1 }}>
+                    <Button variant="outlined" color="error" onClick={handleCancelSubscription}>
                         구독 취소하기
                     </Button>
                 ) : (
-                    <Button variant="contained" onClick={handleSubscribe} sx={{ mt: 1 }}>
+                    <Button variant="contained" onClick={handleSubscribe} sx={subscribeButtonStyle}>
                         월간 구독하기 (11,900P)
                     </Button>
                 )}
-            </Box>
+            </Paper>
 
-            <Box sx={{ mb: 4 }}>
+            <Paper 
+                variant="outlined" 
+                sx={{ 
+                    p: 3, 
+                    mb: 4, 
+                    borderRadius: '16px', 
+                    backgroundColor: 'white',
+                    maxWidth: '500px'
+                }}
+            >
                  <PointCharger onChargeSuccess={onChargeSuccess} />
-            </Box>
+            </Paper>
 
-            <Box>
-                <Typography variant="h6">내가 소장한 책 목록 ({myBooks.length}권)</Typography>
+            <Paper 
+                variant="outlined" 
+                sx={{ 
+                    p: 3, 
+                    borderRadius: '16px', 
+                    backgroundColor: 'white' 
+                }}
+            >
+                <Typography variant="h6" fontWeight="bold">내가 소장한 책 목록 ({myBooks.length}권)</Typography>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '20px', mt: 2 }}>
                     {myBooks.length > 0 ? (
                         myBooks.map(book => <BookCard key={book.bookId} book={book} />)
                     ) : (
-                        <Typography>아직 구매한 책이 없습니다.</Typography>
+                        <Typography sx={{ p: 3, color: 'text.secondary' }}>아직 구매한 책이 없습니다.</Typography>
                     )}
                 </Box>
-            </Box>
+            </Paper>
         </Box>
     );
 };
