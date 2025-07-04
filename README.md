@@ -49,14 +49,16 @@
 ---
 # 소스 코드 추가 설명
 
-1. AI 요약 생성 (ContentAnalyzer)
+## AI Service - 핵심 이벤트 처리
 
-트리거: BookRegisted 이벤트 수신
-처리: GPT를 활용한 콘텐츠 요약 + 장르 분류
-발행: AiSummarized 이벤트
-핵심 로직: 중복 처리 방지, 2단계 AI 처리 (요약 → 분류)
+### 1. AI 요약 생성 (ContentAnalyzer)
+- **트리거**: `BookRegisted` 이벤트 수신
+- **처리**: GPT를 활용한 콘텐츠 요약 + 장르 분류
+- **발행**: `AiSummarized` 이벤트
+- **핵심 로직**: 중복 처리 방지, 2단계 AI 처리 (요약 → 분류)
 
-java// AI 요약 생성 - 2단계 처리
+```java
+// AI 요약 생성 - 2단계 처리
 String initialSummary = gptService.generateSummary(
     bookRegisted.getContext(), 500, "KO", "일반요약"
 );
@@ -67,14 +69,16 @@ String classifiedGenre = gptService.classifyGenre(
 // 이벤트 발행
 AiSummarized aiSummarized = new AiSummarized(contentAnalyzer);
 aiSummarized.publishAfterCommit();
-2. AI 표지 생성 (CoverDesign)
+```
 
-트리거: REST API 요청 또는 AiSummarized 이벤트
-처리: DALL-E를 활용한 표지 이미지 생성
-발행: CoverCreated 이벤트
-핵심 로직: 요약 결과 활용으로 고품질 표지 생성
+### 2. AI 표지 생성 (CoverDesign)
+- **트리거**: REST API 요청 또는 `AiSummarized` 이벤트
+- **처리**: DALL-E를 활용한 표지 이미지 생성
+- **발행**: `CoverCreated` 이벤트
+- **핵심 로직**: 요약 결과 활용으로 고품질 표지 생성
 
-java// AI 표지 생성
+```java
+// AI 표지 생성
 DalleService dalleService = new DalleService();
 String imageUrl = dalleService.generateCoverImage(title, context);
 
@@ -85,6 +89,7 @@ String contextForImage = analyzer.getSummary() != null ?
 // 이벤트 발행
 CoverCreated coverCreated = new CoverCreated(coverDesign);
 coverCreated.publishAfterCommit();
+```
 
 <br><br>
 
