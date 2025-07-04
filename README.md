@@ -52,18 +52,17 @@
 
 # 📚 소스코드 설명
 
-
 ---
 
-## 🤖 AI
+<details>
+<summary><strong>🤖 AI Service</strong></summary>
 
-### 📝 AI 요약 생성 (ContentAnalyzer)
-| 항목 | 내용 |
-|------|------|
-| **트리거** | `BookRegisted` 이벤트 수신 |
-| **처리** | GPT를 활용한 콘텐츠 요약 + 장르 분류 |
-| **발행** | `AiSummarized` 이벤트 |
-| **핵심 로직** | 중복 처리 방지, 2단계 AI 처리 (요약 → 분류) |
+## AI 요약 생성 (ContentAnalyzer)
+
+**트리거**: `BookRegisted` 이벤트 수신  
+**처리**: GPT를 활용한 콘텐츠 요약 + 장르 분류  
+**발행**: `AiSummarized` 이벤트  
+**핵심 로직**: 중복 처리 방지, 2단계 AI 처리 (요약 → 분류)
 
 ```java
 // AI 요약 생성 - 2단계 처리
@@ -79,13 +78,12 @@ AiSummarized aiSummarized = new AiSummarized(contentAnalyzer);
 aiSummarized.publishAfterCommit();
 ```
 
-### 🎨 AI 표지 생성 (CoverDesign)
-| 항목 | 내용 |
-|------|------|
-| **트리거** | REST API 요청 또는 `AiSummarized` 이벤트 |
-| **처리** | DALL-E를 활용한 표지 이미지 생성 |
-| **발행** | `CoverCreated` 이벤트 |
-| **핵심 로직** | 요약 결과 활용으로 고품질 표지 생성 |
+## AI 표지 생성 (CoverDesign)
+
+**트리거**: REST API 요청 또는 `AiSummarized` 이벤트  
+**처리**: DALL-E를 활용한 표지 이미지 생성  
+**발행**: `CoverCreated` 이벤트  
+**핵심 로직**: 요약 결과 활용으로 고품질 표지 생성
 
 ```java
 // AI 표지 생성
@@ -101,12 +99,11 @@ CoverCreated coverCreated = new CoverCreated(coverDesign);
 coverCreated.publishAfterCommit();
 ```
 
-### 🔄 PolicyHandler
-| 항목 | 내용 |
-|------|------|
-| **트리거** | Kafka 이벤트 스트림 수신 |
-| **처리** | 이벤트 기반 순차 처리 및 중복 방지 |
-| **핵심 로직** | 중복 처리 방지, 순차 실행, 품질 개선 처리 |
+## PolicyHandler
+
+**트리거**: Kafka 이벤트 스트림 수신  
+**처리**: 이벤트 기반 순차 처리 및 중복 방지  
+**핵심 로직**: 중복 처리 방지, 순차 실행, 품질 개선 처리
 
 ```java
 // BookRegisted 이벤트 처리 - 순차적 AI 처리
@@ -123,17 +120,23 @@ public void wheneverBookRegisted_ProcessSequentially(@Payload BookRegisted bookR
 }
 ```
 
----
+### 비즈니스 가치
 
-## 👤 AuthorManage
+**자동화된 콘텐츠 처리**: 책 등록 시 AI 요약 및 표지 자동 생성  
+**중복 처리 방지**: 불필요한 AI API 호출 및 비용 절약  
+**품질 최적화**: 요약 결과를 활용한 고품질 표지 생성
 
-### ✅ 작가 승인 처리 (AuthorAggregate)
-| 항목 | 내용 |
-|------|------|
-| **트리거** | 관리자의 `등록 승인` 커맨드 |
-| **처리** | 작가 승인 상태 업데이트 |
-| **발행** | `AuthorApproved` 이벤트 |
-| **핵심 로직** | 관리자 승인 워크플로우, 작가 상태 관리 |
+</details>
+
+<details>
+<summary><strong>👤 AuthorManage</strong></summary>
+
+## 작가 승인 처리 (AuthorAggregate)
+
+**트리거**: 관리자의 `등록 승인` 커맨드  
+**처리**: 작가 승인 상태 업데이트  
+**발행**: `AuthorApproved` 이벤트  
+**핵심 로직**: 관리자 승인 워크플로우, 작가 상태 관리
 
 ```java
 // 작가 승인 이벤트 발행
@@ -142,7 +145,8 @@ authorApproved.setAuthorId(author.getAuthorId());
 authorApproved.setIsApproved(true);
 ```
 
-**📋 AuthorApproved 이벤트 구조**
+## AuthorApproved 이벤트 구조
+
 ```java
 @Data
 public class AuthorApproved extends AbstractEvent {
@@ -152,17 +156,17 @@ public class AuthorApproved extends AbstractEvent {
 }
 ```
 
----
+</details>
 
-## ✍️ WriteManage
+<details>
+<summary><strong>✍️ WriteManage</strong></summary>
 
-### 📖 책 등록 처리 (WritingAggregate)
-| 항목 | 내용 |
-|------|------|
-| **트리거** | 작가의 `책 등록` 커맨드 |
-| **처리** | 책 정보 저장 및 등록 상태 설정 |
-| **발행** | `BookRegisted` 이벤트 |
-| **핵심 로직** | 작가 인증 후 책 등록, 글 작성/수정/삭제 관리 |
+## 책 등록 처리 (WritingAggregate)
+
+**트리거**: 작가의 `책 등록` 커맨드  
+**처리**: 책 정보 저장 및 등록 상태 설정  
+**발행**: `BookRegisted` 이벤트  
+**핵심 로직**: 작가 인증 후 책 등록, 글 작성/수정/삭제 관리
 
 ```java
 // 책 등록 이벤트 발행
@@ -172,7 +176,8 @@ bookRegisted.setTitle(writing.getTitle());
 bookRegisted.setRegistration(true);
 ```
 
-**📋 BookRegisted 이벤트 구조**
+## BookRegisted 이벤트 구조
+
 ```java
 @Data
 public class BookRegisted extends AbstractEvent {
@@ -184,11 +189,12 @@ public class BookRegisted extends AbstractEvent {
 }
 ```
 
----
+</details>
 
-## 👥 SubscribeManage
+<details>
+<summary><strong>👥 SubscribeManage</strong></summary>
 
-### 🔄 PolicyHandler
+## PolicyHandler
 
 ```java
 @Service
@@ -232,43 +238,40 @@ public class PolicyHandler {
 }
 ```
 
-### 📋 처리하는 외부 이벤트
-- **PointDecreased**: 포인트 차감 (구매 시)
-- **PointRecharged**: 포인트 충전
-- **KtSignedupPointCharged**: KT 가입 혜택 포인트 지급
-- **StandardSignedupPointCharged**: 일반 가입 혜택 포인트 지급
-- **Published**: 도서 출간 정보
+## 처리하는 외부 이벤트
 
+**PointDecreased**: 포인트 차감 (구매 시)  
+**PointRecharged**: 포인트 충전  
+**KtSignedupPointCharged**: KT 가입 혜택 포인트 지급  
+**StandardSignedupPointCharged**: 일반 가입 혜택 포인트 지급  
+**Published**: 도서 출간 정보
 
-### 🔐 사용자 등록 처리 (UserAggregate)
-| 항목 | 내용 |
-|------|------|
-| **트리거** | 사용자의 `회원가입` 커맨드 |
-| **처리** | 사용자 정보 저장 및 등록 상태 설정 |
-| **발행** | `UserRegistered` 이벤트 |
+## 사용자 등록 처리 (UserAggregate)
 
-### 📝 사용자 정보 수정 처리
-| 항목 | 내용 |
-|------|------|
-| **트리거** | 사용자의 `회원정보수정` 커맨드 |
-| **처리** | 사용자 정보 업데이트 |
-| **발행** | `UserUpdated` 이벤트 |
+**트리거**: 사용자의 `회원가입` 커맨드  
+**처리**: 사용자 정보 저장 및 등록 상태 설정  
+**발행**: `UserRegistered` 이벤트
 
-### 💎 구독 서비스 가입 처리
-| 항목 | 내용 |
-|------|------|
-| **트리거** | 사용자의 `구독가입` 커맨드 |
-| **처리** | 월 구독 상태 활성화 |
-| **발행** | `BookServiceSubscribed` 이벤트 |
+## 사용자 정보 수정 처리
 
-### 🛒 개별 책 구매 처리
-| 항목 | 내용 |
-|------|------|
-| **트리거** | 사용자의 `소장` 커맨드 |
-| **처리** | 포인트 차감 및 책 소장 권한 부여 |
-| **발행** | `BuyBookSub` 이벤트 |
+**트리거**: 사용자의 `회원정보수정` 커맨드  
+**처리**: 사용자 정보 업데이트  
+**발행**: `UserUpdated` 이벤트
 
-**📋 주요 이벤트 구조**
+## 구독 서비스 가입 처리
+
+**트리거**: 사용자의 `구독가입` 커맨드  
+**처리**: 월 구독 상태 활성화  
+**발행**: `BookServiceSubscribed` 이벤트
+
+## 개별 책 구매 처리
+
+**트리거**: 사용자의 `소장` 커맨드  
+**처리**: 포인트 차감 및 책 소장 권한 부여  
+**발행**: `BuyBookSub` 이벤트
+
+## 주요 이벤트 구조
+
 ```java
 // 👤 사용자 등록
 @Data
@@ -292,11 +295,18 @@ public class BuyBookSub extends AbstractEvent {
 }
 ```
 
----
+### 비즈니스 가치
 
-## 💰 Point 
+**구독 모델**: 월 구독 vs 개별 구매 모델 지원  
+**포인트 시스템**: 포인트 기반 책 구매 시스템  
+**KT 제휴**: KT 계정 연동 기능으로 차별화된 서비스
 
-### 🔄 PolicyHandler
+</details>
+
+<details>
+<summary><strong>💰 Point Service</strong></summary>
+
+## PolicyHandler
 
 ```java
 @Service
@@ -329,7 +339,8 @@ public class PolicyHandler {
 }
 ```
 
-**📋 발행하는 이벤트 구조**
+## 발행하는 이벤트 구조
+
 ```java
 // 💸 포인트 차감 완료 이벤트
 @Data
@@ -360,11 +371,18 @@ public class StandardSignedupPointCharged extends AbstractEvent {
 }
 ```
 
----
+### 비즈니스 가치
 
-## 📚 LibraryPlatform
+**결제 허브**: 모든 포인트 결제 요청을 중앙에서 처리  
+**가입 혜택**: 회원 가입 시 자동 포인트 지급  
+**실시간 처리**: 이벤트 기반 실시간 포인트 처리
 
-### 🔄 이벤트 조합 처리 (Event Orchestration)
+</details>
+
+<details>
+<summary><strong>📚 LibraryPlatform</strong></summary>
+
+## 이벤트 조합 처리 (Event Orchestration)
 
 ```java
 @Service
@@ -405,7 +423,8 @@ public class PolicyHandler {
 }
 ```
 
-**📋 발행하는 이벤트 구조**
+## 발행하는 이벤트 구조
+
 ```java
 // 📚 도서 출간 완료 이벤트
 @Data
@@ -432,29 +451,13 @@ public class BestsellerGiven extends AbstractEvent {
 }
 ```
 
----
+### 비즈니스 가치
 
-## 🎯 비즈니스 가치
+**완성도 보장**: AI 요약과 표지가 모두 완료된 도서만 출간  
+**이벤트 동기화**: 비동기 이벤트들의 조합을 통한 완전한 도서 정보 생성  
+**랭킹 시스템**: 구매 횟수 기반 베스트셀러 선정 및 랭킹 관리
 
-### 🤖 AI 
-- **자동화된 콘텐츠 처리**: 책 등록 시 AI 요약 및 표지 자동 생성
-- **중복 처리 방지**: 불필요한 AI API 호출 및 비용 절약
-- **품질 최적화**: 요약 결과를 활용한 고품질 표지 생성
-
-### 👥 SubscribeManage
-- **구독 모델**: 월 구독 vs 개별 구매 모델 지원
-- **포인트 시스템**: 포인트 기반 책 구매 시스템
-- **KT 제휴**: KT 계정 연동 기능으로 차별화된 서비스
-
-### 💰 Point
-- **결제 허브**: 모든 포인트 결제 요청을 중앙에서 처리
-- **가입 혜택**: 회원 가입 시 자동 포인트 지급
-- **실시간 처리**: 이벤트 기반 실시간 포인트 처리
-
-### 📚 LibraryPlatform 
-- **완성도 보장**: AI 요약과 표지가 모두 완료된 도서만 출간
-- **이벤트 동기화**: 비동기 이벤트들의 조합을 통한 완전한 도서 정보 생성
-- **랭킹 시스템**: 구매 횟수 기반 베스트셀러 선정 및 랭킹 관리
+</details>
 
 ---
 
@@ -525,21 +528,21 @@ graph TD
     class L1,L2,L3 libraryService
 ```
 
-### 📊 서비스 간 이벤트 연결 매트릭스
+## 📊 서비스 간 이벤트 연결 매트릭스
 
-| 발행 서비스 | 이벤트 | 구독 서비스 | 처리 내용 |
-|------------|--------|-------------|-----------|
-| 👤 AuthorManage | `AuthorApproved` | - | 작가 승인 완료 |
-| ✍️ WriteManage | `BookRegisted` | 🤖 AI Service | AI 요약 및 표지 생성 |
-| 🤖 AI Service | `AiSummarized` | 📚 LibraryPlatform | 도서 출간 준비 |
-| 🤖 AI Service | `CoverCreated` | 📚 LibraryPlatform | 도서 출간 준비 |
-| 📚 LibraryPlatform | `Published` | 👥 SubscribeManage | 도서 정보 동기화 |
-| 📚 LibraryPlatform | `BestsellerGiven` | - | 베스트셀러 선정 |
-| 👥 SubscribeManage | `UserRegistered` | 💰 Point Service | 신규 가입 포인트 지급 |
-| 👥 SubscribeManage | `UserUpdated` | 💰 Point Service | KT 연동 포인트 지급 |
-| 👥 SubscribeManage | `BookServiceSubscribed` | 💰 Point Service | 구독료 포인트 차감 |
-| 👥 SubscribeManage | `BuyBookSub` | 💰 Point Service<br>📚 LibraryPlatform | 포인트 차감<br>라이브러리 추가 |
-| 💰 Point Service | `PointDecreased` | 👥 SubscribeManage | 포인트 잔액 동기화 |
-| 💰 Point Service | `PointRecharged` | 👥 SubscribeManage | 포인트 잔액 동기화 |
-| 💰 Point Service | `KtSignedupPointCharged` | 👥 SubscribeManage | 포인트 잔액 동기화 |
-| 💰 Point Service | `StandardSignedupPointCharged` | 👥 SubscribeManage | 포인트 잔액 동기화 |
+**발행 서비스 → 이벤트 → 구독 서비스**
+
+👤 AuthorManage → `AuthorApproved` → 작가 승인 완료  
+✍️ WriteManage → `BookRegisted` → 🤖 AI Service (AI 요약 및 표지 생성)  
+🤖 AI Service → `AiSummarized` → 📚 LibraryPlatform (도서 출간 준비)  
+🤖 AI Service → `CoverCreated` → 📚 LibraryPlatform (도서 출간 준비)  
+📚 LibraryPlatform → `Published` → 👥 SubscribeManage (도서 정보 동기화)  
+📚 LibraryPlatform → `BestsellerGiven` → 베스트셀러 선정  
+👥 SubscribeManage → `UserRegistered` → 💰 Point Service (신규 가입 포인트 지급)  
+👥 SubscribeManage → `UserUpdated` → 💰 Point Service (KT 연동 포인트 지급)  
+👥 SubscribeManage → `BookServiceSubscribed` → 💰 Point Service (구독료 포인트 차감)  
+👥 SubscribeManage → `BuyBookSub` → 💰 Point Service, 📚 LibraryPlatform (포인트 차감, 라이브러리 추가)  
+💰 Point Service → `PointDecreased` → 👥 SubscribeManage (포인트 잔액 동기화)  
+💰 Point Service → `PointRecharged` → 👥 SubscribeManage (포인트 잔액 동기화)  
+💰 Point Service → `KtSignedupPointCharged` → 👥 SubscribeManage (포인트 잔액 동기화)  
+💰 Point Service → `StandardSignedupPointCharged` → 👥 SubscribeManage (포인트 잔액 동기화)
