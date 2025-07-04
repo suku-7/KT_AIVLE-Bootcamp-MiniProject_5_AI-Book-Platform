@@ -76,7 +76,7 @@ spring:
         - id: writemanage
           uri: http://writemanage:8080
           predicates:
-            - Path=/writings/**, 
+            - Path=/writings/**, /approvalAuthors/**
         - id: ai
           uri: http://ai:8080
           predicates:
@@ -88,11 +88,11 @@ spring:
         - id: libraryplatform
           uri: http://libraryplatform:8080
           predicates:
-            - Path=/libraryInfos/**, 
+            - Path=/libraryInfos/**, /bestsellers,
         - id: subscribemanage
           uri: http://subscribemanage:8080
           predicates:
-            - Path=/subscribers/**, /subscribedBooks/**, 
+            - Path=/users/**, /subscribers/**, /subscribedBooks/**, /subscribeLists/** # <-- /users/** 추가
         - id: outside
           uri: http://outside:8080
           predicates:
