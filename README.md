@@ -46,9 +46,12 @@
 - **7일차 (07.03)**: 서비스 메시 적용, 모니터링 & 로깅
 - **8일차 (07.04)**: 배포 파이프라인 설계, Wrap-up, 발표
 
+<br><br>
+
 ---
 
 # 📚 소스코드 설명
+
 
 ---
 
@@ -63,7 +66,7 @@
 | **핵심 로직** | 중복 처리 방지, 2단계 AI 처리 (요약 → 분류) |
 
 ```java
-// 🔄 AI 요약 생성 - 2단계 처리
+// AI 요약 생성 - 2단계 처리
 String initialSummary = gptService.generateSummary(
     bookRegisted.getContext(), 500, "KO", "일반요약"
 );
@@ -71,7 +74,7 @@ String classifiedGenre = gptService.classifyGenre(
     bookRegisted.getTitle(), initialSummary
 );
 
-// 📤 이벤트 발행
+// 이벤트 발행
 AiSummarized aiSummarized = new AiSummarized(contentAnalyzer);
 aiSummarized.publishAfterCommit();
 ```
@@ -85,15 +88,15 @@ aiSummarized.publishAfterCommit();
 | **핵심 로직** | 요약 결과 활용으로 고품질 표지 생성 |
 
 ```java
-// 🎨 AI 표지 생성
+// AI 표지 생성
 DalleService dalleService = new DalleService();
 String imageUrl = dalleService.generateCoverImage(title, context);
 
-// 🔍 요약 결과 활용한 고품질 표지 생성
+// 요약 결과 활용한 고품질 표지 생성
 String contextForImage = analyzer.getSummary() != null ? 
     analyzer.getSummary() : analyzer.getContext();
 
-// 📤 이벤트 발행
+// 이벤트 발행
 CoverCreated coverCreated = new CoverCreated(coverDesign);
 coverCreated.publishAfterCommit();
 ```
@@ -106,15 +109,15 @@ coverCreated.publishAfterCommit();
 | **핵심 로직** | 중복 처리 방지, 순차 실행, 품질 개선 처리 |
 
 ```java
-// 📚 BookRegisted 이벤트 처리 - 순차적 AI 처리
+// BookRegisted 이벤트 처리 - 순차적 AI 처리
 @StreamListener(condition = "headers['type']=='BookRegisted'")
 public void wheneverBookRegisted_ProcessSequentially(@Payload BookRegisted bookRegisted) {
-    // 🚫 중복 처리 방지
+    // 중복 처리 방지
     if (contentAnalysisExists && coverExists) {
         return;
     }
     
-    // ⚡ 순차적 AI 처리
+    // 순차적 AI 처리
     ContentAnalyzer.aiSummarize(event);
     CoverDesign.autoCoverGeneratePolicy(event);
 }
@@ -133,7 +136,7 @@ public void wheneverBookRegisted_ProcessSequentially(@Payload BookRegisted bookR
 | **핵심 로직** | 관리자 승인 워크플로우, 작가 상태 관리 |
 
 ```java
-// ✅ 작가 승인 이벤트 발행
+// 작가 승인 이벤트 발행
 AuthorApproved authorApproved = new AuthorApproved(author);
 authorApproved.setAuthorId(author.getAuthorId());
 authorApproved.setIsApproved(true);
@@ -162,7 +165,7 @@ public class AuthorApproved extends AbstractEvent {
 | **핵심 로직** | 작가 인증 후 책 등록, 글 작성/수정/삭제 관리 |
 
 ```java
-// 📖 책 등록 이벤트 발행
+// 책 등록 이벤트 발행
 BookRegisted bookRegisted = new BookRegisted(writing);
 bookRegisted.setBookId(writing.getBookId());
 bookRegisted.setTitle(writing.getTitle());
@@ -248,25 +251,25 @@ public class BuyBookSub extends AbstractEvent {
 @Transactional
 public class PolicyHandler {
     
-    // 🛒 개별 책 구매 시 포인트 차감
+    // 개별 책 구매 시 포인트 차감
     @StreamListener(condition = "headers['type']=='BuyBookSub'")
     public void wheneverBuyBookSub_PointDecrease(@Payload BuyBookSub buyBookSub) {
         Point.pointDecrease(event);
     }
 
-    // 💎 구독 서비스 가입 시 포인트 차감
+    // 구독 서비스 가입 시 포인트 차감
     @StreamListener(condition = "headers['type']=='BookServiceSubscribed'")
     public void wheneverBookServiceSubscribed_PointDecrease(@Payload BookServiceSubscribed bookServiceSubscribed) {
         Point.pointDecrease(event);
     }
 
-    // 🎁 신규 회원 가입 시 초기 포인트 지급
+    // 신규 회원 가입 시 초기 포인트 지급
     @StreamListener(condition = "headers['type']=='UserRegistered'")
     public void wheneverUserRegistered_InitialPointPolicy(@Payload UserRegistered userRegistered) {
         Point.initialPointPolicy(event);
     }
 
-    // 📱 KT 계정 연동 시 추가 포인트 지급
+    // KT 계정 연동 시 추가 포인트 지급
     @StreamListener(condition = "headers['type']=='UserUpdated'")
     public void wheneverUserUpdated_KtSignedupPointPolicy(@Payload UserUpdated userUpdated) {
         Point.ktSignedupPointPolicy(event);
@@ -316,11 +319,11 @@ public class StandardSignedupPointCharged extends AbstractEvent {
 @Transactional
 public class PolicyHandler {
     
-    // 🗂️ 임시 저장소: bookId 기준으로 이벤트 매칭
+    // 임시 저장소: bookId 기준으로 이벤트 매칭
     private Map<Long, AiSummarized> aiSummarizedMap = new ConcurrentHashMap<>();
     private Map<Long, CoverCreated> coverCreatedMap = new ConcurrentHashMap<>();
 
-    // 📝 AI 요약 완료 이벤트 수신 및 임시 저장
+    // AI 요약 완료 이벤트 수신 및 임시 저장
     @StreamListener(condition = "headers['type']=='AiSummarized'")
     public void wheneverAiSummarized(@Payload AiSummarized aiSummarized) {
         Long bookId = aiSummarized.getBookId();
@@ -328,7 +331,7 @@ public class PolicyHandler {
         publishIfReady(bookId);
     }
 
-    // 🎨 AI 표지 생성 완료 이벤트 수신 및 임시 저장
+    // AI 표지 생성 완료 이벤트 수신 및 임시 저장
     @StreamListener(condition = "headers['type']=='CoverCreated'")
     public void wheneverCoverCreated(@Payload CoverCreated coverCreated) {
         Long bookId = coverCreated.getBookId();
@@ -336,13 +339,13 @@ public class PolicyHandler {
         publishIfReady(bookId);
     }
 
-    // ✅ 두 이벤트가 모두 수신되면 출간된 도서 정보 발행
+    // 두 이벤트가 모두 수신되면 출간된 도서 정보 발행
     private void publishIfReady(Long bookId) {
         AiSummarized aiEvent = aiSummarizedMap.get(bookId);
         CoverCreated coverEvent = coverCreatedMap.get(bookId);
 
         if (aiEvent != null && coverEvent != null) {
-            LibraryInfo.publish(aiEvent, coverEvent); // 📚 출간된 도서 정보 발행
+            LibraryInfo.publish(aiEvent, coverEvent); // 출간된 도서 정보 발행
             aiSummarizedMap.remove(bookId);
             coverCreatedMap.remove(bookId);
         }
@@ -407,19 +410,84 @@ public class BestsellerGiven extends AbstractEvent {
 
 ```mermaid
 graph TD
-    A[📖 BookRegisted] --> B[🤖 AI 요약 생성]
-    A --> C[🎨 AI 표지 생성]
-    B --> D[📝 AiSummarized]
-    C --> E[🎨 CoverCreated]
-    D --> F[📚 LibraryPlatform]
-    E --> F
-    F --> G[📚 Published]
+    %% 작가 관리 흐름
+    A1[👤 작가 가입] --> A2[👤 AuthorManage]
+    A2 --> A3[✅ AuthorApproved]
     
-    H[🛒 BuyBookSub] --> I[💰 Point 차감]
-    H --> J[📚 Library 추가]
-    I --> K[💸 PointDecreased]
+    %% 글 작성 및 책 등록 흐름
+    W1[✍️ 글 작성] --> W2[✍️ WriteManage]
+    W2 --> W3[📖 BookRegisted]
     
-    L[👤 UserRegistered] --> M[🎁 Initial Point]
-    M --> N[💳 StandardSignedupPointCharged]
+    %% AI 처리 흐름
+    W3 --> AI1[🤖 AI Service]
+    AI1 --> AI2[📝 AiSummarized]
+    AI1 --> AI3[🎨 CoverCreated]
+    
+    %% 도서 출간 흐름
+    AI2 --> L1[📚 LibraryPlatform]
+    AI3 --> L1
+    L1 --> L2[📚 Published]
+    L2 --> L3[🏆 BestsellerGiven]
+    
+    %% 사용자 관리 흐름
+    U1[👥 사용자 가입] --> U2[👥 SubscribeManage]
+    U2 --> U3[🔐 UserRegistered]
+    U3 --> P1[💰 Point Service]
+    P1 --> P2[🎁 StandardSignedupPointCharged]
+    
+    %% 구독 및 구매 흐름
+    U2 --> U4[💎 BookServiceSubscribed]
+    U2 --> U5[🛒 BuyBookSub]
+    
+    %% 포인트 처리 흐름
+    U4 --> P1
+    U5 --> P1
+    P1 --> P3[💸 PointDecreased]
+    P1 --> P4[💳 PointRecharged]
+    P1 --> P5[📱 KtSignedupPointCharged]
+    
+    %% 포인트 동기화
+    P3 --> U2
+    P4 --> U2
+    P5 --> U2
+    P2 --> U2
+    
+    %% 라이브러리 업데이트
+    U5 --> L1
+    L2 --> U2
+    
+    %% 스타일링
+    classDef authorService fill:#FFE5CC
+    classDef writeService fill:#E5F2FF
+    classDef aiService fill:#F0E5FF
+    classDef subscribeService fill:#E5FFE5
+    classDef pointService fill:#FFE5F0
+    classDef libraryService fill:#FFFACD
+    classDef event fill:#FFF0E5
+    
+    class A1,A2,A3 authorService
+    class W1,W2,W3 writeService
+    class AI1,AI2,AI3 aiService
+    class U1,U2,U3,U4,U5 subscribeService
+    class P1,P2,P3,P4,P5 pointService
+    class L1,L2,L3 libraryService
 ```
 
+### 📊 서비스 간 이벤트 연결 매트릭스
+
+| 발행 서비스 | 이벤트 | 구독 서비스 | 처리 내용 |
+|------------|--------|-------------|-----------|
+| 👤 AuthorManage | `AuthorApproved` | - | 작가 승인 완료 |
+| ✍️ WriteManage | `BookRegisted` | 🤖 AI Service | AI 요약 및 표지 생성 |
+| 🤖 AI Service | `AiSummarized` | 📚 LibraryPlatform | 도서 출간 준비 |
+| 🤖 AI Service | `CoverCreated` | 📚 LibraryPlatform | 도서 출간 준비 |
+| 📚 LibraryPlatform | `Published` | 👥 SubscribeManage | 도서 정보 동기화 |
+| 📚 LibraryPlatform | `BestsellerGiven` | - | 베스트셀러 선정 |
+| 👥 SubscribeManage | `UserRegistered` | 💰 Point Service | 신규 가입 포인트 지급 |
+| 👥 SubscribeManage | `UserUpdated` | 💰 Point Service | KT 연동 포인트 지급 |
+| 👥 SubscribeManage | `BookServiceSubscribed` | 💰 Point Service | 구독료 포인트 차감 |
+| 👥 SubscribeManage | `BuyBookSub` | 💰 Point Service<br>📚 LibraryPlatform | 포인트 차감<br>라이브러리 추가 |
+| 💰 Point Service | `PointDecreased` | 👥 SubscribeManage | 포인트 잔액 동기화 |
+| 💰 Point Service | `PointRecharged` | 👥 SubscribeManage | 포인트 잔액 동기화 |
+| 💰 Point Service | `KtSignedupPointCharged` | 👥 SubscribeManage | 포인트 잔액 동기화 |
+| 💰 Point Service | `StandardSignedupPointCharged` | 👥 SubscribeManage | 포인트 잔액 동기화 |
