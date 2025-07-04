@@ -146,9 +146,9 @@ authorApproved.setIsApproved(true);
 ```java
 @Data
 public class AuthorApproved extends AbstractEvent {
-    private Long authorId;      // 👤 작가 ID
-    private Boolean isApproved; // ✅ 승인 상태
-    private String name;        // 📝 작가 이름
+    private Long authorId;      //  작가 ID
+    private Boolean isApproved; //  승인 상태
+    private String name;        //  작가 이름
 }
 ```
 
@@ -176,11 +176,11 @@ bookRegisted.setRegistration(true);
 ```java
 @Data
 public class BookRegisted extends AbstractEvent {
-    private Long bookId;        // 📚 책 ID
-    private String context;     // 📝 책 내용
-    private Long authorId;      // 👤 작가 ID
-    private String title;       // 📖 책 제목
-    private Boolean registration; // ✅ 등록 상태
+    private Long bookId;        //  책 ID
+    private String context;     //  책 내용
+    private Long authorId;      //  작가 ID
+    private String title;       //  책 제목
+    private Boolean registration; //  등록 상태
 }
 ```
 
@@ -221,22 +221,22 @@ public class BookRegisted extends AbstractEvent {
 // 👤 사용자 등록
 @Data
 public class UserRegistered extends AbstractEvent {
-    private Long userId;    // 👤 사용자 ID
-    private String isKt;    // 📱 KT 계정 여부
+    private Long userId;    //  사용자 ID
+    private String isKt;    //  KT 계정 여부
 }
 
 // 💎 구독 서비스 가입
 @Data
 public class BookServiceSubscribed extends AbstractEvent {
-    private Long userId;           // 👤 사용자 ID
-    private String isSubscribe;    // 💎 구독 상태
+    private Long userId;           //  사용자 ID
+    private String isSubscribe;    //  구독 상태
 }
 
 // 🛒 개별 책 구매
 @Data
 public class BuyBookSub extends AbstractEvent {
-    private Long userId;    // 👤 사용자 ID
-    private Long bookId;    // 📚 책 ID
+    private Long userId;    //  사용자 ID
+    private Long bookId;    //  책 ID
 }
 ```
 
@@ -282,29 +282,29 @@ public class PolicyHandler {
 // 💸 포인트 차감 완료 이벤트
 @Data
 public class PointDecreased extends AbstractEvent {
-    private Long userId;            // 👤 사용자 ID
-    private Integer pointBalance;   // 💰 차감 후 잔액
+    private Long userId;            //  사용자 ID
+    private Integer pointBalance;   //  차감 후 잔액
 }
 
 // 💳 포인트 충전 완료 이벤트
 @Data
 public class PointRecharged extends AbstractEvent {
-    private Long userId;            // 👤 사용자 ID
-    private Integer pointBalance;   // 💰 충전 후 잔액
+    private Long userId;            //  사용자 ID
+    private Integer pointBalance;   //  충전 후 잔액
 }
 
 // 📱 KT 가입 혜택 포인트 지급
 @Data
 public class KtSignedupPointCharged extends AbstractEvent {
-    private Long userId;            // 👤 사용자 ID
-    private Integer pointBalance;   // 💰 지급 후 잔액
+    private Long userId;            //  사용자 ID
+    private Integer pointBalance;   //  지급 후 잔액
 }
 
 // 🎁 일반 가입 혜택 포인트 지급
 @Data
 public class StandardSignedupPointCharged extends AbstractEvent {
-    private Long userId;            // 👤 사용자 ID
-    private Integer pointBalance;   // 💰 지급 후 잔액
+    private Long userId;            //  사용자 ID
+    private Integer pointBalance;   //  지급 후 잔액
 }
 ```
 
@@ -358,25 +358,25 @@ public class PolicyHandler {
 // 📚 도서 출간 완료 이벤트
 @Data
 public class Published extends AbstractEvent {
-    private Long bookId;             // 📚 도서 ID
-    private Long authorId;           // 👤 작가 ID
-    private String authorName;       // 📝 작가명
-    private String title;            // 📖 도서 제목
-    private String imageUrl;         // 🎨 AI 생성 표지 URL
-    private String summary;          // 📝 AI 생성 요약
-    private String context;          // 📄 도서 내용
-    private String classificationType; // 🏷️ AI 분류 장르
-    private Date publishDate;        // 📅 출간일
-    private Long selectCount;        // 📊 선택(구매) 횟수
-    private Integer rank;            // 🏆 랭킹
-    private Boolean bestseller;      // ⭐ 베스트셀러 여부
+    private Long bookId;             //  도서 ID
+    private Long authorId;           //  작가 ID
+    private String authorName;       //  작가명
+    private String title;            //  도서 제목
+    private String imageUrl;         //  AI 생성 표지 URL
+    private String summary;          //  AI 생성 요약
+    private String context;          //  도서 내용
+    private String classificationType; // 🏷 AI 분류 장르
+    private Date publishDate;        //  출간일
+    private Long selectCount;        //  선택(구매) 횟수
+    private Integer rank;            //  랭킹
+    private Boolean bestseller;      //  베스트셀러 여부
 }
 
 // 🏆 베스트셀러 선정 이벤트
 @Data
 public class BestsellerGiven extends AbstractEvent {
     // ... Published와 동일한 구조
-    private Boolean bestseller;      // ⭐ 베스트셀러 여부 (true)
+    private Boolean bestseller;      //  베스트셀러 여부 (true)
 }
 ```
 
