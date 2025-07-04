@@ -55,7 +55,7 @@
 
 ---
 
-## 🤖 AI Service
+## 🤖 AI
 
 ### 📝 AI 요약 생성 (ContentAnalyzer)
 | 항목 | 내용 |
@@ -101,7 +101,7 @@ CoverCreated coverCreated = new CoverCreated(coverDesign);
 coverCreated.publishAfterCommit();
 ```
 
-### 🔄 이벤트 오케스트레이션 (PolicyHandler)
+### 🔄 PolicyHandler
 | 항목 | 내용 |
 |------|------|
 | **트리거** | Kafka 이벤트 스트림 수신 |
@@ -125,9 +125,9 @@ public void wheneverBookRegisted_ProcessSequentially(@Payload BookRegisted bookR
 
 ---
 
-## 👤 AuthorManage Service
+## 👤 AuthorManage
 
-### ✅ 작가 승인 처리 (Author Aggregate)
+### ✅ 작가 승인 처리 (AuthorAggregate)
 | 항목 | 내용 |
 |------|------|
 | **트리거** | 관리자의 `등록 승인` 커맨드 |
@@ -154,9 +154,9 @@ public class AuthorApproved extends AbstractEvent {
 
 ---
 
-## ✍️ WriteManage Service
+## ✍️ WriteManage
 
-### 📖 책 등록 처리 (Writing Aggregate)
+### 📖 책 등록 처리 (WritingAggregate)
 | 항목 | 내용 |
 |------|------|
 | **트리거** | 작가의 `책 등록` 커맨드 |
@@ -186,9 +186,61 @@ public class BookRegisted extends AbstractEvent {
 
 ---
 
-## 👥 SubscribeManage Service
+## 👥 SubscribeManage
 
-### 🔐 사용자 등록 처리 (User Aggregate)
+### 🔄 PolicyHandler
+
+```java
+@Service
+@Transactional
+public class PolicyHandler {
+    @Autowired
+    UserRepository userRepository;
+    
+    @Autowired
+    LibraryRepository libraryRepository;
+
+    // 포인트 감소 이벤트 처리
+    @StreamListener(condition = "headers['type']=='PointDecreased'")
+    public void wheneverPointDecreased_PointSyncPolicy(@Payload PointDecreased pointDecreased) {
+        User.pointSyncPolicy(event); // 사용자 포인트 잔액 동기화
+    }
+
+    // 포인트 충전 이벤트 처리
+    @StreamListener(condition = "headers['type']=='PointRecharged'")
+    public void wheneverPointRecharged_PointSyncPolicy(@Payload PointRecharged pointRecharged) {
+        User.pointSyncPolicy(event); // 사용자 포인트 잔액 동기화
+    }
+
+    // KT 가입 포인트 지급 이벤트 처리
+    @StreamListener(condition = "headers['type']=='KtSignedupPointCharged'")
+    public void wheneverKtSignedupPointCharged_PointSyncPolicy(@Payload KtSignedupPointCharged ktSignedupPointCharged) {
+        User.pointSyncPolicy(event); // KT 가입 혜택 포인트 동기화
+    }
+
+    // 일반 가입 포인트 지급 이벤트 처리
+    @StreamListener(condition = "headers['type']=='StandardSignedupPointCharged'")
+    public void wheneverStandardSignedupPointCharged_PointSyncPolicy(@Payload StandardSignedupPointCharged standardSignedupPointCharged) {
+        User.pointSyncPolicy(event); // 일반 가입 혜택 포인트 동기화
+    }
+
+    // 도서 출간 이벤트 처리
+    @StreamListener(condition = "headers['type']=='Published'")
+    public void wheneverPublished_BookInfoPolicy(@Payload Published published) {
+        Library.bookInfoPolicy(event); // 도서 정보 Library에 동기화
+    }
+}
+```
+
+### 📋 처리하는 외부 이벤트
+- **PointDecreased**: 포인트 차감 (구매 시)
+- **PointRecharged**: 포인트 충전
+- **KtSignedupPointCharged**: KT 가입 혜택 포인트 지급
+- **StandardSignedupPointCharged**: 일반 가입 혜택 포인트 지급
+- **Published**: 도서 출간 정보
+
+
+### 🔐 사용자 등록 처리 (UserAggregate)
 | 항목 | 내용 |
 |------|------|
 | **트리거** | 사용자의 `회원가입` 커맨드 |
@@ -242,9 +294,9 @@ public class BuyBookSub extends AbstractEvent {
 
 ---
 
-## 💰 Point Service
+## 💰 Point 
 
-### 🔄 이벤트 처리 정책 (PolicyHandler)
+### 🔄 PolicyHandler
 
 ```java
 @Service
@@ -310,7 +362,7 @@ public class StandardSignedupPointCharged extends AbstractEvent {
 
 ---
 
-## 📚 LibraryPlatform Service
+## 📚 LibraryPlatform
 
 ### 🔄 이벤트 조합 처리 (Event Orchestration)
 
@@ -384,22 +436,22 @@ public class BestsellerGiven extends AbstractEvent {
 
 ## 🎯 비즈니스 가치
 
-### 🤖 AI Service
+### 🤖 AI 
 - **자동화된 콘텐츠 처리**: 책 등록 시 AI 요약 및 표지 자동 생성
 - **중복 처리 방지**: 불필요한 AI API 호출 및 비용 절약
 - **품질 최적화**: 요약 결과를 활용한 고품질 표지 생성
 
-### 👥 SubscribeManage Service
+### 👥 SubscribeManage
 - **구독 모델**: 월 구독 vs 개별 구매 모델 지원
 - **포인트 시스템**: 포인트 기반 책 구매 시스템
 - **KT 제휴**: KT 계정 연동 기능으로 차별화된 서비스
 
-### 💰 Point Service
+### 💰 Point
 - **결제 허브**: 모든 포인트 결제 요청을 중앙에서 처리
 - **가입 혜택**: 회원 가입 시 자동 포인트 지급
 - **실시간 처리**: 이벤트 기반 실시간 포인트 처리
 
-### 📚 LibraryPlatform Service
+### 📚 LibraryPlatform 
 - **완성도 보장**: AI 요약과 표지가 모두 완료된 도서만 출간
 - **이벤트 동기화**: 비동기 이벤트들의 조합을 통한 완전한 도서 정보 생성
 - **랭킹 시스템**: 구매 횟수 기반 베스트셀러 선정 및 랭킹 관리
