@@ -120,11 +120,6 @@ public void wheneverBookRegisted_ProcessSequentially(@Payload BookRegisted bookR
 }
 ```
 
-### 비즈니스 가치
-
-**자동화된 콘텐츠 처리**: 책 등록 시 AI 요약 및 표지 자동 생성  
-**중복 처리 방지**: 불필요한 AI API 호출 및 비용 절약  
-**품질 최적화**: 요약 결과를 활용한 고품질 표지 생성
 
 </details>
 
@@ -295,11 +290,6 @@ public class BuyBookSub extends AbstractEvent {
 }
 ```
 
-### 비즈니스 가치
-
-**구독 모델**: 월 구독 vs 개별 구매 모델 지원  
-**포인트 시스템**: 포인트 기반 책 구매 시스템  
-**KT 제휴**: KT 계정 연동 기능으로 차별화된 서비스
 
 </details>
 
@@ -371,11 +361,6 @@ public class StandardSignedupPointCharged extends AbstractEvent {
 }
 ```
 
-### 비즈니스 가치
-
-**결제 허브**: 모든 포인트 결제 요청을 중앙에서 처리  
-**가입 혜택**: 회원 가입 시 자동 포인트 지급  
-**실시간 처리**: 이벤트 기반 실시간 포인트 처리
 
 </details>
 
@@ -451,11 +436,6 @@ public class BestsellerGiven extends AbstractEvent {
 }
 ```
 
-### 비즈니스 가치
-
-**완성도 보장**: AI 요약과 표지가 모두 완료된 도서만 출간  
-**이벤트 동기화**: 비동기 이벤트들의 조합을 통한 완전한 도서 정보 생성  
-**랭킹 시스템**: 구매 횟수 기반 베스트셀러 선정 및 랭킹 관리
 
 </details>
 
