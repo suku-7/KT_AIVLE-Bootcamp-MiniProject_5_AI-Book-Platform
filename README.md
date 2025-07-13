@@ -1,9 +1,4 @@
 # 📚 KT 걷다가서재 - AI 기반 자동 출간 및 구독 플랫폼
-
-> 클라우드 네이티브 기반 전자책 자동 출간 및 구독 플랫폼  
-> Spring Boot + React + Kubernetes + Kafka 기반 마이크로서비스 프로젝트  
-> Azure + Docker를 통한 배포 및 Github연동 CI/CD 자동 배포   
-
 ---
 
 ## 📝 프로젝트 목적 및 설명
