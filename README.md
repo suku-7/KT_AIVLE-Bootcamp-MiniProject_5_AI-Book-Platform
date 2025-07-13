@@ -52,16 +52,15 @@
 ---
 
 ## **📝 도서 관리 시스템 결과물**
+
+
 <img width="2536" height="1277" alt="스크린샷 2025-07-04 113342" src="https://github.com/user-attachments/assets/8c9c723d-dabe-4075-b494-f14eaec9abaf" />
-<img width="2536" height="1289" alt="스크린샷 2025-07-04 113457" src="https://github.com/user-attachments/assets/aeec5758-c360-4f5d-80c2-6e9babdf3a48" />
-<img width="2533" height="1293" alt="스크린샷 2025-07-04 113724" src="https://github.com/user-attachments/assets/0063f4ff-5c65-4db0-8aec-2255d8901b3d" />
-<img width="2536" height="1293" alt="스크린샷 2025-07-04 113859" src="https://github.com/user-attachments/assets/da70e2e5-7e92-4de1-a1d6-54dfde8fd624" />
-<img width="2535" height="1285" alt="스크린샷 2025-07-04 114026" src="https://github.com/user-attachments/assets/5b3a77d5-65d1-4bac-91d3-5b458034b6be" />
 
 --- 
 
-## **📝 프로젝트 기본 아키텍처**
-![스크린샷 2025-06-02 213307](https://github.com/user-attachments/assets/3be55bce-c382-4d91-8023-82807d0fad7f)
+## **📝 아키텍처 정의서**
+
+<img width="1212" height="826" alt="image" src="https://github.com/user-attachments/assets/7ab3a5a9-d3b9-42d5-a334-f4625fccde0d" />
 
 --- 
 ## 📝 **개발 환경 / 기술 스택**
@@ -109,11 +108,6 @@
 
 - **VCS**: Git & GitHub
 - **Collaboration Tools**: Notion, Zoom, Microsoft Teams
-
----
-## **📝 아키텍처 정의서 **
-
-<img width="1212" height="826" alt="image" src="https://github.com/user-attachments/assets/7ab3a5a9-d3b9-42d5-a334-f4625fccde0d" />
 
 ---
 
