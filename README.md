@@ -45,6 +45,20 @@
 
 ---
 
+### 📁 미니 프로젝트 5차 Notion  
+[KT-AIVLE 미니 프로젝트 5차 AI 기반 자동 출간 및 구독 플랫폼 만들기 Notion 상세 설명 및 회의록](https://www.notion.so/KT-AIVLE-5-21dd02208fab809d91b2d97bc2c7ab09)  
+- [KT 걷다가 서재 - 상세 API 명세서](https://www.notion.so/API-227d02208fab80df8d02f035b3a55e0e)  
+---
+
+## **📝 도서 관리 시스템 결과물**
+
+
+
+---
+
+
+---
+
 # 📚 소스코드 설명
 
 ---
