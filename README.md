@@ -35,10 +35,10 @@
 <table style="width:100%">
   <thead>
     <tr>
-      <th style="width:20%">이름</th>
+      <th style="width:25%">이름</th>
       <th style="width:20%">주요 역할</th>
-      <th style="width:25%">담당 파트</th>
-      <th style="width:40%">주요 기여 내용</th>
+      <th style="width:20%">담당 파트</th>
+      <th style="width:35%">주요 기여 내용</th>
     </tr>
   </thead>
   <tbody>
