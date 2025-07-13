@@ -51,8 +51,8 @@
 
 ---
 
-## **📝 도서 관리 시스템 결과물**
-
+## **📝 AI 기반 자동 출간 및 구독 플랫폼 결과물**
+- [Google Drive]([https://www.notion.so/API-227d02208fab80df8d02f035b3a55e0e](https://drive.google.com/file/d/1aLjrhVx7qR7zv1QNo4R3RIm3C4FnJlW-/view?usp=sharing))  
 <img width="2536" height="1277" alt="스크린샷 2025-07-04 113342" src="https://github.com/user-attachments/assets/8c9c723d-dabe-4075-b494-f14eaec9abaf" />
 
 --- 
