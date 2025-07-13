@@ -32,86 +32,34 @@
 
 ## 👥 팀원 (AI_04반_11조)
 
-<table style="width:100%">
-  <thead>
-    <tr>
-      <th style="width:25%">이름</th>
-      <th style="width:20%">주요 역할</th>
-      <th style="width:20%">담당 파트</th>
-      <th style="width:35%">주요 기여 내용</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>이헌준</td>
-      <td>조장</td>
-      <td>PM, 배포 (AKS & CD)</td>
-      <td>분업 및 작업 내용 확인, AKS 배포 및 CD 파이프라인 구축</td>
-    </tr>
-    <tr>
-      <td>김시훈</td>
-      <td>발표, PPT</td>
-      <td>AI 도메인 개발 (Backend)</td>
-      <td>AI 도메인 MSAEZ 아키텍처 설계 및 백엔드 코드 작성</td>
-    </tr>
-    <tr>
-      <td>안도형</td>
-      <td>PPT</td>
-      <td>구독자 도메인 개발 (Backend), FE 지원</td>
-      <td>구독자 도메인 MSAEZ 아키텍처 설계, 코드 정리 및 README 작성</td>
-    </tr>
-    <tr>
-      <td>박수연</td>
-      <td>PPT</td>
-      <td>서재 도메인 개발 (Backend)</td>
-      <td>서재 도메인 MSAEZ 아키텍처 설계 및 백엔드 코드 작성</td>
-    </tr>
-    <tr>
-      <td>오현종</td>
-      <td>검토 담당자</td>
-      <td>글쓰기 도메인 개발 (Backend), 모니터링</td>
-      <td>글쓰기 도메인 MSAEZ 아키텍처 설계, 배포 환경 모니터링, CI 파이프라인 구축</td>
-    </tr>
-    <tr>
-      <td>양성현</td>
-      <td>검토 담당자</td>
-      <td>포인트 도메인 개발 (Backend), CI/CD, FE 지원</td>
-      <td>포인트 도메인 MSAEZ 아키텍처 설계, CI/CD 파이프라인 구축</td>
-    </tr>
-     <tr>
-      <td>김민서</td>
-      <td>검토 담당자</td>
-      <td>작가 관리 도메인 담당, FE 지원, AKS 배포</td>
-      <td>작가 관리 도메인 MSAEZ 아키텍처 제작 및 백엔드 코드 작성, AKS 배포</td>
-    </tr>
-    <tr>
-      <td>류근우</td>
-      <td>서기, PPT</td>
-      <td>프론트엔드 총괄, 백엔드 통합</td>
-      <td>MSAEZ 통합 및 수정, API 명세서 제작, BE 단위 테스트, FE 제작</td>
-    </tr>
-  </tbody>
-</table>
+| 담당자 | 주요 역할 | 담당 파트 | 주요 기여 내용 |
+| :----- | :--- | :--- | :--- |
+| 이헌준 | 조장 | PM, 배포 (AKS & CD) | 분업 및 작업 내용 확인, AKS 배포 및 CD 파이프라인 구축 |
+| 김시훈 | 발표, PPT | AI 도메인 개발 (Backend) | AI 도메인 MSAEZ 아키텍처 설계 및 백엔드 코드 작성 |
+| 안도형 | PPT | 구독자 도메인 개발 (Backend), FE 지원 | 구독자 도메인 MSAEZ 아키텍처 설계, 코드 정리 및 README 작성 |
+| 박수연 | PPT | 서재 도메인 개발 (Backend) | 서재 도메인 MSAEZ 아키텍처 설계 및 백엔드 코드 작성 |
+| 오현종 | 검토 담당자 | 글쓰기 도메인 개발 (Backend), 모니터링 | 글쓰기 도메인 MSAEZ 아키텍처 설계, 배포 환경 모니터링, CI 파이프라인 구축 |
+| 양성현 | 검토 담당자 | 포인트 도메인 개발 (Backend), CI/CD, FE 지원 | 포인트 도메인 MSAEZ 아키텍처 설계, CI/CD 파이프라인 구축 |
+| 김민서 | 검토 담당자 | 작가 관리 도메인 담당, FE 지원, AKS 배포 | 작가 관리 도메인 MSAEZ 아키텍처 제작 및 백엔드 코드 작성, AKS 배포 |
+| 류근우 | 서기, PPT | 프론트엔드 총괄, 백엔드 통합 | MSAEZ 통합 및 수정, API 명세서 제작, BE 단위 테스트, FE 제작 |
 
 ---
 
 ### 📁 미니 프로젝트 5차 Notion  
 [KT-AIVLE 미니 프로젝트 5차 AI 기반 자동 출간 및 구독 플랫폼 만들기 Notion 상세 설명 및 회의록](https://www.notion.so/KT-AIVLE-5-21dd02208fab809d91b2d97bc2c7ab09)  
-- [KT 걷다가 서재 - 상세 API 명세서](https://www.notion.so/API-227d02208fab80df8d02f035b3a55e0e)  
+[KT 걷다가 서재 - 상세 API 명세서](https://www.notion.so/API-227d02208fab80df8d02f035b3a55e0e)  
+
 ---
 
 ## **📝 도서 관리 시스템 결과물**
+<img width="2536" height="1277" alt="스크린샷 2025-07-04 113342" src="https://github.com/user-attachments/assets/8c9c723d-dabe-4075-b494-f14eaec9abaf" />
+<img width="2536" height="1289" alt="스크린샷 2025-07-04 113457" src="https://github.com/user-attachments/assets/aeec5758-c360-4f5d-80c2-6e9babdf3a48" />
+<img width="2533" height="1293" alt="스크린샷 2025-07-04 113724" src="https://github.com/user-attachments/assets/0063f4ff-5c65-4db0-8aec-2255d8901b3d" />
+<img width="2536" height="1293" alt="스크린샷 2025-07-04 113859" src="https://github.com/user-attachments/assets/da70e2e5-7e92-4de1-a1d6-54dfde8fd624" />
+<img width="2535" height="1285" alt="스크린샷 2025-07-04 114026" src="https://github.com/user-attachments/assets/5b3a77d5-65d1-4bac-91d3-5b458034b6be" />
 
----
-## **📝 주요 기능**
-
-- 도서 관리: 생성, 조회, 수정, 삭제 (CRUD)
-- AI 기능:
-    - GPT-4.1-mini 프롬프트 개선
-    - DALL-E-3: 맞춤형 표지 이미지 생성
-- UI/UX : 모달기능 추가하여, 편리하고 직관적으로 확인, 수정가능.
-  
 --- 
+
 ## **📝 프로젝트 기본 아키텍처**
 ![스크린샷 2025-06-02 213307](https://github.com/user-attachments/assets/3be55bce-c382-4d91-8023-82807d0fad7f)
 
@@ -145,24 +93,27 @@
 
 - **OpenAI API**: GPT-4.1-mini, DALL·E 3
 - **Features**:
-    - 프롬프트 기반 도서 정보 요약
-    - 도서 커버 이미지 생성
+    - 도서 정보 요약 및 도서 커버 이미지 생성
+
+### 🏛️ Microservice & Event-Driven Architecture
+- **MSA Framework**: MSAEZ
+- **Message Queue**: Kafka
+
+### ☁️ Deployment & DevOps
+- **Containerization**: Docker
+- **Orchestration**: Kubernetes
+- **Cloud Platform**: Microsoft Azure
+- **CI/CD**: Azure Pipelines
 
 ### 📦 Version Control & Tools
 
 - **VCS**: Git & GitHub
 - **Collaboration Tools**: Notion, Zoom, Microsoft Teams
-  
-###  
 
 ---
-## **📝 프로젝트 구조**
+## **📝 아키텍처 정의서 **
 
-![스크린샷 2025-06-05 214138](https://github.com/user-attachments/assets/11811e67-f0ef-406b-a95d-55e27f8e136a)  
-![스크린샷 2025-06-05 214148](https://github.com/user-attachments/assets/12f4d5d1-a42e-443b-88f6-7b5af8626052)  
-
----
-
+<img width="1212" height="826" alt="image" src="https://github.com/user-attachments/assets/7ab3a5a9-d3b9-42d5-a334-f4625fccde0d" />
 
 ---
 
