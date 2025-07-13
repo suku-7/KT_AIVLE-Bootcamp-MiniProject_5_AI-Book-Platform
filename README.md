@@ -32,16 +32,66 @@
 
 ## 👥 팀원 (AI_04반_11조)
 
-| 담당자 | 주요 역할 | 담당 파트 | 주요 기여 내용 |
-| :----- | :--- | :--- | :--- |
-| 이헌준 | 조장 | PM, 배포 (AKS & CD) | 분업 및 작업 내용 확인, AKS 배포 및 CD 파이프라인 구축 |
-| 김시훈 | 발표, PPT | AI 도메인 개발 (Backend) | AI 도메인 MSAEZ 아키텍처 설계 및 백엔드 코드 작성 |
-| 안도형 | PPT | 구독자 도메인 개발 (Backend), FE 지원 | 구독자 도메인 MSAEZ 아키텍처 설계, 코드 정리 및 README 작성 |
-| 박수연 | PPT | 서재 도메인 개발 (Backend) | 서재 도메인 MSAEZ 아키텍처 설계 및 백엔드 코드 작성 |
-| 오현종 | 검토 담당자 | 글쓰기 도메인 개발 (Backend), 모니터링 | 글쓰기 도메인 MSAEZ 아키텍처 설계, 배포 환경 모니터링, CI 파이프라인 구축 |
-| 양성현 | 검토 담당자 | 포인트 도메인 개발 (Backend), CI/CD, FE 지원 | 포인트 도메인 MSAEZ 아키텍처 설계, CI/CD 파이프라인 구축 |
-| 김민서 | 검토 담당자 | 작가 관리 도메인 담당, FE 지원, AKS 배포 | 작가 관리 도메인 MSAEZ 아키텍처 제작 및 백엔드 코드 작성, AKS 배포 |
-| 류근우 | 서기, PPT | 프론트엔드 총괄, 백엔드 통합 | MSAEZ 통합 및 수정, API 명세서 제작, BE 단위 테스트, FE 제작 |
+<table style="width:100%">
+  <thead>
+    <tr>
+      <th style="width:15%">이름</th>
+      <th style="width:20%">주요 역할</th>
+      <th style="width:25%">담당 파트</th>
+      <th style="width:40%">주요 기여 내용</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>이헌준</td>
+      <td>조장</td>
+      <td>PM, 배포 (AKS & CD)</td>
+      <td>분업 및 작업 내용 확인, AKS 배포 및 CD 파이프라인 구축</td>
+    </tr>
+    <tr>
+      <td>김시훈</td>
+      <td>발표, PPT</td>
+      <td>AI 도메인 개발 (Backend)</td>
+      <td>AI 도메인 MSAEZ 아키텍처 설계 및 백엔드 코드 작성</td>
+    </tr>
+    <tr>
+      <td>안도형</td>
+      <td>PPT</td>
+      <td>구독자 도메인 개발 (Backend), FE 지원</td>
+      <td>구독자 도메인 MSAEZ 아키텍처 설계, 코드 정리 및 README 작성</td>
+    </tr>
+    <tr>
+      <td>박수연</td>
+      <td>PPT</td>
+      <td>서재 도메인 개발 (Backend)</td>
+      <td>서재 도메인 MSAEZ 아키텍처 설계 및 백엔드 코드 작성</td>
+    </tr>
+    <tr>
+      <td>오현종</td>
+      <td>검토 담당자</td>
+      <td>글쓰기 도메인 개발 (Backend), 모니터링</td>
+      <td>글쓰기 도메인 MSAEZ 아키텍처 설계, 배포 환경 모니터링, CI 파이프라인 구축</td>
+    </tr>
+    <tr>
+      <td>양성현</td>
+      <td>검토 담당자</td>
+      <td>포인트 도메인 개발 (Backend), CI/CD, FE 지원</td>
+      <td>포인트 도메인 MSAEZ 아키텍처 설계, CI/CD 파이프라인 구축</td>
+    </tr>
+     <tr>
+      <td>김민서</td>
+      <td>검토 담당자</td>
+      <td>작가 관리 도메인 담당, FE 지원, AKS 배포</td>
+      <td>작가 관리 도메인 MSAEZ 아키텍처 제작 및 백엔드 코드 작성, AKS 배포</td>
+    </tr>
+    <tr>
+      <td>류근우</td>
+      <td>서기, PPT</td>
+      <td>프론트엔드 총괄, 백엔드 통합</td>
+      <td>MSAEZ 통합 및 수정, API 명세서 제작, BE 단위 테스트, FE 제작</td>
+    </tr>
+  </tbody>
+</table>
 
 ---
 
@@ -52,7 +102,64 @@
 
 ## **📝 도서 관리 시스템 결과물**
 
+---
+## **📝 주요 기능**
 
+- 도서 관리: 생성, 조회, 수정, 삭제 (CRUD)
+- AI 기능:
+    - GPT-4.1-mini 프롬프트 개선
+    - DALL-E-3: 맞춤형 표지 이미지 생성
+- UI/UX : 모달기능 추가하여, 편리하고 직관적으로 확인, 수정가능.
+  
+--- 
+## **📝 프로젝트 기본 아키텍처**
+![스크린샷 2025-06-02 213307](https://github.com/user-attachments/assets/3be55bce-c382-4d91-8023-82807d0fad7f)
+
+--- 
+## 📝 **개발 환경 / 기술 스택**
+
+### 👨‍💻 Front-End
+
+- **Language**: JavaScript (ES6+)
+- **Framework**: React 19.x
+- **Build Tool**: Vite
+- **Routing**: React Router
+- **HTTP Client**: Axios
+- **UI Library**: Material-UI (@mui/material)
+- **Styling**: Emotion (@emotion/react, @emotion/styled)
+- **Date/Time**: Moment.js
+- **IDE**: Visual Studio Code
+
+### 👨‍💻 Back-End
+
+- **Language**: Java 17
+- **Framework**: Spring Boot 3.5.0
+- **Architecture**: RESTful API, MVC
+- **ORM**: JPA (Hibernate)
+- **Database**: H2 (In-memory, development)
+- **Build Tool**: Gradle
+- **Other**: Lombok, CORS 설정
+- **IDE**: IntelliJ IDEA
+
+### 🤖 AI Integration
+
+- **OpenAI API**: GPT-4.1-mini, DALL·E 3
+- **Features**:
+    - 프롬프트 기반 도서 정보 요약
+    - 도서 커버 이미지 생성
+
+### 📦 Version Control & Tools
+
+- **VCS**: Git & GitHub
+- **Collaboration Tools**: Notion, Zoom, Microsoft Teams
+  
+###  
+
+---
+## **📝 프로젝트 구조**
+
+![스크린샷 2025-06-05 214138](https://github.com/user-attachments/assets/11811e67-f0ef-406b-a95d-55e27f8e136a)  
+![스크린샷 2025-06-05 214148](https://github.com/user-attachments/assets/12f4d5d1-a42e-443b-88f6-7b5af8626052)  
 
 ---
 
